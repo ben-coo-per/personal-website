@@ -1,20 +1,28 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import { fade } from 'svelte/transition';
+
 	export let backHeader: boolean;
 </script>
 
-<header
-	class="w-full bg-black text-white font-serif flex justify-between p-6 border-b border-white"
->
-	{#if backHeader}
+{#if backHeader}
+	<header
+		class="w-full bg-black text-white font-serif flex justify-between p-6 border-b border-white"
+		in:fade
+	>
 		<button class="text-xl" on:click={() => (browser ? window.history.back() : () => {})}
 			>&larr; Back</button
 		>
 		<div class="flex gap-4">
 			<slot />
 		</div>
-	{:else}
+	</header>
+{:else}
+	<header
+		class="w-full bg-black text-white font-serif flex justify-between p-6 border-b border-white"
+		in:fade
+	>
 		<h3 class="text-xl">Ben Cooper</h3>
 		<div class="flex gap-4">
 			<a href="/" class="hover:text-gray-400" class:active={$page.url.pathname === '/'}>Portfolio</a
@@ -30,8 +38,8 @@
 				Contact
 			</a>
 		</div>
-	{/if}
-</header>
+	</header>
+{/if}
 
 <style lang="scss">
 	.active {
