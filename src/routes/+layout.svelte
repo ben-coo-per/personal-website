@@ -1,13 +1,13 @@
 <script>
 	import '../app.css';
+
+	import Header from '../components/Header.svelte';
 </script>
 
-<div class="container">
-	<header class="header">
-		<a class="header__title" href="/">SvelteKit + Sanity</a>
-	</header>
-	<main>
+<div class="bg-black h-screen overflow-hidden">
+	<Header />
+	<main class="overflow-auto h-full">
 		<slot />
+		<footer class="footer" />
 	</main>
-	<footer class="footer" />
 </div>

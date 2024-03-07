@@ -5,7 +5,7 @@
 	export let data: PageData;
 </script>
 
-<div>
+<div class="pb-48">
 	{#each data.projects as project}
 		<Card {project} />
 	{/each}

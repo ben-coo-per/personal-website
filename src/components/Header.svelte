@@ -1,0 +1,40 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
+	const isBackHeader = false;
+</script>
+
+<header
+	class="w-full bg-black text-white font-serif flex justify-between p-6 border-b border-white"
+>
+	{#if isBackHeader}
+		<button class="text-xl" on:click={() => (browser ? window.history.back() : () => {})}
+			>&larr; Back</button
+		>
+		<div class="flex gap-4">
+			<slot />
+		</div>
+	{:else}
+		<h3 class="text-xl">Ben Cooper</h3>
+		<div class="flex gap-4">
+			<a href="/" class="hover:text-gray-400" class:active={$page.url.pathname === '/'}>Portfolio</a
+			>
+			<a href="/about" class="hover:text-gray-400" class:active={$page.url.pathname === '/about'}
+				>About</a
+			>
+			<a
+				href="/contact"
+				class="hover:text-gray-400"
+				class:active={$page.url.pathname === '/contact'}
+			>
+				Contact
+			</a>
+		</div>
+	{/if}
+</header>
+
+<style lang="scss">
+	.active {
+		@apply font-bold underline underline-offset-4;
+	}
+</style>

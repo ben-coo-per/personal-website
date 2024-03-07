@@ -20,7 +20,7 @@ export const client = createClient({
 
 export async function getProjects(): Promise<Project[]> {
 	return await client.fetch(
-		groq`*[_type == "project" && defined(slug.current)] | order(_createdAt desc)`
+		groq`*[_type == "project" && defined(slug.current)]  | order(priority desc)`
 	);
 }
 
