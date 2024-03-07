@@ -5,6 +5,8 @@
 
 	export let data: PageData;
 	const { project, next } = data;
+
+	const IMG_WIDTH = 2000;
 </script>
 
 <section class="text-white p-6 bg-gray-700 overflow-auto" in:fade={{ duration: 350 }}>
@@ -16,7 +18,7 @@
 			{#if project.mainImage}
 				<img
 					class="md:absolute top-0 left-0"
-					src={urlFor(project.mainImage).url()}
+					src={urlFor(project.mainImage).width(IMG_WIDTH).url()}
 					alt={project.title}
 				/>
 			{/if}
@@ -25,7 +27,7 @@
 		<div class="text-center mb-60">
 			{#each project.gallery as item}
 				{#if item._type === 'image'}
-					<img class="w-full my-6" src={urlFor(item).url()} alt="product" />
+					<img class="w-full my-6" src={urlFor(item).width(IMG_WIDTH).url()} alt="product" />
 				{:else if item.text}
 					<p class="text-lg my-6">{item.text}</p>
 				{/if}
