@@ -1,4 +1,3 @@
-import type { PortableTextBlock } from '@portabletext/types';
 import { createClient } from '@sanity/client';
 import type { ImageAsset, Slug } from '@sanity/types';
 import groq from 'groq';
@@ -30,6 +29,19 @@ export async function getProject(slug: string): Promise<Project> {
 	});
 }
 
+export async function getNextProjectInOrder(slug: string): Promise<Project> {
+	const allProjects = await getProjects();
+	const currentIndex = allProjects.findIndex((project) => project.slug.current === slug);
+	const nextIndex = (currentIndex + 1) % allProjects.length;
+	return allProjects[nextIndex];
+}
+
+type Blurb = {
+	_type: 'blurb';
+	text: string;
+	styling: string;
+};
+
 export interface Project {
 	_type: 'project';
 	_createdAt: string;
@@ -37,6 +49,7 @@ export interface Project {
 	subtitle?: string;
 	slug: Slug;
 	previewImage?: ImageAsset;
-	images: ImageAsset[];
-	blurbs: PortableTextBlock[];
+	mainImage?: ImageAsset;
+	mainDescription?: string;
+	gallery: (ImageAsset | Blurb)[];
 }

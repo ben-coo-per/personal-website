@@ -29,15 +29,12 @@
 		/>
 		{#if projectBGImage}
 			<div
-				transition:fade
+				in:fade
 				class="absolute inset-0 bg-repeat"
 				style="background-image: url({projectBGImage})"
 			/>
 		{:else}
-			<div
-				transition:fade
-				class="absolute inset-0 bg-repeat bg-gradient-to-r from-pink-500 to-cyan-600"
-			/>
+			<div in:fade class="absolute inset-0 bg-repeat bg-gradient-to-r from-pink-500 to-cyan-600" />
 		{/if}
 	{/if}
 </a>

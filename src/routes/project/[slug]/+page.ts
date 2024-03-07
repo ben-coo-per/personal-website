@@ -1,12 +1,13 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { getProject } from '$lib/utils/sanity';
+import { getNextProjectInOrder, getProject } from '$lib/utils/sanity';
 
 export const ssr = false;
 
 export const load = (async ({ params }) => {
-	const post = await getProject(params.slug);
-	if (post) return post;
+	const project = await getProject(params.slug);
+	const next = await getNextProjectInOrder(params.slug);
+	if (project) return { project, next };
 
 	throw error(404, 'Not found');
 }) satisfies PageLoad;
