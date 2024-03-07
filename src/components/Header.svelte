@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
-	const isBackHeader = false;
+	export let backHeader: boolean;
 </script>
 
 <header
 	class="w-full bg-black text-white font-serif flex justify-between p-6 border-b border-white"
 >
-	{#if isBackHeader}
+	{#if backHeader}
 		<button class="text-xl" on:click={() => (browser ? window.history.back() : () => {})}
 			>&larr; Back</button
 		>
