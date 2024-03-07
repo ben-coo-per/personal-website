@@ -6,7 +6,9 @@ import groq from 'groq';
 import { PUBLIC_SANITY_DATASET, PUBLIC_SANITY_PROJECT_ID } from '$env/static/public';
 
 if (!PUBLIC_SANITY_PROJECT_ID || !PUBLIC_SANITY_DATASET) {
-	throw new Error('Did you forget to run sanity init --env?');
+	throw new Error(
+		'You must include the sanity project ID and dataset in your environment variables.'
+	);
 }
 
 export const client = createClient({
@@ -16,24 +18,25 @@ export const client = createClient({
 	apiVersion: '2023-03-20' // date of setup
 });
 
-export async function getPosts(): Promise<Post[]> {
+export async function getProjects(): Promise<Project[]> {
 	return await client.fetch(
-		groq`*[_type == "post" && defined(slug.current)] | order(_createdAt desc)`
+		groq`*[_type == "project" && defined(slug.current)] | order(_createdAt desc)`
 	);
 }
 
-export async function getPost(slug: string): Promise<Post> {
-	return await client.fetch(groq`*[_type == "post" && slug.current == $slug][0]`, {
+export async function getProject(slug: string): Promise<Project> {
+	return await client.fetch(groq`*[_type == "project" && slug.current == $slug][0]`, {
 		slug
 	});
 }
 
-export interface Post {
-	_type: 'post';
+export interface Project {
+	_type: 'project';
 	_createdAt: string;
 	title?: string;
+	subtitle?: string;
 	slug: Slug;
-	excerpt?: string;
-	mainImage?: ImageAsset;
-	body: PortableTextBlock[];
+	previewImage?: ImageAsset;
+	images: ImageAsset[];
+	blurbs: PortableTextBlock[];
 }

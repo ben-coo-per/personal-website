@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	font-family: Hatton;
+	src: url('/fonts/PPHatton-Ultralight.otf') format('opentype');
+	font-weight: thin;
+}
+
+@font-face {
+	font-family: Hatton;
+	src: url('/fonts/PPHatton-Medium.otf') format('opentype');
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: Hatton;
+	src: url('/fonts/PPHatton-Bold.otf') format('opentype');
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'Neue Montreal';
+	src: url('./fonts/PPNeueMontreal-Book.otf') format('opentype');
+	font-weight: normal;
+}
+@font-face {
+	font-family: 'Neue Montreal';
+	src: url('/fonts/PPNeueMontreal-Bold.otf') format('opentype');
+	font-weight: bold;
+}
