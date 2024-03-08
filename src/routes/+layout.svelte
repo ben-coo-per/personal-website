@@ -7,9 +7,9 @@
 	$: backHeader = $page.url.pathname.includes('/project/');
 </script>
 
-<div class="bg-black h-screen overflow-hidden">
+<div class="bg-black">
 	<Header {backHeader} />
-	<main class="overflow-auto h-full">
+	<main class="h-full overflow-auto">
 		<slot />
 		<footer class="footer" />
 	</main>

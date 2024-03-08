@@ -9,10 +9,12 @@
 		: null;
 
 	let hovering: boolean = false;
+	export let scrollTransition: boolean = false;
 </script>
 
 <a
 	class="group block w-full border-y relative border-white px-6 py-12 bg-repeat hover:bg-black bg-opacity-0"
+	class:py-40={scrollTransition}
 	href={`/project/${project.slug.current}`}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
@@ -23,18 +25,21 @@
 		</h4>
 		<h3 class="text-2xl">{project.subtitle || ''}</h3>
 	</div>
-	{#if hovering}
+	{#if hovering || scrollTransition}
 		<div
 			class="absolute inset-0 z-10 opacity-60 bg-gradient-to-r from-black from-50% to-transparent"
 		/>
 		{#if projectBGImage}
 			<div
-				in:fade
+				in:fade={{ duration: scrollTransition ? 1500 : 350 }}
 				class="absolute inset-0 bg-repeat"
 				style="background-image: url({projectBGImage})"
 			/>
 		{:else}
-			<div in:fade class="absolute inset-0 bg-repeat bg-gradient-to-r from-pink-500 to-cyan-600" />
+			<div
+				in:fade={{ duration: scrollTransition ? 1500 : 350 }}
+				class="absolute inset-0 bg-repeat bg-gradient-to-r from-pink-500 to-cyan-600"
+			/>
 		{/if}
 	{/if}
 </a>
