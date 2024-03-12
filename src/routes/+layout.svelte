@@ -7,7 +7,7 @@
 	$: backHeader = $page.url.pathname.includes('/project/');
 </script>
 
-<div class="bg-black">
+<div class="bg-custom-black">
 	<Header {backHeader} />
 	<main class="h-full overflow-auto">
 		<slot />

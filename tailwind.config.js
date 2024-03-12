@@ -15,6 +15,9 @@ export default {
 					'0%': { filter: 'blur(6px)' },
 					'100%': { filter: 'blur(7px)' }
 				}
+			},
+			colors: {
+				'custom-black': '#081312'
 			}
 		},
 		fontFamily: {

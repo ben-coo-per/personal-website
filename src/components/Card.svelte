@@ -13,7 +13,7 @@
 </script>
 
 <a
-	class="group block w-full border-y relative border-white px-6 py-12 bg-repeat hover:bg-black bg-opacity-0"
+	class="group block w-full border-y relative border-white px-6 py-12 bg-repeat hover:bg-custom-black bg-opacity-0"
 	class:py-40={scrollTransition}
 	href={`/project/${project.slug.current}`}
 	on:mouseenter={() => (hovering = true)}
