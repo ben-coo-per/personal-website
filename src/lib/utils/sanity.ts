@@ -1,6 +1,7 @@
 import { createClient } from '@sanity/client';
 import type { ImageAsset, Slug } from '@sanity/types';
 import groq from 'groq';
+import type { PortableTextBlock } from '@portabletext/types';
 
 import { PUBLIC_SANITY_DATASET, PUBLIC_SANITY_PROJECT_ID } from '$env/static/public';
 
@@ -34,6 +35,10 @@ export async function getNextProjectInOrder(slug: string): Promise<Project> {
 	const currentIndex = allProjects.findIndex((project) => project.slug.current === slug);
 	const nextIndex = (currentIndex + 1) % allProjects.length;
 	return allProjects[nextIndex];
+}
+
+export async function getAboutPage(): Promise<{ body: PortableTextBlock[] }> {
+	return await client.fetch(groq`*[_type == "about"][0]`);
 }
 
 type Blurb = {
