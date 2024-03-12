@@ -15,6 +15,7 @@
 		"@sanity/client": "^6.0.0",
 		"@sanity/image-url": "^1.0.2",
 		"@tabler/icons-svelte": "^3.0.0",
+		"@vercel/analytics": "^1.2.2",
 		"groq": "^3.8.1",
 		"svelte-inview": "^4.0.2"
 	},
