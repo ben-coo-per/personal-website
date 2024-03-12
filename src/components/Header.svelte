@@ -2,8 +2,13 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import { fade } from 'svelte/transition';
+	import { goto } from '$app/navigation';
 
 	export let backHeader: boolean;
+
+	function goBack() {
+		goto('/');
+	}
 </script>
 
 {#if backHeader}
@@ -11,9 +16,7 @@
 		class="sticky top-0 inset-x-0 w-full bg-black text-white font-serif flex justify-between p-6 border-b border-white z-50"
 		in:fade
 	>
-		<button class="text-xl" on:click={() => (browser ? window.history.back() : () => {})}
-			>&larr; Back</button
-		>
+		<button class="text-xl" on:click={goBack}>&larr; Back</button>
 		<div class="flex gap-4">
 			<slot />
 		</div>

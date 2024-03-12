@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 
 	export let project: Project;
-	const projectBGImage = project.previewImage
+	$: projectBGImage = project.previewImage
 		? urlFor(project.previewImage).width(450).height(200).url()
 		: null;
 
