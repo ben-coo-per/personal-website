@@ -28,8 +28,16 @@
 		{#if project.gallery}
 			<div class="md:h-screen">
 				<h1 class="text-6xl font-serif font-bold">{project.title}</h1>
-				<h3 class="text-2xl font-sans">{project.subtitle}</h3>
-				<p class="mt-6 text-md md:w-1/3 lg:w-1/2">{project.mainDescription}</p>
+				<h3
+					class="text-2xl font-sans md:w-min md:whitespace-nowrap md:pr-4 rounded-xl relative bg-gray-800 bg-opacity-50 z-10"
+				>
+					{project.subtitle}
+				</h3>
+				<p
+					class="mt-6 text-md md:w-1/3 lg:w-1/2 py-2 relative bg-gray-800 rounded-xl bg-opacity-50 z-10"
+				>
+					{project.mainDescription}
+				</p>
 				{#if project.mainImage}
 					<img
 						class="md:absolute top-2 md:-top-4 right-0 md:w-2/3"
@@ -45,7 +53,7 @@
 					{#if item._type === 'image'}
 						<img class="w-full my-6" src={urlFor(item).width(IMG_WIDTH).url()} alt="product" />
 					{:else if item.text}
-						<p class="text-lg my-6">
+						<p class="text-lg my-6 py-2 bg-gray-800 bg-opacity-50">
 							{item.text}
 						</p>
 					{/if}

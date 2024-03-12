@@ -4,16 +4,11 @@ export default {
 	theme: {
 		extend: {
 			animation: {
-				gradient: 'gradient 8s linear infinite',
-				blur: 'blur 2s linear infinite alternate'
+				gradient: 'gradient 8s linear infinite'
 			},
 			keyframes: {
 				gradient: {
 					to: { 'background-position': '200% center' }
-				},
-				blur: {
-					'0%': { filter: 'blur(6px)' },
-					'100%': { filter: 'blur(7px)' }
 				}
 			},
 			colors: {
