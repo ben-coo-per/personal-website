@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import {
+		IconBrandGithub,
 		IconBrandInstagram,
 		IconBrandLinkedin,
 		IconExternalLink,
@@ -11,11 +12,13 @@
 		email: boolean;
 		instagram: boolean;
 		linkedin: boolean;
+		github: boolean;
 	};
 	let shownState: ShownState = {
 		email: false,
 		instagram: false,
-		linkedin: false
+		linkedin: false,
+		github: false
 	};
 
 	function show(item: keyof ShownState) {
@@ -26,8 +29,8 @@
 <section class="text-white p-6 bg-gray-800 h-screen" in:fade={{ duration: 350 }}>
 	<div class="container mx-auto relative">
 		<h1 class="text-6xl font-serif font-bold">Contact</h1>
-		<div class=" mt-6 flex flex-col gap-2">
-			<p class="text-xl">
+		<div class=" mt-6 flex flex-col gap-3">
+			<p class="text-xl mb-2">
 				Feel free to reach out to me if you have any questions or just want to chat.
 			</p>
 			<div class="text-md flex flex-row items-center gap-2">
@@ -51,7 +54,7 @@
 						class="flex flex-row gap-1 items-center"
 					>
 						@ben.coo.per
-						<IconExternalLink size={16} />
+						<IconExternalLink size={16} class="text-gray-400" />
 					</a>
 				{/if}
 			</div>
@@ -66,7 +69,22 @@
 						target="_blank"
 					>
 						ben-a-cooper
-						<IconExternalLink size={16} />
+						<IconExternalLink size={16} class="text-gray-400" />
+					</a>
+				{/if}
+			</div>
+			<div class="text-md flex flex-row items-center gap-2">
+				<IconBrandGithub size={32} />
+				{#if !shownState.github}
+					<button on:click={() => show('github')} class="animate-blur">fake-github-a</button>
+				{:else}
+					<a
+						href="https://github.com/ben-coo-per"
+						class="flex flex-row gap-1 items-center"
+						target="_blank"
+					>
+						ben-coo-per
+						<IconExternalLink size={16} class="text-gray-400" />
 					</a>
 				{/if}
 			</div>
