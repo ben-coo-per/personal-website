@@ -23,7 +23,7 @@
 
 <svelte:window bind:scrollY />
 
-<section class="text-white p-6 bg-gray-700" in:fade={{ duration: 350 }}>
+<section class="text-white p-6 bg-gray-800" in:fade={{ duration: 350 }}>
 	<div class="container mx-auto relative">
 		{#if project.gallery}
 			<div class="md:h-screen">
