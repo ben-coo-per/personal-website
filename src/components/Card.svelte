@@ -20,7 +20,7 @@
 	on:mouseleave={() => (hovering = false)}
 >
 	<div class="text-white flex flex-col gap-1 relative z-20">
-		<h4 class="text-sm font-serif">
+		<h4 class="text-md font-serif">
 			{project.title}
 		</h4>
 		<h3 class="text-2xl">{project.subtitle || ''}</h3>
