@@ -31,13 +31,13 @@
 		/>
 		{#if projectBGImage}
 			<div
-				in:fade={{ duration: scrollTransition ? 1500 : 350 }}
+				in:fade|global={{ duration: scrollTransition ? 1500 : 350 }}
 				class="absolute inset-0 bg-repeat"
 				style="background-image: url({projectBGImage})"
 			/>
 		{:else}
 			<div
-				in:fade={{ duration: scrollTransition ? 1500 : 350 }}
+				in:fade|global={{ duration: scrollTransition ? 1500 : 350 }}
 				class="absolute inset-0 bg-repeat bg-gradient-to-r from-pink-500 to-cyan-600"
 			/>
 		{/if}

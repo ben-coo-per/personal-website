@@ -14,7 +14,7 @@
 {#if backHeader}
 	<header
 		class="sticky top-0 inset-x-0 w-full bg-custom-black text-white font-serif flex justify-between py-4 px-2 sm:p-6 border-b border-white z-50"
-		in:fade
+		in:fade|global
 	>
 		<button class="text-xl" on:click={goBack}>&larr; Back</button>
 		<div class="flex gap-4">
@@ -24,7 +24,7 @@
 {:else}
 	<header
 		class="sticky top-0 inset-x-0 w-full bg-custom-black text-white font-serif flex justify-between py-4 px-2 sm:p-6 border-b border-white z-50"
-		in:fade
+		in:fade|global
 	>
 		<h3 class="text-lg sm:text-xl">Ben Cooper</h3>
 		<div class="text-sm md:text-md flex gap-2 md:gap-4 items-center">

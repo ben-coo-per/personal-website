@@ -26,7 +26,7 @@
 				href={link}
 				class="flex flex-row gap-1 items-center text-xl sm:text-md hover:text-gray-300"
 				target={isExternal ? '_blank' : '_self'}
-				in:fade
+				in:fade|global
 			>
 				{value}
 				{#if isExternal}
@@ -36,7 +36,7 @@
 		{/if}
 	</div>
 	{#if !shown}
-		<button on:click={show} class="border-l border-gray-200 p-4 sm:p-2" out:fade>
+		<button on:click={show} class="border-l border-gray-200 p-4 sm:p-2" out:fade|global>
 			<IconEye class="size-8 sm:size-6" />
 		</button>
 	{/if}
