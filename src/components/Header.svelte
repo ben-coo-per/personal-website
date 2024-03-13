@@ -27,7 +27,7 @@
 		in:fade|global
 	>
 		<h3 class="text-lg sm:text-xl">Ben Cooper</h3>
-		<div class="text-sm md:text-md flex gap-2 md:gap-4 items-center">
+		<div class="text-sm md:text-lg flex gap-4 items-center">
 			<a href="/" class="hover:text-gray-400" class:active={$page.url.pathname === '/'}>Portfolio</a
 			>
 			<a href="/about" class="hover:text-gray-400" class:active={$page.url.pathname === '/about'}

@@ -8,7 +8,7 @@
 	import { PortableText } from '@portabletext/svelte';
 </script>
 
-<section class="text-white p-6 bg-gray-800 h-screen" in:fade|global={{ duration: 350 }}>
+<section class="text-white p-6 bg-custom-black h-screen" in:fade|global={{ duration: 350 }}>
 	<div class="container mx-auto relative">
 		<h1 class="text-6xl font-serif font-bold">About</h1>
 		<div class="text-xl mt-6">
