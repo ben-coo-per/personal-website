@@ -11,5 +11,5 @@ export const load = (async () => {
 		};
 	}
 
-	throw error(404, 'Not found');
+	error(404, 'Not found');
 }) satisfies PageLoad;

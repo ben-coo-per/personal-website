@@ -9,5 +9,5 @@ export const load = (async ({ params }) => {
 	const next = await getNextProjectInOrder(params.slug);
 	if (project) return { project, next };
 
-	throw error(404, 'Not found');
+	error(404, 'Not found');
 }) satisfies PageLoad;
