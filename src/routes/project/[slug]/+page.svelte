@@ -23,7 +23,7 @@
 
 <svelte:window bind:scrollY />
 
-<section class="text-white p-6 bg-custom-black" in:fade|global={{ duration: 350 }}>
+<section class="text-gray-100 p-6 bg-custom-black" in:fade|global={{ duration: 350 }}>
 	<div class="container mx-auto relative">
 		{#if project.gallery}
 			<div class="md:h-screen">
@@ -85,7 +85,7 @@
 </section>
 
 <div
-	class=" text-white"
+	class=" text-gray-100"
 	use:inview
 	on:inview_change={(event) => {
 		const { inView } = event.detail;

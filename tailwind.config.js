@@ -12,7 +12,7 @@ export default {
 				}
 			},
 			colors: {
-				'custom-black': '#081312'
+				'custom-black': '#1c1c1c'
 			}
 		},
 		fontFamily: {

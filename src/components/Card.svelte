@@ -13,13 +13,14 @@
 </script>
 
 <a
-	class="group block w-full border-y relative border-white px-6 py-12 bg-repeat hover:bg-custom-black bg-opacity-0"
+	class="group block w-full border-b relative border-gray-500 px-6 py-12 bg-repeat hover:bg-custom-black bg-opacity-0"
 	class:py-40={scrollTransition}
+	class:border-t={scrollTransition}
 	href={`/project/${project.slug.current}`}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 >
-	<div class="text-white flex flex-col gap-1 relative z-20">
+	<div class="text-gray-100 flex flex-col gap-1 relative z-20">
 		<h4 class="text-md font-serif">
 			{project.title}
 		</h4>

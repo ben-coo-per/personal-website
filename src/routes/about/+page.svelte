@@ -21,8 +21,8 @@
 	let paragraphsInView: Record<number, boolean> = {};
 </script>
 
-<section class="text-stone-50 p-6 bg-custom-black" in:fade|global={{ duration: 350 }}>
-	<div class="container mx-auto relative pb-96 pt-24">
+<section class="text-gray-100 p-6 bg-custom-black" in:fade|global={{ duration: 350 }}>
+	<div class="container mx-auto relative pb-48 pt-24">
 		{#each paragraphs as paragraph}
 			<p
 				class="text-4xl md:text-6xl font-serif font-thin leading-relaxed md:leading-relaxed py-40"
