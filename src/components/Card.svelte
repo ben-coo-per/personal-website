@@ -13,14 +13,15 @@
 </script>
 
 <a
-	class="group block w-full border-b relative border-gray-500 px-6 py-12 bg-repeat hover:bg-custom-black bg-opacity-0"
+	class="group block w-full border-b relative border-gray-500 px-6 py-12 bg-repeat hover:bg-custom-black bg-opacity-0 transition-all"
 	class:py-40={scrollTransition}
 	class:border-t={scrollTransition}
+	class:py-16={hovering && !scrollTransition}
 	href={`/project/${project.slug.current}`}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 >
-	<div class="text-gray-100 flex flex-col gap-1 relative z-20">
+	<div class="text-gray-100 flex flex-col gap-1 relative z-20" class:text-white={hovering}>
 		<h4 class="text-md font-serif">
 			{project.title}
 		</h4>
@@ -28,7 +29,7 @@
 	</div>
 	{#if hovering || scrollTransition}
 		<div
-			class="absolute inset-0 z-10 opacity-60 bg-gradient-to-r from-black from-50% to-transparent"
+			class="absolute inset-0 z-10 bg-gradient-to-r from-custom-black from-5% via-transparent via-80% to-custom-black to-98%"
 		/>
 		{#if projectBGImage}
 			<div

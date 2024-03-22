@@ -14,9 +14,11 @@
 </script>
 
 <div class="bg-custom-black">
-	<Header {backHeader} />
-	<main class="h-full overflow-auto">
-		<slot />
-		<footer class="footer" />
-	</main>
+	<div class="container mx-auto">
+		<Header {backHeader} />
+		<main class="h-full overflow-auto">
+			<slot />
+			<footer class="footer" />
+		</main>
+	</div>
 </div>
