@@ -27,7 +27,7 @@
 	<div class="container mx-auto relative">
 		<h1 class="text-6xl font-serif font-bold">Contact</h1>
 		<div class=" mt-6 flex flex-col gap-3">
-			<p class="text-xl">
+			<p class="text-xl text-gray-200">
 				Feel free to reach out to me if you have any questions or just want to chat.
 			</p>
 			<div class="flex flex-col gap-2 container max-w-sm">

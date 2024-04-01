@@ -29,12 +29,12 @@
 			<div class="md:h-screen">
 				<h1 class="text-6xl font-serif font-bold relative z-10">{project.title}</h1>
 				<h3
-					class="text-2xl font-sans md:w-min md:whitespace-nowrap md:pr-4 rounded-xl relative bg-custom-black bg-opacity-50 z-10"
+					class="text-2xl md:text-3xl text-gray-200 font-sans md:w-min md:whitespace-nowrap md:pr-4 rounded-xl relative bg-custom-black bg-opacity-50 z-10"
 				>
 					{project.subtitle}
 				</h3>
 				<p
-					class="mt-6 text-md md:w-1/3 lg:w-1/2 py-2 relative bg-custom-black rounded-xl bg-opacity-50 z-10"
+					class="mt-6 text-md text-gray-200 md:text-2xl md:w-1/3 lg:w-1/2 py-2 relative bg-custom-black rounded-xl bg-opacity-50 z-10"
 				>
 					{project.mainDescription}
 				</p>
@@ -53,7 +53,7 @@
 					{#if item._type === 'image'}
 						<img class="w-full my-6" src={urlFor(item).width(IMG_WIDTH).url()} alt="product" />
 					{:else if item.text}
-						<p class="text-lg my-6 py-2 bg-custom-black bg-opacity-50">
+						<p class="text-lg md:text-2xl my-6 py-2 bg-custom-black bg-opacity-50">
 							{item.text}
 						</p>
 					{/if}
