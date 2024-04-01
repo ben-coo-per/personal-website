@@ -34,8 +34,8 @@
 				<ContactReveal
 					shown={shownState.email}
 					show={() => show('email')}
-					value="me@bencooper.xyz"
-					link="mailto:me@bencooper.xyz"
+					value="hello@bencooper.xyz"
+					link="mailto:hello@bencooper.xyz"
 					isExternal={false}
 				>
 					<IconSend class="size-8 sm:size-6 flex-shrink-0" />
