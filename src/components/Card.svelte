@@ -12,6 +12,8 @@
 	export let scrollTransition: boolean = false;
 </script>
 
+<!-- I still want the card images to be preloaded so I'm going to handle that here -->
+<img class="hidden" src={projectBGImage} alt="" />
 <a
 	class="group block w-full border-b relative border-gray-500 px-6 py-12 bg-repeat hover:bg-custom-black bg-opacity-0 transition-all"
 	class:py-40={scrollTransition}
