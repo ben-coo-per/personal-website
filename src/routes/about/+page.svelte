@@ -25,7 +25,7 @@
 	<div class="container mx-auto relative pb-48 pt-24">
 		{#each paragraphs as paragraph}
 			<p
-				class="text-4xl md:text-6xl font-serif font-thin leading-relaxed md:leading-relaxed py-40"
+				class="text-4xl md:text-6xl font-bold leading-snug py-40 text-gray-300"
 				class:in-view={paragraphsInView[paragraph.id]}
 				use:inview={{ rootMargin: '-40%' }}
 				on:inview_change={(event) => {
