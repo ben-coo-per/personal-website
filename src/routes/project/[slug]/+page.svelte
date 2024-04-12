@@ -19,6 +19,8 @@
 		IMG_WIDTH = Math.round(window.outerWidth);
 		MAIN_IMG_WIDTH = Math.round(window.outerWidth);
 	});
+
+	const isImage = (item: any) => item._type === 'image';
 </script>
 
 <svelte:window bind:scrollY />
@@ -50,7 +52,7 @@
 
 			<div class="text-center mb-60 relative z-10">
 				{#each project.gallery as item}
-					{#if item._type === 'image'}
+					{#if isImage(item)}
 						<img class="w-full my-6" src={urlFor(item).width(IMG_WIDTH).url()} alt="product" />
 					{:else if item.text}
 						<p class="text-lg md:text-2xl my-6 py-2 bg-custom-black bg-opacity-50">

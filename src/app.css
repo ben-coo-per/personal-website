@@ -30,3 +30,15 @@
 	src: url('/fonts/PPNeueMontreal-Bold.otf') format('opentype');
 	font-weight: bold;
 }
+
+html,
+body {
+	background-color: #1c1c1c;
+
+	/* hidden scrollbar */
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
