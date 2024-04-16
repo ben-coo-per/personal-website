@@ -25,7 +25,7 @@
 
 <section class="text-gray-100 p-6 bg-custom-black h-screen" in:fade|global={{ duration: 350 }}>
 	<div class="container mx-auto relative">
-		<h1 class="text-6xl font-serif font-bold">Contact</h1>
+		<h1 class="text-6xl font-display font-bold">Contact</h1>
 		<div class=" mt-6 flex flex-col gap-3">
 			<p class="text-xl text-gray-200">
 				Feel free to reach out and tell me about what you're working on!

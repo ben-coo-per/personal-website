@@ -3,24 +3,6 @@
 @tailwind utilities;
 
 @font-face {
-	font-family: Hatton;
-	src: url('/fonts/PPHatton-Ultralight.otf') format('opentype');
-	font-weight: 100;
-}
-
-@font-face {
-	font-family: Hatton;
-	src: url('/fonts/PPHatton-Medium.otf') format('opentype');
-	font-weight: normal;
-}
-
-@font-face {
-	font-family: Hatton;
-	src: url('/fonts/PPHatton-Bold.otf') format('opentype');
-	font-weight: bold;
-}
-
-@font-face {
 	font-family: 'Neue Montreal';
 	src: url('/fonts/PPNeueMontreal-Book.otf') format('opentype');
 	font-weight: normal;
@@ -29,6 +11,24 @@
 	font-family: 'Neue Montreal';
 	src: url('/fonts/PPNeueMontreal-Bold.otf') format('opentype');
 	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'Polymath';
+	src: url('/fonts/PolymathDemo-Regular.otf') format('opentype');
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'Polymath';
+	src: url('/fonts/PolymathDemo-Bold.otf') format('opentype');
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: Mondwest;
+	src: url('/fonts/PPMondwest-Regular.otf') format('opentype');
+	font-weight: regular;
 }
 
 html,

@@ -16,8 +16,8 @@ export default {
 			}
 		},
 		fontFamily: {
-			sans: ['Neue Montreal', 'ui-sans-serif', 'system-ui'],
-			serif: ['Hatton', 'ui-serif', 'Georgia']
+			sans: ['Polymath', 'ui-sans-serif', 'system-ui'],
+			display: ['Mondwest', 'ui-sans-serif', 'system-ui']
 		}
 	},
 	plugins: []

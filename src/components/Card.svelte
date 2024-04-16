@@ -15,7 +15,7 @@
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <a
-	class="group block w-full border-b relative border-gray-500 px-6 py-12 bg-repeat hover:bg-custom-black bg-opacity-0 transition-all"
+	class="group block w-full border-b relative border-gray-500 px-6 py-12 bg-repeat hover:text-yellow-200bg-custom-black bg-opacity-0 transition-all"
 	class:py-40={scrollTransition}
 	class:border-t={scrollTransition}
 	class:py-16={hovering && !scrollTransition}
@@ -24,7 +24,7 @@
 	on:mouseleave={() => (hovering = false)}
 >
 	<div class="text-gray-100 flex flex-col gap-1 relative z-20" class:text-white={hovering}>
-		<h4 class="text-md font-serif">
+		<h4 class="text-md font-display">
 			{project.title}
 		</h4>
 		<h3 class="text-2xl">{project.subtitle || ''}</h3>

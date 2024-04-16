@@ -29,7 +29,7 @@
 	<div class="container mx-auto relative">
 		{#if project.gallery}
 			<div class="md:h-screen">
-				<h1 class="text-6xl font-serif font-bold relative z-10">{project.title}</h1>
+				<h1 class="text-6xl font-display font-bold relative z-10">{project.title}</h1>
 				<h3
 					class="text-2xl md:text-3xl text-gray-200 font-sans md:w-min md:whitespace-nowrap md:pr-4 rounded-xl relative bg-custom-black bg-opacity-50 z-10"
 				>
@@ -63,7 +63,7 @@
 			</div>
 		{:else}
 			<div class="h-screen">
-				<h1 class="text-4xl md:text-6xl font-serif font-bold">{project.title}</h1>
+				<h1 class="text-4xl md:text-6xl font-display font-bold">{project.title}</h1>
 				<h3 class="text-2xl font-sans">{project.subtitle}</h3>
 				<p class="mt-6 text-md md:w-1/3 lg:w-1/2">{project.mainDescription || ''}</p>
 				{#if project.mainImage}
@@ -76,7 +76,7 @@
 				{/if}
 				<div class="w-full h-1/2 flex justify-center items-center">
 					<p
-						class="text-5xl md:text-7xl text-center font-serif font-extrabold bg-clip-text py-6 text-transparent bg-[linear-gradient(to_right,theme(colors.purple.400),theme(colors.purple.100),theme(colors.pink.300),theme(colors.orange.400),theme(colors.pink.300),theme(colors.purple.100),theme(colors.purple.400))] bg-[length:200%_auto] animate-gradient"
+						class="text-5xl md:text-7xl text-center font-display font-extrabold bg-clip-text py-6 text-transparent bg-[linear-gradient(to_right,theme(colors.purple.400),theme(colors.purple.100),theme(colors.pink.300),theme(colors.orange.400),theme(colors.pink.300),theme(colors.purple.100),theme(colors.purple.400))] bg-[length:200%_auto] animate-gradient"
 					>
 						Coming Soon
 					</p>
@@ -94,6 +94,6 @@
 		atBottom = inView;
 	}}
 >
-	<h3 class="text-2xl font-serif font-thin p-6">Next Project:</h3>
+	<h3 class="text-2xl font-display font-thin p-6">Next Project:</h3>
 	<Card project={next} scrollTransition={atBottom} />
 </div>
