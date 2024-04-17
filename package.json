@@ -18,8 +18,7 @@
 		"@vercel/analytics": "^1.2.2",
 		"groq": "^3.8.1",
 		"motion": "^10.17.0",
-		"split-type": "^0.2.1",
-		"svelte-inview": "^4.0.2"
+		"split-type": "^0.2.1"
 	},
 	"devDependencies": {
 		"@portabletext/svelte": "^2.1.3",

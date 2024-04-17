@@ -5,7 +5,7 @@
 	import Card from '../../../components/Card.svelte';
 	$: project = data.project;
 	$: next = data.next;
-	import { inview } from 'svelte-inview';
+	import { inView } from 'motion';
 	import { onMount } from 'svelte';
 
 	let IMG_WIDTH = 2000;
@@ -18,13 +18,16 @@
 	onMount(() => {
 		IMG_WIDTH = Math.round(window.outerWidth);
 		MAIN_IMG_WIDTH = Math.round(window.outerWidth);
+
+		inView('#next-project', () => {
+			atBottom = true;
+		});
 	});
 
 	const isImage = (item: any) => item._type === 'image';
 </script>
 
 <svelte:window bind:scrollY />
-
 <section class="text-gray-100 p-6 bg-custom-black" in:fade|global={{ duration: 350 }}>
 	<div class="container mx-auto relative">
 		{#if project.gallery}
@@ -88,14 +91,7 @@
 	</div>
 </section>
 
-<div
-	class=" text-gray-100"
-	use:inview
-	on:inview_change={(event) => {
-		const { inView } = event.detail;
-		atBottom = inView;
-	}}
->
+<div id="next-project" class="text-gray-100">
 	<h3 class="text-2xl font-sans p-6">Next Project:</h3>
 	<Card project={next} scrollTransition={atBottom} />
 </div>
