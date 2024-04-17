@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-
-	// uses portable text to render the about page body content
 	import type { PageData } from './$types';
-	export let data: PageData;
 
-	import { inview } from 'svelte-inview';
+	import { animate, stagger } from 'motion';
+	import SplitType from 'split-type';
+	import { onMount } from 'svelte';
+	import { hasViewed } from './page.config';
+	export let data: PageData;
 
 	const paragraphs = data.about.body.map((block, i) => {
 		return {
@@ -18,36 +19,31 @@
 		};
 	});
 
-	let paragraphsInView: Record<number, boolean> = {};
+	onMount(() => {
+		hasViewed.subscribe((viewed) => {
+			if (viewed) return;
+			const ps = new SplitType('.about-text', { types: 'words' });
+			animate(
+				ps.words,
+				{
+					opacity: [0, 1]
+				},
+				{ duration: 0.5, delay: stagger(0.1) }
+			);
+		});
+		hasViewed.set(true);
+	});
 </script>
 
 <section class="text-gray-100 p-6 bg-custom-black" in:fade|global={{ duration: 350 }}>
-	<div class="container mx-auto relative pb-48 pt-24">
-		{#each paragraphs as paragraph}
-			<p
-				class="text-4xl md:text-6xl font-bold leading-snug py-40 text-gray-300"
-				class:in-view={paragraphsInView[paragraph.id]}
-				use:inview={{ rootMargin: '-40%' }}
-				on:inview_change={(event) => {
-					const { inView } = event.detail;
-					paragraphsInView[paragraph.id] = inView;
-				}}
-			>
-				{paragraph.text}
-			</p>
-		{/each}
+	<div class="container mx-auto relative pb-48">
+		<h1 class="text-6xl font-display font-bold">About</h1>
+		<div class="mt-6 flex flex-col gap-3">
+			{#each paragraphs as { id, text }}
+				<div class=" pb-10">
+					<p class="text-2xl text-gray-200 about-text" id={`${id}`}>{text}</p>
+				</div>
+			{/each}
+		</div>
 	</div>
 </section>
-
-<style lang="scss">
-	.in-view {
-		opacity: 1;
-		transform: translate(0, -20px);
-		transition: opacity 1s, transform 0.5s;
-	}
-	p:not(.in-view) {
-		opacity: 0;
-		transform: translate(0, 0);
-		transition: opacity 2s, transform 2s;
-	}
-</style>
