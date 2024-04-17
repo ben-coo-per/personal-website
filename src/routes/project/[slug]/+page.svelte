@@ -94,6 +94,6 @@
 		atBottom = inView;
 	}}
 >
-	<h3 class="text-2xl font-display font-thin p-6">Next Project:</h3>
+	<h3 class="text-2xl font-sans p-6">Next Project:</h3>
 	<Card project={next} scrollTransition={atBottom} />
 </div>
