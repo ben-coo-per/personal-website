@@ -8,7 +8,8 @@
 	export let link: string;
 	export let isExternal = true;
 
-	const fakeValueOfSameLength = value.replace(/./g, 'x');
+	// max length is 15
+	const fakeValueOfSameLength = value.replace(/./g, 'x').slice(0, 15);
 </script>
 
 <div class="text-md flex flex-row justify-between items-center border-gray-100 border rounded-lg">
@@ -36,7 +37,7 @@
 		{/if}
 	</div>
 	{#if !shown}
-		<button on:click={show} class="border-l border-gray-200 p-4 sm:p-2" out:fade|global>
+		<button on:click={show} class="flex-1 border-l border-gray-200 p-4 sm:p-2" out:fade|global>
 			<IconEye class="size-8 sm:size-6" />
 		</button>
 	{/if}
