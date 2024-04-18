@@ -35,7 +35,7 @@
 	});
 </script>
 
-<section class="text-gray-100 p-6 bg-custom-black" in:fade|global={{ duration: 350 }}>
+<section class="text-gray-100 p-6 bg-custom-black h-full" in:fade={{ duration: 350 }}>
 	<div class="container mx-auto relative pb-48">
 		<h1 class="text-6xl font-display font-bold">About</h1>
 		<div class="mt-6 flex flex-col gap-3">

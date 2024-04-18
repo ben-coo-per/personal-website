@@ -10,16 +10,20 @@
 
 	let hovering: boolean = false;
 	export let scrollTransition: boolean = false;
+
+	const gotoProject = () => {
+		window.location.href = `/project/${project.slug.current}`;
+	};
 </script>
 
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
-<a
-	class="group block w-full border-b relative border-gray-500 px-6 py-12 bg-repeat hover:text-yellow-200bg-custom-black bg-opacity-0 transition-all"
+<button
+	class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 bg-repeat hover:text-yellow-200bg-custom-black bg-opacity-0 transition-all"
 	class:py-40={scrollTransition}
 	class:border-t={scrollTransition}
 	class:py-16={hovering && !scrollTransition}
-	href={`/project/${project.slug.current}`}
+	on:click={gotoProject}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 >
@@ -46,4 +50,4 @@
 			/>
 		{/if}
 	{/if}
-</a>
+</button>

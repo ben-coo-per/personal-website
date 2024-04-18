@@ -1,6 +1,7 @@
 <script>
 	import '../app.css';
 	import Header from '../components/Header.svelte';
+	import Footer from '../components/Footer.svelte';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 
@@ -13,12 +14,12 @@
 	$: backHeader = $page.url.pathname.includes('/project/');
 </script>
 
-<div class="bg-custom-black">
-	<div class="container mx-auto">
+<div class="bg-custom-black h-screen">
+	<div class="container mx-auto h-full">
 		<Header {backHeader} />
-		<main class="h-full overflow-auto">
+		<main class="overflow-auto flex flex-col h-full">
 			<slot />
-			<footer class="footer" />
+			<Footer />
 		</main>
 	</div>
 </div>
