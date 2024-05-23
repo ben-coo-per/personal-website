@@ -15,9 +15,9 @@
 </script>
 
 <div class="bg-custom-black h-screen">
-	<div class="container mx-auto h-full">
+	<div class="mx-auto overflow-auto flex flex-col h-full">
 		<Header {backHeader} />
-		<main class="overflow-auto flex flex-col h-full">
+		<main class="h-full container mx-auto">
 			<slot />
 			<Footer />
 		</main>
