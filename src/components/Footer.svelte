@@ -6,7 +6,6 @@
 			Typography by <a href="https://pangrampangram.com/products/bitmap-mondwest" target="_blank">
 				PangramPangram
 			</a>
-			& <a href="https://ohnotype.co/fonts/polymath" target="_blank">OHNO TypeCo</a>
 		</p>
 	</div>
 </footer>

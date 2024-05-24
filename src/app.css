@@ -3,22 +3,6 @@
 @tailwind utilities;
 
 @font-face {
-	font-family: 'Polymath';
-	src: url('/fonts/PolymathTextDemo-Light.otf') format('opentype');
-	font-weight: 100;
-}
-@font-face {
-	font-family: 'Polymath';
-	src: url('/fonts/PolymathDemo-Regular.otf') format('opentype');
-	font-weight: regular;
-}
-@font-face {
-	font-family: 'Polymath';
-	src: url('/fonts/PolymathDemo-Bold.otf') format('opentype');
-	font-weight: bold;
-}
-
-@font-face {
 	font-family: Mondwest;
 	src: url('/fonts/PPMondwest-Regular.otf') format('opentype');
 	font-weight: regular;

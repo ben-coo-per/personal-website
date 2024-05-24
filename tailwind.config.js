@@ -16,7 +16,7 @@ export default {
 			}
 		},
 		fontFamily: {
-			sans: ['Polymath', 'ui-sans-serif', 'system-ui'],
+			sans: ['Rubik', 'Arial', 'ui-sans-serif', 'system-ui'],
 			display: ['Mondwest', 'ui-sans-serif', 'system-ui']
 		}
 	},
