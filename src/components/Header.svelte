@@ -47,6 +47,9 @@
 			>
 				Contact
 			</a>
+			<a href="https://blog.bencooper.xyz/" target="_blank" class="sm:hover:text-yellow-200">
+				Blog ⤴
+			</a>
 		</div>
 	</header>
 {/if}
