@@ -28,7 +28,7 @@
 				{
 					opacity: [0, 1]
 				},
-				{ duration: 0.5, delay: stagger(0.1) }
+				{ duration: 0.2, delay: stagger(0.1) }
 			);
 		});
 		hasViewed.set(true);

@@ -1,4 +1,4 @@
-<footer class="py-4">
+<footer class="py-4 px-2">
 	<div class="text-sm text-gray-400">
 		<p>&copy; 2024 Ben Cooper</p>
 		<p>Built with Sveltekit, TailwindCSS, & Sanity.io</p>

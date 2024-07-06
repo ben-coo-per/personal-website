@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { browser } from '$app/environment';
 	import { fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 
@@ -13,7 +12,7 @@
 
 {#if backHeader}
 	<header
-		class="sticky top-0 inset-x-0 w-full bg-custom-black text-gray-100 font-display flex justify-between py-4 px-2 sm:p-6 border-b border-gray-500 z-50"
+		class="sticky top-0 inset-x-0 w-full bg-custom-black text-gray-100 font-display flex justify-between p-4 sm:p-6 border-b border-gray-500 z-50"
 		in:fade|global
 	>
 		<button class="text-lg sm:text-2xl text-gray-200 sm:hover:text-yellow-200" on:click={goBack}
@@ -25,13 +24,14 @@
 	</header>
 {:else}
 	<header
-		class="sticky top-0 inset-x-0 w-full bg-custom-black text-gray-100 font-display flex justify-between py-4 px-2 sm:p-6 border-b border-gray-500 z-50"
+		class="sticky top-0 inset-x-0 w-full bg-custom-black text-gray-100 font-display flex justify-between p-4 sm:p-6 border-b border-gray-500 z-50"
 		in:fade|global
 	>
 		<a href="/" class="sm:hover:text-yellow-200">
-			<h3 class="text-2xl sm:text-3xl">Ben Cooper</h3>
+			<h3 class="hidden sm:block text-3xl">Ben Cooper</h3>
+			<h3 class="block sm:hidden text-3xl">BC</h3>
 		</a>
-		<div class="text-md md:text-lg flex gap-4 items-center">
+		<div class="text-md md:text-lg flex gap-3 sm:gap-4 items-center">
 			<a href="/" class="sm:hover:text-yellow-200" class:active={$page.url.pathname === '/'}
 				>Portfolio</a
 			>
