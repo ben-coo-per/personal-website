@@ -5,6 +5,7 @@ import type { PortableTextBlock } from '@portabletext/types';
 
 import { PUBLIC_SANITY_DATASET, PUBLIC_SANITY_PROJECT_ID } from '$env/static/public';
 
+
 if (!PUBLIC_SANITY_PROJECT_ID || !PUBLIC_SANITY_DATASET) {
 	throw new Error(
 		'You must include the sanity project ID and dataset in your environment variables.'
@@ -25,10 +26,25 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function getProject(slug: string): Promise<Project> {
-	return await client.fetch(groq`*[_type == "project" && slug.current == $slug][0]`, {
-		slug
-	});
+	return await client.fetch(
+		groq`
+      *[_type == "project" && slug.current == $slug][0] {
+        ...,
+        gallery[]{
+          ...,
+          _type == "video" => {
+            "muxPlaybackId": asset->playbackId,
+            "muxAssetId": asset->assetId,
+            "muxStatus": asset->status,
+            "muxData": asset->data
+          }
+        }
+      }
+    `,
+		{ slug }
+	);
 }
+
 
 export async function getNextProjectInOrder(slug: string): Promise<Project> {
 	const allProjects = await getProjects();
@@ -47,6 +63,14 @@ type Blurb = {
 	styling: string;
 };
 
+type Video = {
+	_type: 'video';
+	muxPlaybackId: string;
+	muxAssetId: string;
+	muxStatus: string;
+};
+
+
 export interface Project {
 	_type: 'project';
 	_createdAt: string;
@@ -56,5 +80,5 @@ export interface Project {
 	previewImage?: ImageAsset;
 	mainImage?: ImageAsset;
 	mainDescription?: string;
-	gallery: (ImageAsset | Blurb)[];
+	gallery: (ImageAsset | Blurb | Video)[];
 }

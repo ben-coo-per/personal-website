@@ -3,6 +3,9 @@
 	import type { PageData } from './$types';
 	import { urlFor } from '$lib/utils/image';
 	import Card from '../../../components/Card.svelte';
+	import "@mux/mux-player";
+
+
 	$: project = data.project;
 	$: next = data.next;
 	import { inView } from 'motion';
@@ -22,9 +25,11 @@
 		inView('#next-project', () => {
 			atBottom = true;
 		});
+
 	});
 
 	const isImage = (item: any) => item._type === 'image';
+	const isVideo = (item: any) => item._type === 'video';
 </script>
 
 <svelte:window bind:scrollY />
@@ -63,6 +68,22 @@
 						>
 							{item.text}
 						</p>
+					{:else if isVideo(item)}
+						{#if item.muxPlaybackId}
+							<mux-player
+									class="w-full my-6"
+									style="--controls-background-color: rgba(0, 0, 0, 0.8);"
+									stream-type="on-demand"
+									playback-id={item.muxPlaybackId}
+									poster={`https://image.mux.com/${item.muxPlaybackId}/thumbnail.jpg`}
+									metadata-video-title={project.title}
+									metadata-video-id={item.muxAssetId}
+									controls
+							>
+							</mux-player>
+						{:else}
+							<p class="text-red-500">Video playback data not available</p>
+						{/if}
 					{/if}
 				{/each}
 			</div>
