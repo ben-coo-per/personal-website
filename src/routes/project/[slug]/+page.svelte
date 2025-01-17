@@ -2,9 +2,8 @@
 	import { fade } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import { urlFor } from '$lib/utils/image';
-	import Card from '../../../components/Card.svelte';
-	import "@mux/mux-player";
-
+	import NextProjectCard from '../../../components/NextProjectCard.svelte';
+	import '@mux/mux-player';
 
 	$: project = data.project;
 	$: next = data.next;
@@ -25,11 +24,11 @@
 		inView('#next-project', () => {
 			atBottom = true;
 		});
-
 	});
 
 	const isImage = (item: any) => item._type === 'image';
 	const isVideo = (item: any) => item._type === 'video';
+	const isBlurb = (item: any) => item._type === 'blurb';
 </script>
 
 <svelte:window bind:scrollY />
@@ -62,28 +61,27 @@
 				{#each project.gallery as item}
 					{#if isImage(item)}
 						<img class="w-full my-6" src={urlFor(item).width(IMG_WIDTH).url()} alt="product" />
-					{:else if item.text}
+					{:else if isVideo(item)}
+						{#if item.muxPlaybackId}
+							<mux-player
+								class="w-full my-6"
+								style="--controls-background-color: rgba(0, 0, 0, 0.8);"
+								stream-type="on-demand"
+								playback-id={item.muxPlaybackId}
+								poster={`https://image.mux.com/${item.muxPlaybackId}/thumbnail.jpg`}
+								metadata-video-title={project.title}
+								metadata-video-id={item.muxAssetId}
+								controls
+							/>
+						{:else}
+							<p class="text-red-500">Video playback data not available</p>
+						{/if}
+					{:else if isBlurb(item)}
 						<p
 							class="text-lg font-thin font-sans md:text-2xl my-6 py-2 bg-custom-black bg-opacity-50"
 						>
 							{item.text}
 						</p>
-					{:else if isVideo(item)}
-						{#if item.muxPlaybackId}
-							<mux-player
-									class="w-full my-6"
-									style="--controls-background-color: rgba(0, 0, 0, 0.8);"
-									stream-type="on-demand"
-									playback-id={item.muxPlaybackId}
-									poster={`https://image.mux.com/${item.muxPlaybackId}/thumbnail.jpg`}
-									metadata-video-title={project.title}
-									metadata-video-id={item.muxAssetId}
-									controls
-							>
-							</mux-player>
-						{:else}
-							<p class="text-red-500">Video playback data not available</p>
-						{/if}
 					{/if}
 				{/each}
 			</div>
@@ -114,5 +112,5 @@
 
 <div id="next-project" class="text-gray-100">
 	<h3 class="text-2xl font-sans p-6">Next Project:</h3>
-	<Card project={next} scrollTransition={atBottom} />
+	<NextProjectCard project={next} scrollTransition={atBottom} />
 </div>

@@ -5,6 +5,8 @@
 	export let data: PageData;
 </script>
 
-{#each data.projects as project}
-	<Card {project} />
-{/each}
+<div class="flex flex-wrap gap-4">
+	{#each data.projects as project}
+		<Card {project} />
+	{/each}
+</div>

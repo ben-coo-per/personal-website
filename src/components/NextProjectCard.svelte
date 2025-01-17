@@ -5,10 +5,11 @@
 
 	export let project: Project;
 	$: projectBGImage = project.previewImage
-		? urlFor(project.previewImage).width(320).height(320).url()
+		? urlFor(project.previewImage).width(450).height(200).url()
 		: null;
 
 	let hovering: boolean = false;
+	export let scrollTransition: boolean = false;
 
 	const gotoProject = () => {
 		window.location.href = `/project/${project.slug.current}`;
@@ -18,31 +19,32 @@
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <button
-	class="group block w-72 h-72 border-b relative text-left border-gray-500 px-6 py-12 bg-repeat hover:text-yellow-200bg-custom-black bg-opacity-0 transition-all"
-	class:py-16={hovering}
+	class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 bg-repeat hover:text-yellow-200bg-custom-black bg-opacity-0 transition-all"
+	class:py-40={scrollTransition}
+	class:border-t={scrollTransition}
 	on:click={gotoProject}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 >
-	<div
-		class="text-gray-100 flex flex-col gap-1 relative z-20 p-4 -m-4 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none"
-		class:text-white={hovering}
-	>
+	<div class="text-gray-100 flex flex-col gap-1 relative z-20" class:text-white={hovering}>
 		<h4 class="text-md font-display">
 			{project.title}
 		</h4>
 		<h3 class="text-2xl">{project.subtitle || ''}</h3>
 	</div>
-	{#if hovering}
+	{#if hovering || scrollTransition}
+		<div
+			class="absolute inset-0 z-10 bg-gradient-to-r from-custom-black from-5% via-transparent via-80% to-custom-black to-98%"
+		/>
 		{#if projectBGImage}
 			<div
-				in:fade|global={{ duration: 350 }}
+				in:fade|global={{ duration: 1500 }}
 				class="absolute inset-0 bg-repeat"
 				style="background-image: url({projectBGImage})"
 			/>
 		{:else}
 			<div
-				in:fade|global={{ duration: 350 }}
+				in:fade|global={{ duration: 1500 }}
 				class="absolute inset-0 bg-repeat bg-gradient-to-r from-pink-500 to-cyan-600"
 			/>
 		{/if}
