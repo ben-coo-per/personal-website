@@ -33,22 +33,22 @@
 		</a>
 		<div class="text-md md:text-lg flex gap-3 sm:gap-4 items-center">
 			<a href="/" class="sm:hover:text-yellow-200" class:active={$page.url.pathname === '/'}
-				>Portfolio</a
+				>Projects</a
 			>
-			<a
+			<!-- <a
 				href="/about"
 				class="sm:hover:text-yellow-200"
 				class:active={$page.url.pathname === '/about'}>About</a
-			>
+			> -->
+			<a href="https://blog.bencooper.xyz/" target="_blank" class="sm:hover:text-yellow-200">
+				<small>little Projects ⤴</small>
+			</a>
 			<a
 				href="/contact"
 				class="sm:hover:text-yellow-200"
 				class:active={$page.url.pathname === '/contact'}
 			>
 				Contact
-			</a>
-			<a href="https://blog.bencooper.xyz/" target="_blank" class="sm:hover:text-yellow-200">
-				Blog ⤴
 			</a>
 		</div>
 	</header>

@@ -18,17 +18,15 @@
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <button
-	class="group block w-72 h-72 border-b relative text-left border-gray-500 px-6 py-12 bg-repeat hover:text-yellow-200bg-custom-black bg-opacity-0 transition-all"
-	class:py-16={hovering}
+	class="group block w-full h-72 border-b relative text-left border-gray-500 px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer"
 	on:click={gotoProject}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 >
 	<div
 		class="text-gray-100 flex flex-col gap-1 relative z-20 p-4 -m-4 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none"
-		class:text-white={hovering}
 	>
-		<h4 class="text-md font-display">
+		<h4 class="text-md font-display" class:text-yellow-200={hovering}>
 			{project.title}
 		</h4>
 		<h3 class="text-2xl">{project.subtitle || ''}</h3>
