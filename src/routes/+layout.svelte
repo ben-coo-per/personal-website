@@ -17,7 +17,7 @@
 <div class="bg-custom-black h-screen">
 	<div class="mx-auto overflow-auto flex flex-col h-full">
 		<Header {backHeader} />
-		<main class="h-full container mx-auto">
+		<main class="h-full container max-w-6xl mx-auto">
 			<slot />
 			<Footer />
 		</main>
