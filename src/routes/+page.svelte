@@ -44,7 +44,7 @@
 
 		setInterval(() => {
 			selectedDownArrow = getRandomDownArrow();
-		}, 1000);
+		}, 2000);
 	});
 </script>
 
@@ -62,19 +62,19 @@
 	</section>
 </div>
 <hr class="border-t border-gray-500" />
-<div class="flex flex-col gap-6 py-10 pt-16">
+<div class="flex flex-col gap-6 py-16">
 	<h1 class="text-3xl md:text-5xl font-display font-bold text-white opacity-75 text-center">
 		{selectedDownArrow} Selected Projects {selectedDownArrow}
 	</h1>
-	<div class="flex flex-wrap gap-0 mx-auto place-items-center">
+	<div class="flex flex-wrap gap-x-0 gap-y-3 mx-auto place-items-center">
 		{#each data.projects as project}
 			<div class="md:w-1/4 w-full h-72 p-1">
 				<Card {project} />
 			</div>
 		{/each}
-		<div class="md:w-1/4 w-full h-72 p-1">
+		<div class="md:w-1/4 w-full h-full p-1">
 			<a
-				class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer group"
+				class="group w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer grid place-content-center"
 				href="https://blog.bencooper.xyz/"
 				target="_blank"
 			>
