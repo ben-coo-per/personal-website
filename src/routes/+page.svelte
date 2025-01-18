@@ -48,12 +48,12 @@
 	});
 </script>
 
-<div class="py-10">
+<div class="py-20">
 	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
 		<div class="container mx-auto relative">
 			<div class="mt-6 flex flex-col gap-3">
 				{#each paragraphs as { id, text }}
-					<div class=" pb-10">
+					<div class="pb-20">
 						<p class="text-3xl text-gray-200 about-text" id={`${id}`}>{text}</p>
 					</div>
 				{/each}
@@ -72,17 +72,19 @@
 				<Card {project} />
 			</div>
 		{/each}
-		<a
-			class="group block md:w-1/4 w-full h-72 border-b relative text-left border-gray-500 px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer group"
-			href="https://blog.bencooper.xyz/"
-			target="_blank"
-		>
-			<div
-				class="text-gray-400 group-hover:text-yellow-200 flex flex-col gap-1 relative z-20 p-4 -m-4 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none"
+		<div class="md:w-1/4 w-full h-72 p-1">
+			<a
+				class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer group"
+				href="https://blog.bencooper.xyz/"
+				target="_blank"
 			>
-				<h4 class="text-md font-display">Little Projects ⤴</h4>
-				<h3 class="text-2xl">Additional smaller projects can be found on my blog</h3>
-			</div>
-		</a>
+				<div
+					class="text-gray-400 group-hover:text-yellow-200 flex flex-col gap-1 relative z-20 p-4 -m-4 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none"
+				>
+					<h4 class="text-md font-display">Little Projects ⤴</h4>
+					<h3 class="text-2xl">Additional smaller projects can be found on my blog</h3>
+				</div>
+			</a>
+		</div>
 	</div>
 </div>
