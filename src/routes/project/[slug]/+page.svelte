@@ -28,7 +28,7 @@
 
 	const isImage = (item: any) => item._type === 'image';
 	const isVideo = (item: any) => item._type === 'video';
-	const isBlurb = (item: any) => item._type === 'blurb';
+	const isBlurb = (item: any) => 'text' in item;
 </script>
 
 <svelte:window bind:scrollY />
@@ -62,7 +62,7 @@
 					{#if isImage(item)}
 						<img class="w-full my-6" src={urlFor(item).width(IMG_WIDTH).url()} alt="product" />
 					{:else if isVideo(item)}
-						{#if item.muxPlaybackId}
+						{#if isVideo(item) && 'muxPlaybackId' in item}
 							<mux-player
 								class="w-full my-6"
 								style="--controls-background-color: rgba(0, 0, 0, 0.8);"
