@@ -48,7 +48,7 @@
 	});
 </script>
 
-<div class="py-20">
+<div class=" p-4 md:px-0 md:py-20">
 	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
 		<div class="container mx-auto relative">
 			<div class="mt-6 flex flex-col gap-3">
@@ -62,7 +62,7 @@
 	</section>
 </div>
 <hr class="border-t border-gray-500" />
-<div class="flex flex-col gap-6 py-16">
+<div class="flex flex-col gap-6 py-8 md:py-16">
 	<h1 class="text-3xl md:text-5xl font-display font-bold text-white opacity-75 text-center">
 		{selectedDownArrow} Selected Projects {selectedDownArrow}
 	</h1>
