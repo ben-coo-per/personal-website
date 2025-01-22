@@ -48,7 +48,7 @@
 	});
 </script>
 
-<div class=" p-4 md:px-0 md:py-20">
+<div class="p-4 md:px-0 md:pt-20 h-5/6 flex flex-col justify-between">
 	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
 		<div class="container mx-auto relative">
 			<div class="mt-6 flex flex-col gap-3">
@@ -60,19 +60,23 @@
 			</div>
 		</div>
 	</section>
-</div>
-<hr class="border-t border-gray-500" />
-<div class="flex flex-col gap-6 py-8 md:py-16">
+	<hr class="border-t border-gray-500" />
 	<h1 class="text-3xl md:text-5xl font-display font-bold text-white opacity-75 text-center">
 		{selectedDownArrow} Selected Projects {selectedDownArrow}
 	</h1>
-	<div class="flex flex-wrap gap-x-0 gap-y-3 mx-auto place-items-center">
-		{#each data.projects as project}
-			<div class="md:w-1/4 w-full h-72 p-1">
+</div>
+<div class="flex flex-col gap-32 py-16">
+	<div class="grid md:grid-flow-row-dense grid-cols-1 gap-2 mx-auto place-items-center">
+		{#each data.projects as project, i}
+			<div
+				class="h-full p-1 w-full"
+				class:md:col-span-2={i % 3 === 0}
+				class:md:row-span-2={i % 2 === 0}
+			>
 				<Card {project} />
 			</div>
 		{/each}
-		<div class="md:w-1/4 w-full h-full p-1">
+		<div class="h-full p-1">
 			<a
 				class="group w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer grid place-content-center"
 				href="https://blog.bencooper.xyz/"
