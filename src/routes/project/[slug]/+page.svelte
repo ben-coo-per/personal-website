@@ -36,6 +36,7 @@
 	<div class="container mx-auto relative">
 		{#if project.gallery}
 			<div class="md:h-screen">
+				<h4 class="text-md font-sans">{project.date.getFullYear()}</h4>
 				<h1 class="text-6xl font-display font-bold relative z-10">{project.title}</h1>
 				<h3
 					class="text-2xl md:text-3xl text-gray-200 font-sans md:w-min md:whitespace-nowrap md:pr-4 rounded-xl relative bg-custom-black bg-opacity-50 z-10"

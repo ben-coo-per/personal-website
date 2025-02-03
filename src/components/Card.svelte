@@ -47,6 +47,7 @@
 	<div
 		class="text-gray-100 relative z-20 p-4 -m-4 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none"
 	>
+		<h3 class="text-md">{project.date.getFullYear() || ''}</h3>
 		<h4 class="text-2xl md:text-4xl font-display" class:text-yellow-200={hovering}>
 			{project.title}
 		</h4>

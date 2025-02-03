@@ -19,16 +19,26 @@ export const client = createClient({
 });
 
 export async function getProjects(): Promise<Project[]> {
-	return await client.fetch(
-		groq`*[_type == "project" && defined(slug.current) ${
-			import.meta.env.DEV ? '' : '&& released == true'
-		}]  | order(priority desc)`
-	);
+	return await client
+		.fetch(
+			groq`*[_type == "project" && defined(slug.current) ${
+				import.meta.env.DEV ? '' : '&& released == true'
+			}]  | order(priority desc)`
+		)
+		.then((projects) => {
+			return projects.map((project: Project) => {
+				return {
+					...project,
+					date: new Date(project.date)
+				};
+			});
+		});
 }
 
 export async function getProject(slug: string): Promise<Project> {
-	return await client.fetch(
-		groq`
+	return await client
+		.fetch(
+			groq`
       *[_type == "project" && slug.current == $slug][0] {
         ...,
         gallery[]{
@@ -42,8 +52,14 @@ export async function getProject(slug: string): Promise<Project> {
         }
       }
     `,
-		{ slug }
-	);
+			{ slug }
+		)
+		.then((project) => {
+			return {
+				...project,
+				date: new Date(project.date)
+			};
+		});
 }
 
 export async function getNextProjectInOrder(slug: string): Promise<Project> {
@@ -80,4 +96,5 @@ export interface Project {
 	mainImage?: ImageAsset;
 	mainDescription?: string;
 	gallery: (ImageAsset | Blurb | Video)[];
+	date: Date;
 }

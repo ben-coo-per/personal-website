@@ -27,7 +27,8 @@
 	on:mouseleave={() => (hovering = false)}
 >
 	<div class="text-gray-100 flex flex-col gap-1 relative z-20" class:text-white={hovering}>
-		<h4 class="text-md font-display">
+		<h3 class="text-md">{project.date.getFullYear() || ''}</h3>
+		<h4 class="text-4xl font-display">
 			{project.title}
 		</h4>
 		<h3 class="text-2xl">{project.subtitle || ''}</h3>
