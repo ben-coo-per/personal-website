@@ -23,7 +23,7 @@ export async function getProjects(): Promise<Project[]> {
 		.fetch(
 			groq`*[_type == "project" && defined(slug.current) ${
 				import.meta.env.DEV ? '' : '&& released == true'
-			}]  | order(priority desc)`
+			}] | order(priority desc, date desc)`
 		)
 		.then((projects) => {
 			return projects.map((project: Project) => {
