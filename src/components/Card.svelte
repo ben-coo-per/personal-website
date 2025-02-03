@@ -5,7 +5,7 @@
 
 	export let project: Project;
 	$: projectBGImage = project.previewImage
-		? urlFor(project.previewImage).width(320).height(320).url()
+		? urlFor(project.previewImage).width(1080).height(1080).url()
 		: null;
 
 	let hovering: boolean = false;
@@ -57,7 +57,7 @@
 			<div
 				in:fade|global={{ duration: 500 }}
 				out:fade|global={{ duration: 150 }}
-				class="absolute inset-0 bg-cover bg-center opacity-60 rounded-lg"
+				class="absolute inset-0 bg-auto bg-center opacity-60 rounded-lg"
 				style="background-image: url({projectBGImage})"
 				class:opacity-0={hovering}
 			/>

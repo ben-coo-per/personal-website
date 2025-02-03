@@ -32,13 +32,15 @@
 		hasViewed.subscribe((viewed) => {
 			if (viewed) return;
 			const ps = new SplitType('.about-text', { types: 'words' });
-			animate(
-				ps.words,
-				{
-					opacity: [0, 1]
-				},
-				{ duration: 0.2, delay: stagger(0.1) }
-			);
+			if (ps.words) {
+				animate(
+					ps.words,
+					{
+						opacity: [0, 1]
+					},
+					{ duration: 0.2, delay: stagger(0.1) }
+				);
+			}
 		});
 		hasViewed.set(true);
 

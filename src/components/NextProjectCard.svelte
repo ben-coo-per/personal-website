@@ -5,7 +5,7 @@
 
 	export let project: Project;
 	$: projectBGImage = project.previewImage
-		? urlFor(project.previewImage).width(450).height(200).url()
+		? urlFor(project.previewImage).width(800).height(800).url()
 		: null;
 
 	let hovering: boolean = false;
@@ -19,7 +19,7 @@
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <button
-	class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 bg-repeat hover:text-yellow-200bg-custom-black bg-opacity-0 transition-all"
+	class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 hover:text-yellow-200 bg-custom-black bg-opacity-0 transition-all"
 	class:py-40={scrollTransition}
 	class:border-t={scrollTransition}
 	on:click={gotoProject}
@@ -39,7 +39,7 @@
 		{#if projectBGImage}
 			<div
 				in:fade|global={{ duration: 1500 }}
-				class="absolute inset-0 bg-repeat"
+				class="absolute inset-0 bg-repeat bg-contain"
 				style="background-image: url({projectBGImage})"
 			/>
 		{:else}
