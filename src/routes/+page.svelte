@@ -36,7 +36,7 @@
 				animate(
 					ps.words,
 					{
-						opacity: [0, 1]
+						opacity: [0.75, 1]
 					},
 					{ duration: 0.2, delay: stagger(0.1) }
 				);
