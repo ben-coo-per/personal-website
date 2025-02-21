@@ -15,15 +15,7 @@
 	};
 
 	// shadow color cycles
-	const shadowColors = [
-		'shadow-amber-500',
-		'shadow-pink-500',
-		'shadow-cyan-500',
-		'shadow-green-500',
-		'shadow-purple-500',
-		'shadow-red-500',
-		'shadow-yellow-500'
-	];
+	const shadowColors = ['shadow-amber-500', 'shadow-yellow-500'];
 	let shadowColor = 0;
 
 	const cycleShadowColor = () => {
@@ -35,14 +27,14 @@
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <button
-	class={`group flex flex-col w-full h-full relative text-left bg-repeat bg-custom-black  border-white border-2 bg-opacity-0 transition-all cursor-pointer ${shadowColors[shadowColor]} `}
+	class={`group flex flex-col w-full h-full relative text-left bg-repeat bg-custom-black  border-gray-500 border-2 bg-opacity-0 transition-all cursor-pointer ${shadowColors[shadowColor]} `}
 	on:click={gotoProject}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
 	class:-mt-1={hovering}
 	class:mb-1={hovering}
 	class:shadow-2xl={hovering}
-	class:border-white={hovering}
+	class:border-amber-100={hovering}
 >
 	{#if projectBGImage}
 		<div
