@@ -48,6 +48,9 @@
 			selectedDownArrow = getRandomDownArrow();
 		}, 2000);
 	});
+
+	const twoColumnIndices = [0, 3, 8, 9, 12, 16];
+	const twoRowIndices = [1, 3, 6, 10, 13, 16, 17];
 </script>
 
 <div class="p-4 md:px-0 md:pt-20 h-5/6 flex flex-col justify-between">
@@ -72,20 +75,20 @@
 		{#each data.projects as project, i}
 			<div
 				class="h-full p-1 w-full"
-				class:md:col-span-2={i % 3 === 0}
-				class:md:row-span-2={i % 2 === 0}
+				class:md:col-span-2={twoColumnIndices.includes(i)}
+				class:md:row-span-2={twoRowIndices.includes(i)}
 			>
 				<Card {project} />
 			</div>
 		{/each}
 		<div class="h-full p-1">
 			<a
-				class="group w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer grid place-content-center"
+				class="group w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer grid place-content-center border-gray-500 border-2 hover:border-amber-500 hover:border-opacity-75"
 				href="https://blog.bencooper.xyz/"
 				target="_blank"
 			>
 				<div
-					class="text-gray-400 group-hover:text-yellow-200 flex flex-col gap-1 relative z-20 p-4 -m-4 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none"
+					class="text-gray-400 group-hover:text-yellow-200 flex flex-col justify-center gap-1 bg-custom-black pointer-events-none"
 				>
 					<h4 class="text-md font-display">Little Projects ⤴</h4>
 					<h3 class="text-2xl">Additional smaller projects can be found on my blog</h3>
