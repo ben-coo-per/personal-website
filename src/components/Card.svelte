@@ -35,7 +35,7 @@
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <button
-	class={`rounded-lg group block w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black  border-custom-black border-2 bg-opacity-0 transition-all cursor-pointer ${shadowColors[shadowColor]} `}
+	class={`group flex flex-col w-full h-full relative text-left bg-repeat bg-custom-black  border-white border-2 bg-opacity-0 transition-all cursor-pointer ${shadowColors[shadowColor]} `}
 	on:click={gotoProject}
 	on:mouseenter={() => (hovering = true)}
 	on:mouseleave={() => (hovering = false)}
@@ -44,30 +44,27 @@
 	class:shadow-2xl={hovering}
 	class:border-white={hovering}
 >
-	<div
-		class="text-gray-100 relative z-20 p-4 -m-4 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none"
-	>
+	{#if projectBGImage}
+		<div
+			in:fade|global={{ duration: 500 }}
+			out:fade|global={{ duration: 150 }}
+			class="bg-auto bg-center opacity-60 h-3/4 min-h-40 w-full"
+			style="background-image: url({projectBGImage})"
+			class:opacity-0={hovering}
+		/>
+	{:else}
+		<div
+			in:fade|global={{ duration: 350 }}
+			class="bg-repeat bg-gradient-to-r from-pink-500 to-cyan-600 opacity-50"
+			class:opacity-100={hovering}
+		/>
+	{/if}
+
+	<div class="text-gray-100 p-6 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none">
 		<h3 class="text-md">{project.date.getFullYear() || ''}</h3>
 		<h4 class="text-2xl md:text-4xl font-display" class:text-yellow-200={hovering}>
 			{project.title}
 		</h4>
 		<h3 class="text-md">{project.subtitle || ''}</h3>
 	</div>
-	{#if !hovering}
-		{#if projectBGImage}
-			<div
-				in:fade|global={{ duration: 500 }}
-				out:fade|global={{ duration: 150 }}
-				class="absolute inset-0 bg-auto bg-center opacity-60 rounded-lg"
-				style="background-image: url({projectBGImage})"
-				class:opacity-0={hovering}
-			/>
-		{:else}
-			<div
-				in:fade|global={{ duration: 350 }}
-				class="absolute inset-0 bg-repeat bg-gradient-to-r rounded-lg from-pink-500 to-cyan-600 opacity-50"
-				class:opacity-100={hovering}
-			/>
-		{/if}
-	{/if}
 </button>

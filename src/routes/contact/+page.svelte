@@ -11,9 +11,9 @@
 
 	let shownState: ShownState = {
 		email: false,
-		instagram: false,
-		linkedin: false,
-		github: false
+		instagram: true,
+		linkedin: true,
+		github: true
 	};
 
 	function show(item: keyof ShownState) {
@@ -29,15 +29,6 @@
 				Feel free to reach out and tell me about what you're working on!
 			</p>
 			<div class="flex flex-col gap-2 container max-w-sm">
-				<ContactReveal
-					shown={shownState.email}
-					show={() => show('email')}
-					value="hello@bencooper.xyz"
-					link="mailto:hello@bencooper.xyz"
-					isExternal={false}
-				>
-					<IconSend class="size-8 sm:size-6 flex-shrink-0" />
-				</ContactReveal>
 				<ContactReveal
 					shown={shownState.instagram}
 					show={() => show('instagram')}
@@ -61,6 +52,15 @@
 					link="https://github.com/ben-coo-per"
 				>
 					<IconBrandGithub class="size-8 sm:size-6 flex-shrink-0 " />
+				</ContactReveal>
+				<ContactReveal
+					shown={shownState.email}
+					show={() => show('email')}
+					value="hello@bencooper.xyz"
+					link="mailto:hello@bencooper.xyz"
+					isExternal={false}
+				>
+					<IconSend class="size-8 sm:size-6 flex-shrink-0" />
 				</ContactReveal>
 			</div>
 		</div>

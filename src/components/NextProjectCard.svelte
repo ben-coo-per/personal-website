@@ -40,7 +40,7 @@
 		{#if projectBGImage}
 			<div
 				in:fade|global={{ duration: 1500 }}
-				class="absolute inset-0 bg-repeat bg-contain"
+				class="absolute inset-0 bg-cover bg-center"
 				style="background-image: url({projectBGImage})"
 			/>
 		{:else}
