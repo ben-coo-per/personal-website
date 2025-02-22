@@ -39,7 +39,7 @@
 
 	<div class="text-gray-100 p-6 bg-blur bg-custom-black bg-opacity-75 rounded pointer-events-none">
 		<h3 class="text-md">{project.date.getFullYear() || ''}</h3>
-		<h4 class="text-2xl md:text-3xl font-display group-hover:text-amber-200">
+		<h4 class="text-2xl md:text-3xl font-display group-hover:text-amber-300">
 			{project.title}
 		</h4>
 		<h3 class="text-md">{project.subtitle || ''}</h3>

@@ -24,5 +24,7 @@
 	<main class="h-full mx-auto">
 		{@render children?.()}
 	</main>
-	<Footer />
+	<div class="block md:hidden">
+		<Footer />
+	</div>
 </div>
