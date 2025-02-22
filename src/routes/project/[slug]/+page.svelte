@@ -5,17 +5,19 @@
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 	import '@mux/mux-player';
 
-	$: project = data.project;
-	$: next = data.next;
 	import { inView } from 'motion';
 	import { onMount } from 'svelte';
 
-	let IMG_WIDTH = 2000;
-	let MAIN_IMG_WIDTH = 2000;
-	let scrollY: number;
-	export let data: PageData;
+	let IMG_WIDTH = $state(2000);
+	let MAIN_IMG_WIDTH = $state(2000);
+	let scrollY: number = $state();
+	interface Props {
+		data: PageData;
+	}
 
-	let atBottom = false;
+	let { data }: Props = $props();
+
+	let atBottom = $state(false);
 
 	onMount(() => {
 		IMG_WIDTH = Math.round(window.outerWidth);
@@ -29,6 +31,8 @@
 	const isImage = (item: any) => item._type === 'image';
 	const isVideo = (item: any) => item._type === 'video';
 	const isBlurb = (item: any) => 'text' in item;
+	let project = $derived(data.project);
+	let next = $derived(data.next);
 </script>
 
 <svelte:window bind:scrollY />
@@ -73,7 +77,7 @@
 								metadata-video-title={project.title}
 								metadata-video-id={item.muxAssetId}
 								controls
-							/>
+							></mux-player>
 						{:else}
 							<p class="text-red-500">Video playback data not available</p>
 						{/if}

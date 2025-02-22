@@ -9,12 +9,12 @@
 	import ContactReveal from '../../components/ContactReveal.svelte';
 	import type { ShownState } from './contact';
 
-	let shownState: ShownState = {
+	let shownState: ShownState = $state({
 		email: false,
 		instagram: true,
 		linkedin: true,
 		github: true
-	};
+	});
 
 	function show(item: keyof ShownState) {
 		shownState[item] = true;

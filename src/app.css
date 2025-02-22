@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @font-face {
 	font-family: Mondwest;
@@ -18,4 +16,8 @@ body {
 	&::-webkit-scrollbar {
 		display: none;
 	}
+}
+
+.active-header-item {
+	@apply font-bold underline underline-offset-4;
 }

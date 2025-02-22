@@ -3,7 +3,12 @@
 	import { fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 
-	export let backHeader: boolean;
+	interface Props {
+		backHeader: boolean;
+		children?: import('svelte').Snippet;
+	}
+
+	let { backHeader, children }: Props = $props();
 
 	function goBack() {
 		goto('/');
@@ -15,11 +20,11 @@
 		class="sticky top-0 inset-x-0 w-full bg-custom-black text-gray-100 font-display flex justify-between p-4 sm:p-6 border-b border-gray-500 z-50"
 		in:fade|global
 	>
-		<button class="text-lg sm:text-2xl text-gray-200 sm:hover:text-yellow-200" on:click={goBack}
+		<button class="text-lg sm:text-2xl text-gray-200 sm:hover:text-yellow-200" onclick={goBack}
 			>&larr; Back</button
 		>
 		<div class="flex gap-4">
-			<slot />
+			{@render children?.()}
 		</div>
 	</header>
 {:else}
@@ -32,13 +37,15 @@
 			<h3 class="block sm:hidden text-3xl">BC</h3>
 		</a>
 		<div class="text-md md:text-lg flex gap-3 sm:gap-4 items-center">
-			<a href="/" class="sm:hover:text-yellow-200" class:active={$page.url.pathname === '/'}
-				>Projects</a
+			<a
+				href="/"
+				class="sm:hover:text-yellow-200"
+				class:active-header-item={$page.url.pathname === '/'}>Projects</a
 			>
 			<a
 				href="/contact"
 				class="sm:hover:text-yellow-200"
-				class:active={$page.url.pathname === '/contact'}
+				class:active-header-item={$page.url.pathname === '/contact'}
 			>
 				Contact
 			</a>
@@ -48,9 +55,3 @@
 		</div>
 	</header>
 {/if}
-
-<style lang="scss">
-	.active {
-		@apply font-bold underline underline-offset-4;
-	}
-</style>

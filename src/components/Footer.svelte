@@ -7,17 +7,13 @@
 		<p>&copy; {currentYear} Ben Cooper</p>
 		<p>Built with Sveltekit, TailwindCSS, & Sanity.io</p>
 		<p>
-			Typography by <a href="https://pangrampangram.com/products/bitmap-mondwest" target="_blank">
+			Typography by <a
+				class="hover:text-yellow-200"
+				href="https://pangrampangram.com/products/bitmap-mondwest"
+				target="_blank"
+			>
 				PangramPangram
 			</a>
 		</p>
 	</div>
 </footer>
-
-<style lang="scss">
-	a {
-		&:hover {
-			@apply text-yellow-200;
-		}
-	}
-</style>

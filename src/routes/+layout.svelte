@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import '../app.css';
 	import Header from '../components/Header.svelte';
 	import Footer from '../components/Footer.svelte';
@@ -10,14 +10,19 @@
 	}
 
 	import { page } from '$app/stores';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	$: backHeader = $page.url.pathname.includes('/project/');
+	let { children }: Props = $props();
+
+	let backHeader = $derived($page.url.pathname.includes('/project/'));
 </script>
 
 <Header {backHeader} />
 <div class="mx-auto overflow-auto flex flex-col">
 	<main class="h-full container max-w-6xl mx-auto">
-		<slot />
+		{@render children?.()}
 	</main>
 	<Footer />
 </div>
