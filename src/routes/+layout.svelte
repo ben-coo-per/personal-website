@@ -14,12 +14,10 @@
 	$: backHeader = $page.url.pathname.includes('/project/');
 </script>
 
-<div class="bg-custom-black h-screen">
-	<div class="mx-auto overflow-auto flex flex-col h-full">
-		<Header {backHeader} />
-		<main class="h-full container max-w-6xl mx-auto">
-			<slot />
-			<Footer />
-		</main>
-	</div>
+<Header {backHeader} />
+<div class="mx-auto overflow-auto flex flex-col">
+	<main class="h-full container max-w-6xl mx-auto">
+		<slot />
+	</main>
+	<Footer />
 </div>

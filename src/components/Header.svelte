@@ -24,7 +24,7 @@
 	</header>
 {:else}
 	<header
-		class="sticky top-0 inset-x-0 w-full bg-custom-black text-gray-100 font-display flex justify-between p-4 sm:p-6 border-b border-gray-500 z-50"
+		class="md:hidden sticky top-0 inset-x-0 w-full bg-custom-black text-gray-100 font-display flex justify-between p-4 sm:p-6 border-b border-gray-500 z-50"
 		in:fade|global
 	>
 		<a href="/" class="sm:hover:text-yellow-200">
