@@ -20,8 +20,8 @@
 </script>
 
 <Header {backHeader} />
-<div class="mx-auto overflow-auto flex flex-col">
-	<main class="h-full container max-w-6xl mx-auto">
+<div class="overflow-auto flex flex-col">
+	<main class="h-full mx-auto">
 		{@render children?.()}
 	</main>
 	<Footer />

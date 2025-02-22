@@ -3,7 +3,6 @@
 	import type { Project } from '$lib/utils/sanity';
 	import { fade } from 'svelte/transition';
 
-
 	let hovering: boolean = $state(false);
 	interface Props {
 		project: Project;
@@ -15,15 +14,15 @@
 	const gotoProject = () => {
 		window.location.href = `/project/${project.slug.current}`;
 	};
-	let projectBGImage = $derived(project.previewImage
-		? urlFor(project.previewImage).width(800).height(800).url()
-		: null);
+	let projectBGImage = $derived(
+		project.previewImage ? urlFor(project.previewImage).width(800).height(800).url() : null
+	);
 </script>
 
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <button
-	class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 hover:text-yellow-200 bg-custom-black bg-opacity-0 transition-all"
+	class="group block w-full border-b relative text-left border-gray-500 px-6 py-12 hover:text-amber-200 bg-custom-black bg-opacity-0 transition-all"
 	class:py-40={scrollTransition}
 	class:border-t={scrollTransition}
 	onclick={gotoProject}

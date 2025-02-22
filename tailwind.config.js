@@ -10,9 +10,6 @@ export default {
 				gradient: {
 					to: { 'background-position': '200% center' }
 				}
-			},
-			colors: {
-				'custom-black': '#1c1c1c'
 			}
 		},
 		fontFamily: {

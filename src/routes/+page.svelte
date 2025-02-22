@@ -8,13 +8,16 @@
 	import SplitType from 'split-type';
 	import { onMount } from 'svelte';
 	import { hasViewed } from './page.config';
+	import type { Project } from '$lib/utils/sanity';
+	import ContactSection from '../components/ContactSection.svelte';
+
 	interface Props {
 		data: PageData;
 	}
 
 	let { data }: Props = $props();
-
-	const paragraphs = data.about.body.map((block, i) => {
+	type Paragraph = { id: number; text: string };
+	const paragraphs: Paragraph[] = data.about.body.map((block, i) => {
 		return {
 			id: i,
 			text: block.children
@@ -29,7 +32,7 @@
 		return downArrowOptions[Math.floor(Math.random() * downArrowOptions.length)];
 	}
 
-	let downArrowOptions = ['⇣', '👇', '↓', '↯', '⇊', '⇓'];
+	let downArrowOptions = ['⇣', '↓', '↯', '⇊', '⇓'];
 	let selectedDownArrow = $state(getRandomDownArrow());
 
 	onMount(() => {
@@ -57,30 +60,28 @@
 	const twoRowIndices = [1, 3, 6, 10, 13, 16, 17];
 </script>
 
-<!-- {#snippet about(paragraphs)} -->
-
-<!-- {/snippet} -->
-<div class="flex flex-col">
-	<div class="p-4 md:px-0 md:pt-20 h-5/6 flex flex-col justify-between">
-		<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
-			<div class="container mx-auto relative">
-				<div class="mt-6 flex flex-col gap-3">
-					{#each paragraphs as { id, text }}
-						<div class="pb-20">
-							<p class="text-3xl text-gray-200 about-text" id={`${id}`}>{text}</p>
-						</div>
-					{/each}
-				</div>
+{#snippet about(paragraphs: Paragraph[])}
+	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
+		<div class="container mx-auto relative">
+			<div class="mt-6 md:mt-2 flex flex-col gap-3">
+				{#each paragraphs as { id, text }}
+					<div class="pb-6 md:pb-2">
+						<p class="text-xl md:text-base text-gray-200 about-text" id={`${id}`}>{text}</p>
+					</div>
+				{/each}
 			</div>
-		</section>
-		<hr class="border-t border-gray-500" />
-		<h1 class="text-3xl py-16 md:text-5xl font-display font-bold text-white opacity-75 text-center">
+		</div>
+	</section>
+{/snippet}
+
+{#snippet projects(selectedDownArrow: string, projects: Project[])}
+	<section class="flex flex-col gap-8 pb-16 py-8">
+		<hr class="border-t border-gray-500 md:hidden" />
+		<h1 class="text-3xl py-4 md:text-4xl font-display font-bold text-white opacity-75 text-center">
 			{selectedDownArrow} Selected Projects {selectedDownArrow}
 		</h1>
-	</div>
-	<div class="flex flex-col gap-32 pb-16">
 		<div class="grid md:grid-flow-row-dense grid-cols-1 gap-2 mx-auto place-items-center">
-			{#each data.projects as project, i}
+			{#each projects as project, i}
 				<div
 					class="h-full p-1 w-full"
 					class:md:col-span-2={twoColumnIndices.includes(i)}
@@ -96,7 +97,7 @@
 					target="_blank"
 				>
 					<div
-						class="text-gray-400 group-hover:text-yellow-200 flex flex-col justify-center gap-1 bg-custom-black pointer-events-none"
+						class="text-gray-400 group-hover:text-amber-200 flex flex-col justify-center gap-1 bg-custom-black pointer-events-none"
 					>
 						<h4 class="text-md font-display">Little Projects ⤴</h4>
 						<h3 class="text-2xl">Additional smaller projects can be found on my blog</h3>
@@ -104,5 +105,24 @@
 				</a>
 			</div>
 		</div>
+	</section>
+{/snippet}
+
+<div class="flex flex-col px-4 md:hidden">
+	{@render about(paragraphs)}
+	{@render projects(selectedDownArrow, data.projects)}
+</div>
+
+<div class="hidden md:grid grid-cols-3 gap-8 px-4 relative">
+	<div class="col-span-2">
+		{@render projects(selectedDownArrow, data.projects)}
+	</div>
+	<div class="fixed top-5 right-0 w-1/3 py-2">
+		<h3 class="text-gray-100 font-display block text-4xl">👋</h3>
+		<h3 class="text-gray-100 font-display block text-4xl mt-2">
+			hi, I'm <i class="text-amber-400">Ben</i>
+		</h3>
+		{@render about(paragraphs)}
+		<ContactSection />
 	</div>
 </div>

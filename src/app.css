@@ -6,6 +6,12 @@
 	font-weight: regular;
 }
 
+@theme {
+	--color-custom-black: #1c1c1c;
+	--font-sans: 'Rubik', Arial, sans-serif;
+	--font-display: 'Mondwest', sans-serif;
+}
+
 html,
 body {
 	background-color: #1c1c1c;
@@ -16,8 +22,4 @@ body {
 	&::-webkit-scrollbar {
 		display: none;
 	}
-}
-
-.active-header-item {
-	@apply font-bold underline underline-offset-4;
 }
