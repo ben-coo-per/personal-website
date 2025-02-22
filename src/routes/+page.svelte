@@ -93,11 +93,11 @@
 	{@render projects(data.projects)}
 </div>
 
-<div class="hidden md:grid grid-cols-3 gap-8 px-4 relative">
-	<div class="col-span-2">
+<div class="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8 px-4 relative">
+	<div class="col-span-2 lg:col-span-3">
 		{@render projects(data.projects)}
 	</div>
-	<div class="fixed right-0 w-1/3 py-8 h-full">
+	<div class="fixed right-0 w-1/3 lg:w-1/4 py-8 h-full pr-4">
 		<h3 class="text-gray-100 font-display block text-4xl">👋</h3>
 		<h3 class="text-gray-100 font-display block text-4xl mt-2">
 			hi, I'm <i class="text-amber-400">Ben</i>
