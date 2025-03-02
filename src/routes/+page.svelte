@@ -64,8 +64,8 @@
 			{#each projects as project, i}
 				<div
 					class="h-full p-1 w-full"
-					class:md:col-span-2={twoColumnIndices.includes(i)}
-					class:md:row-span-2={twoRowIndices.includes(i)}
+					class:lg:col-span-2={twoColumnIndices.includes(i)}
+					class:lg:row-span-2={twoRowIndices.includes(i)}
 				>
 					<Card {project} />
 				</div>
