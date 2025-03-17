@@ -62,7 +62,7 @@
 				{/if}
 			</div>
 
-			<div class="text-center mb-60 relative z-10">
+			<div class="text-center mb-60 relative z-10 max-w-3xl mx-auto">
 				{#each project.gallery as item}
 					{#if isImage(item)}
 						<img class="w-full my-6" src={urlFor(item).width(IMG_WIDTH).url()} alt="product" />
