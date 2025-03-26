@@ -98,7 +98,6 @@
 		{@render projects(data.projects)}
 	</div>
 	<div class="fixed right-0 w-1/3 lg:w-1/4 py-8 h-full pr-4">
-		<h3 class="text-gray-100 font-display block text-4xl">👋</h3>
 		<h3 class="text-gray-100 font-display block text-4xl mt-2">
 			hi, I'm <i class="text-amber-400">Ben</i>
 		</h3>
