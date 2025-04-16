@@ -27,7 +27,7 @@
 		<div
 			in:fade|global={{ duration: 500 }}
 			out:fade|global={{ duration: 150 }}
-			class="bg-cover bg-center opacity-60 min-h-64 h-full w-full group-hover:opacity-100 transition-all duration-300"
+			class="bg-contain bg-center opacity-60 min-h-64 h-full w-full group-hover:opacity-100 transition-all duration-300 bg-no-repeat"
 			style="background-image: url({projectBGImage})"
 		></div>
 	{:else}
