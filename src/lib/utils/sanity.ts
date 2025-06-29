@@ -21,9 +21,7 @@ export const client = createClient({
 export async function getProjects(): Promise<Project[]> {
 	return await client
 		.fetch(
-			groq`*[_type == "project" && defined(slug.current) ${
-				import.meta.env.DEV ? '' : '&& released == true'
-			}] | order(priority desc, date desc)`
+			groq`*[_type == "project" && defined(slug.current) && isRestricted != true] | order(priority desc, date desc)`
 		)
 		.then((projects) => {
 			return projects.map((project: Project) => {

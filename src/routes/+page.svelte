@@ -73,14 +73,13 @@
 			<div class="h-full p-1">
 				<a
 					class="group w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer grid place-content-center border-gray-500 border-2 hover:border-amber-500 hover:border-opacity-75"
-					href="https://blog.bencooper.xyz/"
-					target="_blank"
+					href="/restricted"
 				>
 					<div
 						class="text-gray-400 group-hover:text-amber-300 flex flex-col justify-center gap-1 bg-custom-black pointer-events-none"
 					>
-						<h4 class="text-md font-display">Little Projects ⤴</h4>
-						<h3 class="text-2xl">Additional smaller projects can be found on my blog</h3>
+						<h4 class="text-md font-display">Confidential Projects 🔒</h4>
+						<h3 class="text-2xl">Password-protected project portfolio</h3>
 					</div>
 				</a>
 			</div>
