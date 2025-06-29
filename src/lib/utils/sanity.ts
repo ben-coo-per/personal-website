@@ -33,7 +33,7 @@ export async function getProjects(includeRestricted = false): Promise<Project[]>
 		});
 }
 
-export async function getProject(slug: string, allowRestricted = false): Promise<Project | null> {
+export async function getProject(slug: string): Promise<Project | null> {
 	const project = await client.fetch(
 		groq`
       *[_type == "project" && slug.current == $slug][0] {
@@ -52,10 +52,10 @@ export async function getProject(slug: string, allowRestricted = false): Promise
 		{ slug }
 	);
 
+	console.log('FFFFOFOFOFOFOOFOFO');
+	console.log('Fetched project:', project);
+
 	if (!project) return null;
-	if (project.isRestricted && !allowRestricted) {
-		return null;
-	}
 
 	return {
 		...project,
@@ -63,8 +63,11 @@ export async function getProject(slug: string, allowRestricted = false): Promise
 	};
 }
 
-export async function getNextProjectInOrder(slug: string): Promise<Project> {
-	const allProjects = await getProjects();
+export async function getNextProjectInOrder(
+	slug: string,
+	includeRestricted?: boolean
+): Promise<Project> {
+	const allProjects = await getProjects(includeRestricted);
 	const currentIndex = allProjects.findIndex((project) => project.slug.current === slug);
 	const nextIndex = (currentIndex + 1) % allProjects.length;
 	return allProjects[nextIndex];
@@ -93,6 +96,7 @@ export interface Project {
 	title?: string;
 	subtitle?: string;
 	slug: Slug;
+	isRestricted?: boolean;
 	previewImage?: ImageAsset;
 	mainImage?: ImageAsset;
 	mainDescription?: string;
