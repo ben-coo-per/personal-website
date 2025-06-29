@@ -18,10 +18,10 @@ export const client = createClient({
 	apiVersion: '2023-03-20' // date of setup
 });
 
-export async function getProjects(): Promise<Project[]> {
+export async function getProjects(includeRestricted = false): Promise<Project[]> {
 	return await client
 		.fetch(
-			groq`*[_type == "project" && defined(slug.current) && isRestricted != true] | order(priority desc, date desc)`
+			groq`*[_type == "project" && defined(slug.current) ${includeRestricted ? '' : '&& (!defined(isRestricted) || isRestricted == false)'}] | order(priority desc, date desc)`
 		)
 		.then((projects) => {
 			return projects.map((project: Project) => {
@@ -33,10 +33,9 @@ export async function getProjects(): Promise<Project[]> {
 		});
 }
 
-export async function getProject(slug: string): Promise<Project> {
-	return await client
-		.fetch(
-			groq`
+export async function getProject(slug: string, allowRestricted = false): Promise<Project | null> {
+	const project = await client.fetch(
+		groq`
       *[_type == "project" && slug.current == $slug][0] {
         ...,
         gallery[]{
@@ -50,14 +49,18 @@ export async function getProject(slug: string): Promise<Project> {
         }
       }
     `,
-			{ slug }
-		)
-		.then((project) => {
-			return {
-				...project,
-				date: new Date(project.date)
-			};
-		});
+		{ slug }
+	);
+
+	if (!project) return null;
+	if (project.isRestricted && !allowRestricted) {
+		return null;
+	}
+
+	return {
+		...project,
+		date: new Date(project.date)
+	};
 }
 
 export async function getNextProjectInOrder(slug: string): Promise<Project> {

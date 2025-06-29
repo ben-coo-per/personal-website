@@ -4,13 +4,13 @@
 
 	import { fade } from 'svelte/transition';
 
-	import { animate, stagger } from 'motion';
 	import SplitType from 'split-type';
 	import { onMount } from 'svelte';
 	import { hasViewed } from './page.config';
 	import type { Project } from '$lib/utils/sanity';
 	import ContactSection from '../components/ContactSection.svelte';
 	import Footer from '../components/Footer.svelte';
+	import PasswordEntry from '../components/PasswordEntry.svelte';
 
 	interface Props {
 		data: PageData;
@@ -29,6 +29,8 @@
 		};
 	});
 
+	let restrictedAccess = data.restrictedAccess ?? false;
+
 	onMount(() => {
 		hasViewed.subscribe((viewed) => {
 			if (viewed) return;
@@ -38,6 +40,13 @@
 
 	const twoColumnIndices = [0, 3, 8, 9, 12, 16];
 	const twoRowIndices = [1, 3, 6, 10, 13, 16, 17];
+
+	async function handlePasswordSuccess() {
+		// sets a flag for authenticated access
+		await fetch('/api/set-restricted-access', { method: 'POST' });
+		// reload the page to get new data from the server
+		window.location.reload();
+	}
 </script>
 
 {#snippet about(paragraphs: Paragraph[])}
@@ -73,13 +82,14 @@
 			<div class="h-full p-1">
 				<a
 					class="group w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer grid place-content-center border-gray-500 border-2 hover:border-amber-500 hover:border-opacity-75"
-					href="/restricted"
+					href="https://blog.bencooper.xyz/"
+					target="_blank"
 				>
 					<div
 						class="text-gray-400 group-hover:text-amber-300 flex flex-col justify-center gap-1 bg-custom-black pointer-events-none"
 					>
-						<h4 class="text-md font-display">Confidential Projects 🔒</h4>
-						<h3 class="text-2xl">Password-protected project portfolio</h3>
+						<h4 class="text-md font-display">Little Projects ⤴</h4>
+						<h3 class="text-2xl">Additional smaller projects can be found on my blog</h3>
 					</div>
 				</a>
 			</div>
@@ -102,7 +112,19 @@
 		</h3>
 		{@render about(paragraphs)}
 		<ContactSection />
+
 		<div class="absolute bottom-0">
+			{#if !restrictedAccess}
+				<PasswordEntry
+					title="Some projects are confidential"
+					label="If you were given a password, enter it here to show them."
+					on:success={handlePasswordSuccess}
+				/>
+			{:else}
+				<div class="text-gray-400 mt-4">
+					<p class="text-sm">Access granted. You can now view confidential projects.</p>
+				</div>
+			{/if}
 			<Footer />
 		</div>
 	</div>
