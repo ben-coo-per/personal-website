@@ -41,6 +41,43 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{project?.title ? `${project.title} – Ben Cooper` : 'Project – Ben Cooper'}</title>
+	<meta name="description" content={project?.mainDescription || 'Project by Ben Cooper'} />
+	<!-- Open Graph -->
+	<meta
+		property="og:title"
+		content={project?.title ? `${project.title} – Ben Cooper` : 'Project – Ben Cooper'}
+	/>
+	<meta property="og:description" content={project?.mainDescription || 'Project by Ben Cooper'} />
+	{#if project?.previewImage}
+		<meta
+			property="og:image"
+			content={urlFor(project.previewImage).width(1200).height(630).url()}
+		/>
+	{:else}
+		<meta property="og:image" content="https://bencooper.xyz/static/android-chrome-192x192.png" />
+	{/if}
+	<meta property="og:url" content={`https://bencooper.xyz/project/${project?.slug}`} />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Ben Cooper" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta
+		name="twitter:title"
+		content={project?.title ? `${project.title} – Ben Cooper` : 'Project – Ben Cooper'}
+	/>
+	<meta name="twitter:description" content={project?.mainDescription || 'Project by Ben Cooper'} />
+	{#if project?.mainImage}
+		<meta name="twitter:image" content={urlFor(project.mainImage).width(1200).height(630).url()} />
+	{:else}
+		<meta name="twitter:image" content="https://bencooper.xyz/static/android-chrome-192x192.png" />
+	{/if}
+	<meta name="twitter:site" content="@ben_coo_per" />
+</svelte:head>
+
 <svelte:window bind:scrollY />
 {#if data.needsPassword}
 	<div class="max-w-md mx-auto mt-20">
