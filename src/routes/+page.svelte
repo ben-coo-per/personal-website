@@ -38,8 +38,8 @@
 		});
 	});
 
-	const twoColumnIndices = [0, 3, 8, 9, 12, 16];
-	const twoRowIndices = [1, 3, 6, 10, 13, 16, 17];
+	const twoColumnIndices = [0, 3, 7, 12, 16, 18, 19, 22, 25, 27];
+	const twoRowIndices = [2, 6, 10, 13, 16, 17, 20, 22, 24, 27];
 
 	async function handlePasswordSuccess() {
 		// sets a flag for authenticated access
