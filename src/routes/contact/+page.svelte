@@ -12,8 +12,5 @@
 			</p>
 		</div>
 		<ContactSection />
-		<p class="text-md text-gray-300 mt-4">
-			🤫 If you want to see more of my work, I'll send you a link to my private portfolio.
-		</p>
 	</div>
 </section>

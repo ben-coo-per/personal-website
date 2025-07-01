@@ -66,9 +66,6 @@
 {#snippet projects(projects: Project[])}
 	<section class="flex flex-col gap-8 pb-16 py-8">
 		<hr class="border-t border-gray-500 md:hidden" />
-		<!-- <h1 class="text-3xl py-4 md:text-4xl font-display font-bold text-white opacity-75 text-center">
-			{selectedDownArrow} Selected Projects {selectedDownArrow}
-		</h1> -->
 		<div class="grid md:grid-flow-row-dense grid-cols-1 gap-2 mx-auto place-items-center">
 			{#each projects as project, i}
 				<div
@@ -99,6 +96,17 @@
 
 <div class="flex flex-col px-4 md:hidden">
 	{@render about(paragraphs)}
+	{#if !restrictedAccess}
+		<PasswordEntry
+			title="Some projects are confidential"
+			label="If you were given a password, enter it here to show them."
+			on:success={handlePasswordSuccess}
+		/>
+	{:else}
+		<div class="text-gray-400 mt-4">
+			<p class="text-sm">Access granted. You can now view confidential projects.</p>
+		</div>
+	{/if}
 	{@render projects(data.projects)}
 </div>
 
