@@ -4,6 +4,7 @@
 	import { urlFor } from '$lib/utils/image';
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 	import PasswordEntry from '../../../components/PasswordEntry.svelte';
+	import { PortableText } from '@portabletext/svelte';
 	import '@mux/mux-player';
 
 	import { inView } from 'motion';
@@ -31,7 +32,7 @@
 
 	const isImage = (item: any) => item._type === 'image';
 	const isVideo = (item: any) => item._type === 'video';
-	const isBlurb = (item: any) => 'text' in item;
+	const isBlurb = (item: any) => 'text' in item || 'content' in item;
 	let project = $derived(data.project);
 	let next = $derived(data.next);
 
@@ -138,11 +139,22 @@
 								<p class="text-red-500">Video playback data not available</p>
 							{/if}
 						{:else if isBlurb(item)}
-							<p
-								class="text-lg font-thin font-sans md:text-2xl my-6 py-2 bg-custom-black bg-opacity-50"
-							>
-								{item.text}
-							</p>
+							{@const blurbItem = item as { content?: any; text?: string }}
+							{#if blurbItem.content}
+								<!-- New format: rich text with block content -->
+								<div
+									class="portable-text-blurb text-lg font-thin font-sans md:text-2xl my-6 py-2 bg-custom-black bg-opacity-50"
+								>
+									<PortableText value={blurbItem.content} />
+								</div>
+							{:else if blurbItem.text}
+								<!-- Legacy format: plain text -->
+								<p
+									class="text-lg font-thin font-sans md:text-2xl my-6 py-2 bg-custom-black bg-opacity-50"
+								>
+									{blurbItem.text}
+								</p>
+							{/if}
 						{/if}
 					{/each}
 				</div>
@@ -176,3 +188,47 @@
 		<NextProjectCard project={next} scrollTransition={atBottom} />
 	</div>
 {/if}
+
+<style>
+	/* Styling for PortableText block content in blurbs */
+	:global(.portable-text-blurb) {
+		text-align: left;
+	}
+
+	:global(.portable-text-blurb p) {
+		margin-bottom: 0.5rem;
+	}
+
+	:global(.portable-text-blurb ul) {
+		list-style-type: disc;
+		margin-left: 1.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	:global(.portable-text-blurb ol) {
+		list-style-type: decimal;
+		margin-left: 1.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	:global(.portable-text-blurb li) {
+		margin-bottom: 0.25rem;
+	}
+
+	:global(.portable-text-blurb strong) {
+		font-weight: 600;
+	}
+
+	:global(.portable-text-blurb em) {
+		font-style: italic;
+	}
+
+	:global(.portable-text-blurb a) {
+		color: #fbbf24;
+		text-decoration: underline;
+	}
+
+	:global(.portable-text-blurb a:hover) {
+		color: #fcd34d;
+	}
+</style>

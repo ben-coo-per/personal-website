@@ -79,8 +79,8 @@ export async function getAboutPage(): Promise<{ body: PortableTextBlock[] }> {
 
 type Blurb = {
 	_type: 'blurb';
-	text: string;
-	styling: string;
+	text?: string; // Legacy format
+	content?: PortableTextBlock[]; // New format with rich text support
 };
 
 type Video = {
