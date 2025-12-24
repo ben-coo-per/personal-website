@@ -15,7 +15,11 @@
 		window.location.href = `/project/${project.slug.current}`;
 	};
 	let projectBGImage = $derived(
-		project.previewImage ? urlFor(project.previewImage).width(800).height(800).url() : null
+		project.nextCardImage
+			? urlFor(project.nextCardImage).width(800).height(800).url()
+			: project.previewImage
+				? urlFor(project.previewImage).width(800).height(800).url()
+				: null
 	);
 </script>
 

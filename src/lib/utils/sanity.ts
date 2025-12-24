@@ -98,6 +98,7 @@ export interface Project {
 	slug: Slug;
 	isRestricted?: boolean;
 	previewImage?: ImageAsset;
+	nextCardImage?: ImageAsset;
 	mainImage?: ImageAsset;
 	mainDescription?: string;
 	gallery: (ImageAsset | Blurb | Video)[];
