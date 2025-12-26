@@ -57,7 +57,7 @@
 			content={urlFor(project.previewImage).width(1200).height(630).url()}
 		/>
 	{:else}
-		<meta property="og:image" content="https://bencooper.xyz/static/android-chrome-192x192.png" />
+		<meta property="og:image" content="https://bencooper.xyz/android-chrome-192x192.png" />
 	{/if}
 	<meta property="og:url" content={`https://bencooper.xyz/project/${project?.slug}`} />
 	<meta property="og:type" content="article" />
@@ -74,7 +74,7 @@
 	{#if project?.mainImage}
 		<meta name="twitter:image" content={urlFor(project.mainImage).width(1200).height(630).url()} />
 	{:else}
-		<meta name="twitter:image" content="https://bencooper.xyz/static/android-chrome-192x192.png" />
+		<meta name="twitter:image" content="https://bencooper.xyz/android-chrome-192x192.png" />
 	{/if}
 	<meta name="twitter:site" content="@ben_coo_per" />
 </svelte:head>
