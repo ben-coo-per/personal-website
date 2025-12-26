@@ -49,6 +49,14 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Ben Cooper – Portfolio</title>
+	<meta
+		name="description"
+		content="Creative developer, designer, and more. Explore my projects and blog."
+	/>
+</svelte:head>
+
 {#snippet about(paragraphs: Paragraph[])}
 	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
 		<div class="container mx-auto relative">
