@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { urlFor } from '$lib/utils/image';
-	import type { Project } from '$lib/utils/sanity';
+	import type { Project } from '$lib/utils/kirby';
 	import { fade } from 'svelte/transition';
 
 	let hovering: boolean = $state(false);
@@ -12,13 +12,13 @@
 	let { project, scrollTransition = false }: Props = $props();
 
 	const gotoProject = () => {
-		window.location.href = `/project/${project.slug.current}`;
+		window.location.href = `/project/${project.slug}`;
 	};
 	let projectBGImage = $derived(
 		project.nextCardImage
-			? urlFor(project.nextCardImage).width(800).height(800).url()
+			? urlFor(project.nextCardImage, project.slug).url()
 			: project.previewImage
-				? urlFor(project.previewImage).width(800).height(800).url()
+				? urlFor(project.previewImage, project.slug).url()
 				: null
 	);
 </script>

@@ -1,17 +1,19 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getNextProjectInOrder, getProject } from '$lib/utils/sanity';
+import { getNextProjectInOrder, getProject } from '$lib/utils/kirby';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
-	const project = await getProject(params.slug);
-	const next = await getNextProjectInOrder(params.slug, hasRestricted);
-	console.log('Project:', project);
-	if (project && project.isRestricted && !hasRestricted) {
-		return { needsPassword: true };
+	const project = getProject(params.slug);
+	const next = getNextProjectInOrder(params.slug, hasRestricted);
+
+	if (!project) {
+		error(404, 'Not found');
 	}
 
-	if (project) return { project, next };
+	if (project.isRestricted && !hasRestricted) {
+		return { needsPassword: true, project: null, next };
+	}
 
-	error(404, 'Not found');
+	return { project, next };
 };

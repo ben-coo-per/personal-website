@@ -1,0 +1,93 @@
+<script lang="ts">
+	import type { PageData } from './$types';
+	import NextProjectCard from '../../../components/NextProjectCard.svelte';
+	import PasswordEntry from '../../../components/PasswordEntry.svelte';
+
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
+	let project = $derived(data.project);
+	let next = $derived(data.next);
+
+	async function handlePasswordSuccess() {
+		await fetch('/api/set-restricted-access', { method: 'POST' });
+		window.location.reload();
+	}
+</script>
+
+<svelte:head>
+	<title>{project?.title ? `${project.title} – Ben Cooper` : 'Project – Ben Cooper'}</title>
+	<meta name="description" content={project?.mainDescription || 'Project by Ben Cooper'} />
+	<meta property="og:title" content={project?.title || 'Project'} />
+	<meta property="og:description" content={project?.mainDescription || 'Project by Ben Cooper'} />
+</svelte:head>
+
+{#if data.needsPassword}
+	<div class="min-h-screen flex items-center justify-center">
+		<PasswordEntry onSuccess={handlePasswordSuccess} />
+	</div>
+{:else if project}
+	<article class="project-page">
+		<header class="project-header">
+			<h1>{project.title}</h1>
+			{#if project.subtitle}
+				<h2>{project.subtitle}</h2>
+			{/if}
+		</header>
+
+		{#if project.mainImage}
+			<div class="main-image">
+				<img src="/cms-assets/{project.slug}/{project.mainImage}" alt={project.title} />
+			</div>
+		{/if}
+
+		<div class="project-content">
+			<!-- This is where mdsvex content will be rendered for each project -->
+			<p>{project.mainDescription}</p>
+		</div>
+
+		{#if next && next.slug !== project.slug}
+			<div id="next-project">
+				<NextProjectCard project={next} />
+			</div>
+		{/if}
+	</article>
+{/if}
+
+<style>
+	.project-page {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 2rem;
+	}
+
+	.project-header {
+		margin-bottom: 2rem;
+	}
+
+	h1 {
+		font-size: 3rem;
+		font-weight: bold;
+		margin-bottom: 0.5rem;
+	}
+
+	h2 {
+		font-size: 1.5rem;
+		color: #666;
+	}
+
+	.main-image {
+		margin-bottom: 2rem;
+	}
+
+	.main-image img {
+		width: 100%;
+		height: auto;
+	}
+
+	.project-content {
+		margin-bottom: 4rem;
+	}
+</style>

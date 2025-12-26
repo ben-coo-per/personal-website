@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { urlFor } from '$lib/utils/image';
-	import type { Project } from '$lib/utils/sanity';
+	import type { Project } from '$lib/utils/kirby';
 	import { fade } from 'svelte/transition';
 
 	interface Props {
@@ -9,11 +9,11 @@
 
 	let { project }: Props = $props();
 	let projectBGImage = $derived(
-		project.previewImage ? urlFor(project.previewImage).width(1080).height(1080).url() : null
+		project.previewImage ? urlFor(project.previewImage, project.slug).url() : null
 	);
 
 	const gotoProject = () => {
-		window.location.href = `/project/${project.slug.current}`;
+		window.location.href = `/project/${project.slug}`;
 	};
 </script>
 

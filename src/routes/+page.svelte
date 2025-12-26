@@ -7,7 +7,7 @@
 	import SplitType from 'split-type';
 	import { onMount } from 'svelte';
 	import { hasViewed } from './page.config';
-	import type { Project } from '$lib/utils/sanity';
+	import type { Project } from '$lib/utils/kirby';
 	import ContactSection from '../components/ContactSection.svelte';
 	import Footer from '../components/Footer.svelte';
 	import PasswordEntry from '../components/PasswordEntry.svelte';
@@ -21,11 +21,7 @@
 	const paragraphs: Paragraph[] = data.about.body.map((block, i) => {
 		return {
 			id: i,
-			text: block.children
-				.map((child) => {
-					return child.text;
-				})
-				.join(' ')
+			text: block.text
 		};
 	});
 

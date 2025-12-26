@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import { client } from '$lib/utils/sanity';
+import { verifyPasscode } from '$lib/utils/kirby';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
@@ -10,19 +10,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			return json({ valid: false, error: 'Passcode required' }, { status: 400 });
 		}
 
-		// Query Sanity for valid passcodes
-		const validPasscodes = await client.fetch(
-			`
-			*[_type == "passcode" && 
-			  code == $passcode && 
-			  isActive == true && 
-			  expiresAt > now()
-			]
-		`,
-			{ passcode }
-		);
-
-		const isValid = validPasscodes.length > 0;
+		const isValid = verifyPasscode(passcode);
 
 		return json({ valid: isValid });
 	} catch (error) {

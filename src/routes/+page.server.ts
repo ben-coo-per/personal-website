@@ -1,19 +1,14 @@
-import { getAboutPage, getProjects } from '$lib/utils/sanity';
-import { error } from '@sveltejs/kit';
+import { getProjects, getAboutPage } from '$lib/utils/kirby';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
-	const projects = await getProjects(hasRestricted);
-	const about = await getAboutPage();
+	const projects = getProjects(hasRestricted);
+	const about = getAboutPage();
 
-	if (projects && about) {
-		return {
-			projects,
-			about,
-			restrictedAccess: hasRestricted
-		};
-	}
-
-	error(404, 'Not found');
+	return {
+		projects,
+		about,
+		restrictedAccess: hasRestricted
+	};
 };
