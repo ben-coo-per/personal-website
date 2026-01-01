@@ -9,7 +9,7 @@
 
 	let { project }: Props = $props();
 	let projectBGImage = $derived(
-		project.previewImage ? urlFor(project.previewImage).width(1080).height(1080).url() : null
+		project.previewImage ? urlFor(project.previewImage).width(1080).url() : null
 	);
 
 	const gotoProject = () => {
