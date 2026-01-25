@@ -10,6 +10,7 @@
 	let { data }: Props = $props();
 	let project = $derived(data.project);
 	let next = $derived(data.next);
+	let content = $derived(data.content);
 
 	async function handlePasswordSuccess() {
 		await fetch('/api/set-restricted-access', { method: 'POST' });
@@ -44,8 +45,12 @@
 		{/if}
 
 		<div class="project-content">
-			<!-- This is where mdsvex content will be rendered for each project -->
-			<p>{project.mainDescription}</p>
+			<p class="main-description">{project.mainDescription}</p>
+			{#if content}
+				<div class="gallery-content">
+					{@html content}
+				</div>
+			{/if}
 		</div>
 
 		{#if next && next.slug !== project.slug}
@@ -90,5 +95,39 @@
 
 	.project-content {
 		margin-bottom: 4rem;
+	}
+
+	.main-description {
+		font-size: 1.25rem;
+		line-height: 1.75;
+		margin-bottom: 2rem;
+	}
+
+	.gallery-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.gallery-content :global(img) {
+		width: 100%;
+		height: auto;
+		border-radius: 0.5rem;
+	}
+
+	.gallery-content :global(p) {
+		font-size: 1.125rem;
+		line-height: 1.75;
+	}
+
+	.gallery-content :global(ul),
+	.gallery-content :global(ol) {
+		padding-left: 1.5rem;
+		font-size: 1.125rem;
+		line-height: 1.75;
+	}
+
+	.gallery-content :global(li) {
+		margin-bottom: 0.5rem;
 	}
 </style>

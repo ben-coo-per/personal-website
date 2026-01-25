@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getNextProjectInOrder, getProject } from '$lib/utils/kirby';
+import { getNextProjectInOrder, getProject, getProjectContent } from '$lib/utils/kirby';
+import { marked } from 'marked';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
@@ -12,8 +13,11 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 	}
 
 	if (project.isRestricted && !hasRestricted) {
-		return { needsPassword: true, project: null, next };
+		return { needsPassword: true, project: null, next, content: '' };
 	}
 
-	return { project, next };
+	const contentMarkdown = getProjectContent(params.slug);
+	const content = contentMarkdown ? await marked(contentMarkdown) : '';
+
+	return { project, next, content };
 };

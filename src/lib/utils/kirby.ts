@@ -105,6 +105,20 @@ export function getNextProjectInOrder(
 }
 
 /**
+ * Get the markdown content for a project
+ */
+export function getProjectContent(slug: string): string {
+	const contentPath = path.resolve(`./cms/content/projects/${slug}/content.md`);
+
+	try {
+		return readFileSync(contentPath, 'utf-8');
+	} catch (error) {
+		// Content file is optional - some projects may not have one
+		return '';
+	}
+}
+
+/**
  * Get list of asset files for a project
  */
 export function getProjectAssets(slug: string): string[] {

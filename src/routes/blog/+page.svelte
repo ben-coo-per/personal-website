@@ -30,7 +30,9 @@
 {#snippet about()}
 	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
 		<div class="container mx-auto relative">
-			<div class="mt-6 md:mt-2 flex flex-col gap-3">Lorem ipsum</div>
+			<div class="mt-6 md:mt-2 flex flex-col gap-3">
+				Well how about that. you've made it to the blog
+			</div>
 		</div>
 	</section>
 {/snippet}
@@ -51,10 +53,11 @@
 </div> -->
 
 <div class="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8 px-4 relative">
-	<div class="col-span-2 lg:col-span-3">
-		{@render posts(data.blogPosts)}
-	</div>
-	<div class="col-span-1 lg:col-span-1 mt-8 lg:mt-0">
+	<div class="fixed left-0 w-1/3 lg:w-1/4 py-8 pb-10 h-full pl-4">
 		{@render about()}
+	</div>
+	<div class="col-span-1"></div>
+	<div class="col-span-2 lg:col-span-3 pt-4">
+		{@render posts(data.blogPosts)}
 	</div>
 </div>
