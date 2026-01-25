@@ -16,7 +16,7 @@
 
 	let { children }: Props = $props();
 
-	let backHeader = $derived($page.url.pathname.includes('/project/'));
+	let backHeader = $derived($page.url.pathname.includes('/projects/'));
 </script>
 
 <svelte:head>
@@ -51,8 +51,10 @@
 	<meta name="theme-color" content="#000000" />
 </svelte:head>
 
-<Header />
 <div class="overflow-auto flex flex-col text-gray-200">
+	<div class="fixed top-0 w-full z-50 hidden md:block">
+		<Header />
+	</div>
 	<main class="h-full">
 		{@render children?.()}
 	</main>

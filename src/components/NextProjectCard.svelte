@@ -12,7 +12,7 @@
 	let { project, scrollTransition = false }: Props = $props();
 
 	const gotoProject = () => {
-		window.location.href = `/project/${project.slug}`;
+		window.location.href = `/projects/${project.slug}`;
 	};
 	let projectBGImage = $derived(
 		project.nextCardImage

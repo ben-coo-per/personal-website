@@ -31,7 +31,7 @@
 {:else if project}
 	<article class="project-page">
 		<header class="project-header">
-			<h1>{project.title}</h1>
+			<h1 class="font-display">{project.title}</h1>
 			{#if project.subtitle}
 				<h2>{project.subtitle}</h2>
 			{/if}
@@ -64,6 +64,7 @@
 	}
 
 	.project-header {
+		margin-top: 2rem;
 		margin-bottom: 2rem;
 	}
 

@@ -1,16 +1,16 @@
 <script lang="ts">
-	import Card from '../components/Card.svelte';
+	import Card from '../../components/Card.svelte';
 	import type { PageData } from './$types';
 
 	import { fade } from 'svelte/transition';
 
 	import SplitType from 'split-type';
 	import { onMount } from 'svelte';
-	import { hasViewed } from './page.config';
+	import { hasViewed } from '../page.config';
 	import type { Project } from '$lib/types';
-	import ContactSection from '../components/ContactSection.svelte';
-	import Footer from '../components/Footer.svelte';
-	import PasswordEntry from '../components/PasswordEntry.svelte';
+	import ContactSection from '../../components/ContactSection.svelte';
+	import Footer from '../../components/Footer.svelte';
+	import PasswordEntry from '../../components/PasswordEntry.svelte';
 
 	interface Props {
 		data: PageData;
@@ -90,6 +90,9 @@
 {/snippet}
 
 <div class="flex flex-col px-4 md:hidden">
+	<h3 class="text-gray-100 font-display block text-4xl mt-2">
+		hi, I'm <i class="text-amber-400">Ben</i>
+	</h3>
 	{@render about(paragraphs)}
 	{#if !restrictedAccess}
 		<PasswordEntry
@@ -105,11 +108,8 @@
 	{@render projects(data.projects)}
 </div>
 
-<div class="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8 px-4 relative">
-	<div class="col-span-2 lg:col-span-3">
-		{@render projects(data.projects)}
-	</div>
-	<div class="fixed right-0 w-1/3 lg:w-1/4 py-8 h-full pr-4">
+<div class="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8 px-4 relative h-full">
+	<div class="fixed left-0 w-1/3 lg:w-1/4 py-8 pb-10 h-full pl-4">
 		<h3 class="text-gray-100 font-display block text-4xl mt-2">
 			hi, I'm <i class="text-amber-400">Ben</i>
 		</h3>
@@ -130,5 +130,9 @@
 			{/if}
 			<Footer />
 		</div>
+	</div>
+	<div class="col-span-1"></div>
+	<div class="col-span-2 lg:col-span-3 pt-4">
+		{@render projects(data.projects)}
 	</div>
 </div>

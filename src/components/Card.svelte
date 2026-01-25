@@ -13,7 +13,7 @@
 	);
 
 	const gotoProject = () => {
-		window.location.href = `/project/${project.slug}`;
+		window.location.href = `/projects/${project.slug}`;
 	};
 </script>
 

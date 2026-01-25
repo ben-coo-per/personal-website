@@ -13,7 +13,7 @@
 		const path = $page.url.pathname;
 		const segments = path.split('/').filter(Boolean);
 
-		const items = [{ label: '~', href: '/' }];
+		const items = [{ label: '~', href: '/projects' }];
 
 		let currentPath = '';
 		segments.forEach((segment, index) => {
