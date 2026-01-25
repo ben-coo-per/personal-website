@@ -13,7 +13,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			'/cms-assets': path.resolve('../cms/content/projects')
+			'/cms-assets': path.resolve('./cms/content')
 		}
 	}
 });

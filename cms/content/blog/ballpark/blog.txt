@@ -1,0 +1,13 @@
+Title: ⚾️ Ballpark
+----
+Slug: ballpark
+----
+Excerpt: Fermi estimation... but fun.
+----
+PublishedAt: 2024-06-06
+----
+TimeSpent: 8.5
+----
+GithubLink: https://github.com/ben-coo-per/fermi-estimator
+----
+InstagramLink: https://www.instagram.com/p/C75EjQfPjnY

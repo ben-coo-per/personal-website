@@ -10,9 +10,9 @@ export interface ImageUrlBuilder {
 	url: () => string;
 }
 
-export function urlFor(imagePath: string, slug?: string): ImageUrlBuilder {
+export function urlFor(imagePath: string, slug?: string, type: 'projects' | 'blog' = 'projects'): ImageUrlBuilder {
 	// If it's already a full path, return it
-	const basePath = imagePath.startsWith('/') ? imagePath : `/cms-assets/${slug}/${imagePath}`;
+	const basePath = imagePath.startsWith('/') ? imagePath : `/cms-assets/${type}/${slug}/${imagePath}`;
 
 	return {
 		width: (w: number) => urlFor(imagePath, slug), // No-op for now, browser handles sizing

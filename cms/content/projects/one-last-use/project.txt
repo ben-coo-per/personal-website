@@ -1,0 +1,35 @@
+Title: One Last Use
+
+----
+
+Subtitle: a second life for aluminum cans before recycling
+
+----
+
+MainDescription: One last use is a project aimed at turning aluminum beverage cans into recyclable drinking straws. 
+
+Plastic straws are a known pollution problem. They are not recyclable on account of their weight and shape, they find themselves clogging up waterways and the digestive systems of wildlife.
+
+----
+
+Date: 2025-03-10
+
+----
+
+Priority: 5
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.jpg
+
+----
+
+NextCardImage: next-card.jpg
+
+----
+
+MainImage: hero.jpg

@@ -1,0 +1,13 @@
+Title: 🪄 Magic Macros
+----
+Slug: magic-macros
+----
+Excerpt: Nutritional tracking that doesn’t suck.
+----
+PublishedAt: 2024-05-26
+----
+TimeSpent: 6
+----
+GithubLink: https://github.com/ben-coo-per/nutrition-tracker
+----
+InstagramLink: https://www.instagram.com/p/C7coAndvshm/

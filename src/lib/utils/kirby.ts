@@ -1,21 +1,9 @@
 import { readFileSync, readdirSync, statSync } from 'fs';
 import path from 'path';
+import type { ProjectMetadata, BlogPostMetadata } from '$lib/types';
 
-export interface ProjectMetadata {
-	title?: string;
-	subtitle?: string;
-	mainDescription?: string;
-	date: Date;
-	priority: number;
-	isRestricted: boolean;
-	previewImage?: string;
-	nextCardImage?: string;
-	mainImage?: string;
-	slug: string;
-}
-
-// Type alias for compatibility with existing components
-export type Project = ProjectMetadata;
+// Re-export types for backward compatibility
+export type { ProjectMetadata, BlogPostMetadata, Project } from '$lib/types';
 
 /**
  * Parse Kirby's text format (Field: Value separated by ----)
@@ -43,7 +31,7 @@ function parseKirbyFile(content: string): Record<string, string> {
  * Get a single project by slug
  */
 export function getProject(slug: string): ProjectMetadata | null {
-	const projectPath = path.resolve(`../cms/content/projects/${slug}/project.txt`);
+	const projectPath = path.resolve(`./cms/content/projects/${slug}/project.txt`);
 
 	try {
 		const content = readFileSync(projectPath, 'utf-8');
@@ -71,7 +59,7 @@ export function getProject(slug: string): ProjectMetadata | null {
  * Get all projects (optionally including restricted ones)
  */
 export function getProjects(includeRestricted = false): ProjectMetadata[] {
-	const projectsPath = path.resolve('../cms/content/projects');
+	const projectsPath = path.resolve('./cms/content/projects');
 
 	try {
 		const projectDirs = readdirSync(projectsPath).filter((dir) => {
@@ -120,7 +108,7 @@ export function getNextProjectInOrder(
  * Get list of asset files for a project
  */
 export function getProjectAssets(slug: string): string[] {
-	const projectPath = path.resolve(`../cms/content/projects/${slug}`);
+	const projectPath = path.resolve(`./cms/content/projects/${slug}`);
 
 	try {
 		return readdirSync(projectPath).filter(
@@ -136,7 +124,7 @@ export function getProjectAssets(slug: string): string[] {
  * Verify a passcode for restricted content
  */
 export function verifyPasscode(passcode: string): boolean {
-	const passcodesPath = path.resolve('../cms/content/passcodes.txt');
+	const passcodesPath = path.resolve('./cms/content/passcodes.txt');
 
 	try {
 		const content = readFileSync(passcodesPath, 'utf-8');
@@ -155,7 +143,7 @@ export function verifyPasscode(passcode: string): boolean {
  * Get about page content
  */
 export function getAboutPage(): { body: { text: string }[] } {
-	const aboutPath = path.resolve('../cms/content/about.txt');
+	const aboutPath = path.resolve('./cms/content/about.txt');
 
 	try {
 		const content = readFileSync(aboutPath, 'utf-8');
@@ -179,5 +167,74 @@ export function getAboutPage(): { body: { text: string }[] } {
 	} catch (error) {
 		console.error('Failed to load about page:', error);
 		return { body: [] };
+	}
+}
+
+// ============================================
+// Blog Post Functions
+// ============================================
+
+/**
+ * Get a single blog post by slug
+ */
+export function getBlogPost(slug: string): BlogPostMetadata | null {
+	const blogPath = path.resolve(`./cms/content/blog/${slug}/blog.txt`);
+
+	try {
+		const content = readFileSync(blogPath, 'utf-8');
+		const rawMetadata = parseKirbyFile(content);
+
+		return {
+			title: rawMetadata.title || 'Untitled',
+			slug: rawMetadata.slug || slug,
+			excerpt: rawMetadata.excerpt || '',
+			publishedAt: new Date(rawMetadata.publishedat || Date.now()),
+			timeSpent: rawMetadata.timespent ? parseInt(rawMetadata.timespent, 10) : undefined,
+			githubLink: rawMetadata.githublink,
+			instagramLink: rawMetadata.instagramlink,
+			onshapeLink: rawMetadata.onshapelink,
+			downloadableFile: rawMetadata.downloadablefile
+		};
+	} catch (error) {
+		console.error(`Failed to load blog post ${slug}:`, error);
+		return null;
+	}
+}
+
+/**
+ * Get all blog posts sorted by date (newest first)
+ */
+export function getBlogPosts(): BlogPostMetadata[] {
+	const blogPath = path.resolve('./cms/content/blog');
+
+	try {
+		const blogDirs = readdirSync(blogPath).filter((dir) => {
+			const fullPath = path.join(blogPath, dir);
+			return statSync(fullPath).isDirectory();
+		});
+
+		const posts = blogDirs
+			.map((slug) => getBlogPost(slug))
+			.filter((post): post is BlogPostMetadata => post !== null);
+
+		// Sort by publishedAt date (newest first)
+		return posts.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+	} catch (error) {
+		console.error('Failed to load blog posts:', error);
+		return [];
+	}
+}
+
+/**
+ * Get the markdown content for a blog post
+ */
+export function getBlogPostContent(slug: string): string {
+	const contentPath = path.resolve(`./cms/content/blog/${slug}/content.md`);
+
+	try {
+		return readFileSync(contentPath, 'utf-8');
+	} catch (error) {
+		console.error(`Failed to load blog post content for ${slug}:`, error);
+		return '';
 	}
 }

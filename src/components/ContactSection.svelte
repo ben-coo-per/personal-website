@@ -23,7 +23,7 @@
 	<ContactReveal value="hello@bencooper.xyz" link="mailto:hello@bencooper.xyz" isExternal={false}>
 		<IconSend class="size-8 sm:size-4 flex-shrink-0" />
 	</ContactReveal>
-	<ContactReveal value="blog" link="https://blog.bencooper.xyz/">
+	<ContactReveal value="blog" link="/blog" isExternal={false}>
 		<IconGalaxy class="size-8 sm:size-4 flex-shrink-0" />
 	</ContactReveal>
 </div>

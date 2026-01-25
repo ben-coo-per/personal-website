@@ -1,0 +1,33 @@
+Title: Example Project
+
+----
+
+Subtitle: A demonstration of the hybrid approach
+
+----
+
+MainDescription: This is an example project showcasing the Kirby + mdsvex hybrid approach for content management.
+
+----
+
+Date: 2025-12-26
+
+----
+
+Priority: 1
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.jpg
+
+----
+
+NextCardImage: next-card.jpg
+
+----
+
+MainImage: hero.jpg

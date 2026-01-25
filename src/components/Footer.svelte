@@ -5,7 +5,7 @@
 <footer class="py-4 px-6 md:px-0 container mx-auto">
 	<div class="text-sm text-gray-400">
 		<p>&copy; {currentYear} Ben Cooper</p>
-		<p>Built with Sveltekit, TailwindCSS, & Sanity.io</p>
+		<p>Built with SvelteKit & TailwindCSS</p>
 		<p>
 			Typography by <a
 				class="hover:text-amber-200"

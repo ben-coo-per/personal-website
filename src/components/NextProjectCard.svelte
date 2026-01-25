@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { urlFor } from '$lib/utils/image';
-	import type { Project } from '$lib/utils/kirby';
+	import type { Project } from '$lib/types';
 	import { fade } from 'svelte/transition';
 
 	let hovering: boolean = $state(false);

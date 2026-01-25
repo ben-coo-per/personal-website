@@ -39,7 +39,7 @@
 
 		{#if project.mainImage}
 			<div class="main-image">
-				<img src="/cms-assets/{project.slug}/{project.mainImage}" alt={project.title} />
+				<img src="/cms-assets/projects/{project.slug}/{project.mainImage}" alt={project.title} />
 			</div>
 		{/if}
 

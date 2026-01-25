@@ -1,0 +1,5 @@
+Codes: password123, restricted2024, viewaccess
+
+----
+
+Description: Valid passcodes for restricted content access
