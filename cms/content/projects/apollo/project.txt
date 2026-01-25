@@ -1,0 +1,29 @@
+Title: Apollo
+
+----
+
+Subtitle: centering personal stories around sentimental objects
+
+----
+
+MainDescription: Apollo is a tabletop lamp that blends light, motion, and memory in a way that feels both personal and a little magical. The idea was to create something that goes beyond being just a lamp—something that could reflect the stories and emotions tied to objects we care about.
+
+----
+
+Date: 2024-11-01
+
+----
+
+Priority: 3
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.png

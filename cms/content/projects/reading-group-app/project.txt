@@ -1,0 +1,29 @@
+Title: Reading Group App
+
+----
+
+Subtitle: lightweight app to manage readings and attendance
+
+----
+
+MainDescription: A group of friends and I have been meeting weekly for a reading group since April of 2020. Throughout this time, both the number of members and the typical meeting attendance has ebbed and flowed but a dedicated core remained. We wanted to find a way to both better communicate if we were planning on attending and keep track of what we were reading. Of course, my answer was to build an rsvp app.
+
+----
+
+Date: 2023-06-13
+
+----
+
+Priority: 2
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.png

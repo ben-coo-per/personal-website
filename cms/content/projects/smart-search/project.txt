@@ -1,0 +1,31 @@
+Title: Smart Search
+
+----
+
+Subtitle: helping ecologists move faster with machine learning
+
+----
+
+MainDescription: Smart Search is a tool I helped design and build at Dendra, where I used work on digital tools for large-scale ecological restoration. It began as a proof of concept attempting to speed up the process of identifying vegetation in aerial imagery by combining machine learning with expert ecological knowledge.
+
+It ended up becoming a favorite tool amongst the ecologists and increased the tagging speed by nearly 80% within the first month of use. We refined this tool further and were able to more than double that time reduction as the UX improved and our ecology team became more comfortable with the tool.
+
+----
+
+Date: 2024-06-12
+
+----
+
+Priority: 5
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.png

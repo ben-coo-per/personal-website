@@ -1,0 +1,33 @@
+Title: Propertea
+
+----
+
+Subtitle: restoring sanity to London flat hunting
+
+----
+
+MainDescription: When I moved to London, I found the flat-hunting process incredibly frustrating—a sentiment many others share. One solvable problem stood out: managing properties across multiple platforms.
+
+Reaching out to brokerages directly was the most effective approach, but each had its own site for saving favorites. Combined with lists on Zoopla, Rightmove, OpenRent, and Spareroom, it quickly became overwhelming.
+
+That’s why I built propertea.rentals—a site to aggregate all your favorite properties in one place, regardless of their source.
+
+----
+
+Date: 2024-08-01
+
+----
+
+Priority: 4
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.png

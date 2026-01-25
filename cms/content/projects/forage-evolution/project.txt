@@ -1,0 +1,31 @@
+Title: Forage Evolution
+
+----
+
+Subtitle: design & development for a next generation biotech company
+
+----
+
+MainDescription: I worked with Forage, a biotech startup based in New York commercializing a product that spun out of research from Cornell University.
+
+A few years ago, Forage’s cofounder and CTO engineered a new strain of Vibrio natriegens - the fastest growing organism on Earth - making it naturally competent (able to readily accept foreign DNA for cloning) and created a medium that maintained competence during growth.
+
+----
+
+Date: 2025-08-31
+
+----
+
+Priority: 4
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.jpg

@@ -1,0 +1,29 @@
+Title: Herd
+
+----
+
+Subtitle: easy, effective local civic engagement
+
+----
+
+MainDescription: Herd was a social polling tool for local politicians and political organizations to discover voter opinions and bring local problems to light. Herd’s mission was to spark accessible, inclusive policy conversations. 
+
+----
+
+Date: 2020-09-05
+
+----
+
+Priority: 5
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.png

@@ -1,0 +1,33 @@
+Title: Fool's Gold
+
+----
+
+Subtitle: A social game made for the real world
+
+----
+
+MainDescription: Fool’s Gold is an ambient multiplayer game that lives on a tiny, digital device, not your phone. It is built to spark playful moments in everyday life, it encourages real-world interactions between friends without the need for constant attention or addictive mechanics.
+
+----
+
+Date: 2025-06-27
+
+----
+
+Priority: 4
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+NextCardImage: next-card.heif
+
+----
+
+MainImage: hero.png

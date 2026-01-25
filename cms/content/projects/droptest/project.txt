@@ -1,0 +1,33 @@
+Title: DropTest
+
+----
+
+Subtitle: Biodiversity data you can't mess up
+
+----
+
+MainDescription: DropTest is an eDNA collection device designed to take consistent, contamination-free samples from marine environments.
+
+The project was done by a team of four designers & engineers over the course of three months. 
+
+I was responsible for the design and engineering of the device, as well as customer validation and research.
+
+----
+
+Date: 2025-12-15
+
+----
+
+Priority: 5
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.png

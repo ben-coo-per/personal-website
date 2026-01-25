@@ -1,0 +1,30 @@
+Title: Nose Thing
+
+----
+
+Subtitle: bringing awareness to breath without sacrificing music.
+
+----
+
+MainDescription: Nose Thing is a nose-worn device that gently brings runners back to their breath—building rhythm, awareness, and flow. 
+This was the outcome of a team 4-week project in my engineering course. The main focus on the project was doing primary user research, rapid prototyping, and user tests/prototype validation.
+
+----
+
+Date: 2025-04-11
+
+----
+
+Priority: 2
+
+----
+
+IsRestricted: false
+
+----
+
+PreviewImage: preview.png
+
+----
+
+MainImage: hero.png
