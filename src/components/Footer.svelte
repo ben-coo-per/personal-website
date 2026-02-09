@@ -2,7 +2,7 @@
 	const currentYear = new Date().getFullYear();
 </script>
 
-<footer class="py-4">
+<footer class="">
 	<div class="text-sm text-gray-400">
 		<p>&copy; {currentYear} Ben Cooper</p>
 		<p>Built with SvelteKit & TailwindCSS</p>

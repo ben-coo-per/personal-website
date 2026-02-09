@@ -27,7 +27,7 @@
 
 <!-- Desktop layout: sticky sidebar -->
 <div class="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8 px-4 relative h-full">
-	<div class="fixed left-0 top-10 w-1/3 lg:w-1/4 pt-8 pb-10 h-full pl-4">
+	<div class="fixed left-0 top-10 w-1/3 lg:w-1/4 pt-8 h-full pl-4">
 		{#if title}
 			{@render title()}
 		{/if}
@@ -36,7 +36,7 @@
 				{@render sidebar()}
 			</div>
 		{/if}
-		<div class="absolute bottom-0">
+		<div class="absolute bottom-0 pb-12">
 			{#if sidebarFooter}
 				{@render sidebarFooter()}
 			{/if}

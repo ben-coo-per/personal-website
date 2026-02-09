@@ -14,7 +14,6 @@
 	}
 
 	let { children }: Props = $props();
-
 </script>
 
 <svelte:head>
