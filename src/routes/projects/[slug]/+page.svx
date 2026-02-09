@@ -26,83 +26,37 @@
 </svelte:head>
 
 {#if data.needsPassword}
-	<div class="min-h-screen flex items-center justify-center">
+	<div class="min-h-screen flex items-center justify-center bg-custom-black">
 		<PasswordEntry onSuccess={handlePasswordSuccess} />
 	</div>
 {:else if project}
-	<article class="project-page">
-		<header class="project-header">
-			<h1 class="font-display">{project.title}</h1>
-			{#if project.subtitle}
-				<h2>{project.subtitle}</h2>
-			{/if}
-		</header>
-
-		{#if project.mainImage}
-			<div class="main-image">
-				<img src="/cms-assets/projects/{project.slug}/{project.mainImage}" alt={project.title} />
-			</div>
-		{/if}
-
-		<div class="project-content">
-			<p class="main-description">{project.mainDescription}</p>
-			{#if content}
-				<div class="gallery-content">
-					{@html content}
-				</div>
-			{/if}
+	<!-- Hero image -->
+	{#if project.mainImage}
+		<div class="mb-8">
+			<img
+				src="/cms-assets/projects/{project.slug}/{project.mainImage}"
+				alt={project.title}
+				class="w-full h-auto rounded-lg shadow-xl"
+			/>
 		</div>
+	{/if}
 
-		{#if next && next.slug !== project.slug}
-			<div id="next-project">
-				<NextProjectCard project={next} />
-			</div>
-		{/if}
-	</article>
+	<!-- Gallery/body content -->
+	{#if content}
+		<div class="gallery-content">
+			{@html content}
+		</div>
+	{/if}
+
+	<!-- Next project -->
+	{#if next && next.slug !== project.slug}
+		<div class="mt-16 pt-8 border-t border-gray-700">
+			<NextProjectCard project={next} />
+		</div>
+	{/if}
 {/if}
 
 <style>
-	.project-page {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 2rem;
-	}
-
-	.project-header {
-		margin-top: 2rem;
-		margin-bottom: 2rem;
-	}
-
-	h1 {
-		font-size: 3rem;
-		font-weight: bold;
-		margin-bottom: 0.5rem;
-	}
-
-	h2 {
-		font-size: 1.5rem;
-		color: #666;
-	}
-
-	.main-image {
-		margin-bottom: 2rem;
-	}
-
-	.main-image img {
-		width: 100%;
-		height: auto;
-	}
-
-	.project-content {
-		margin-bottom: 4rem;
-	}
-
-	.main-description {
-		font-size: 1.25rem;
-		line-height: 1.75;
-		margin-bottom: 2rem;
-	}
-
 	.gallery-content {
 		display: flex;
 		flex-direction: column;
@@ -113,11 +67,13 @@
 		width: 100%;
 		height: auto;
 		border-radius: 0.5rem;
+		box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 	}
 
 	.gallery-content :global(p) {
 		font-size: 1.125rem;
 		line-height: 1.75;
+		color: #d1d5db;
 	}
 
 	.gallery-content :global(ul),
@@ -125,9 +81,35 @@
 		padding-left: 1.5rem;
 		font-size: 1.125rem;
 		line-height: 1.75;
+		color: #d1d5db;
 	}
 
 	.gallery-content :global(li) {
 		margin-bottom: 0.5rem;
+	}
+
+	.gallery-content :global(h2) {
+		font-size: 1.5rem;
+		font-weight: bold;
+		color: #f3f4f6;
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+	}
+
+	.gallery-content :global(h3) {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #f3f4f6;
+		margin-top: 1.5rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.gallery-content :global(a) {
+		color: #fbbf24;
+		text-decoration: none;
+	}
+
+	.gallery-content :global(a:hover) {
+		text-decoration: underline;
 	}
 </style>

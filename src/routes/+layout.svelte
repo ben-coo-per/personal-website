@@ -9,14 +9,12 @@
 		inject({ mode: 'production' });
 	}
 
-	import { page } from '$app/stores';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
 
 	let { children }: Props = $props();
 
-	let backHeader = $derived($page.url.pathname.includes('/projects/'));
 </script>
 
 <svelte:head>

@@ -17,7 +17,7 @@
 	<ContactReveal value="ben-coo-per" link="https://github.com/ben-coo-per">
 		<IconBrandGithub class="size-8 sm:size-4 flex-shrink-0 " />
 	</ContactReveal>
-	<ContactReveal value="ben-a-cooper" link="https://www.linkedin.com/in/ben-a-cooper/">
+	<ContactReveal value="ben-coo-per" link="https://www.linkedin.com/in/ben-coo-per/">
 		<IconBrandLinkedin class="size-8 sm:size-4 flex-shrink-0" />
 	</ContactReveal>
 	<ContactReveal value="hello@bencooper.xyz" link="mailto:hello@bencooper.xyz" isExternal={false}>

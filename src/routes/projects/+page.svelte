@@ -9,7 +9,7 @@
 	import { hasViewed } from '../page.config';
 	import type { Project } from '$lib/types';
 	import ContactSection from '../../components/ContactSection.svelte';
-	import Footer from '../../components/Footer.svelte';
+	import ContentLayout from '../../components/ContentLayout.svelte';
 	import PasswordEntry from '../../components/PasswordEntry.svelte';
 
 	interface Props {
@@ -48,7 +48,7 @@
 {#snippet about(paragraphs: Paragraph[])}
 	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
 		<div class="container mx-auto relative">
-			<div class="mt-6 md:mt-2 flex flex-col gap-3">
+			<div class="flex flex-col gap-3">
 				{#each paragraphs as { id, text }}
 					<div class="pb-6 md:pb-2">
 						<p class="text-xl md:text-base text-gray-200 about-text" id={`${id}`}>{text}</p>
@@ -60,7 +60,7 @@
 {/snippet}
 
 {#snippet projects(projects: Project[])}
-	<section class="flex flex-col gap-8 pb-16 py-8">
+	<section class="flex flex-col gap-8 pb-16">
 		<hr class="border-t border-gray-500 md:hidden" />
 		<div class="grid md:grid-flow-row-dense grid-cols-1 gap-2 mx-auto place-items-center">
 			{#each projects as project, i}
@@ -89,50 +89,33 @@
 	</section>
 {/snippet}
 
-<div class="flex flex-col px-4 md:hidden">
-	<h3 class="text-gray-100 font-display block text-4xl mt-2">
-		hi, I'm <i class="text-amber-400">Ben</i>
-	</h3>
-	{@render about(paragraphs)}
-	{#if !restrictedAccess}
-		<PasswordEntry
-			title="Some projects are confidential"
-			label="If you were given a password, enter it here to show them."
-			on:success={handlePasswordSuccess}
-		/>
-	{:else}
-		<div class="text-gray-400 mt-4">
-			<p class="text-sm">Access granted. You can now view confidential projects.</p>
-		</div>
-	{/if}
-	{@render projects(data.projects)}
-</div>
-
-<div class="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8 px-4 relative h-full">
-	<div class="fixed left-0 w-1/3 lg:w-1/4 py-8 pb-10 h-full pl-4">
-		<h3 class="text-gray-100 font-display block text-4xl mt-2">
+<ContentLayout>
+	{#snippet title()}
+		<h3 class="text-gray-100 font-display block text-4xl">
 			hi, I'm <i class="text-amber-400">Ben</i>
 		</h3>
-		{@render about(paragraphs)}
-		<ContactSection />
+	{/snippet}
 
-		<div class="absolute bottom-0">
-			{#if !restrictedAccess}
-				<PasswordEntry
-					title="Some projects are confidential"
-					label="If you were given a password, enter it here to show them."
-					on:success={handlePasswordSuccess}
-				/>
-			{:else}
-				<div class="text-gray-400 mt-4">
-					<p class="text-sm">Access granted. You can now view confidential projects.</p>
-				</div>
-			{/if}
-			<Footer />
+	{#snippet sidebar()}
+		{@render about(paragraphs)}
+		<div class="hidden md:block">
+			<ContactSection />
 		</div>
-	</div>
-	<div class="col-span-1"></div>
-	<div class="col-span-2 lg:col-span-3 pt-4">
-		{@render projects(data.projects)}
-	</div>
-</div>
+	{/snippet}
+
+	{#snippet sidebarFooter()}
+		{#if !restrictedAccess}
+			<PasswordEntry
+				title="Some projects are confidential"
+				label="If you were given a password, enter it here to show them."
+				on:success={handlePasswordSuccess}
+			/>
+		{:else}
+			<div class="text-gray-400 mt-4">
+				<p class="text-sm">Access granted. You can now view confidential projects.</p>
+			</div>
+		{/if}
+	{/snippet}
+
+	{@render projects(data.projects)}
+</ContentLayout>
