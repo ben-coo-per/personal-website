@@ -3,7 +3,7 @@
 </script>
 
 <footer class="">
-	<div class="text-sm text-gray-400">
+	<div class="text-xs text-gray-400">
 		<p>&copy; {currentYear} Ben Cooper</p>
 		<p>Built with SvelteKit & TailwindCSS</p>
 		<p>

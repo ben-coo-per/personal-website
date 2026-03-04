@@ -1,54 +1,46 @@
-import { readFileSync, readdirSync, statSync } from 'fs';
-import path from 'path';
+import { env } from '$env/dynamic/private';
 import type { ProjectMetadata, BlogPostMetadata } from '$lib/types';
 
 // Re-export types for backward compatibility
 export type { ProjectMetadata, BlogPostMetadata, Project } from '$lib/types';
 
-/**
- * Parse Kirby's text format (Field: Value separated by ----)
- */
-function parseKirbyFile(content: string): Record<string, string> {
-	const blocks = content.split('----').filter((block) => block.trim());
-	const metadata: Record<string, string> = {};
+function kirbyAuthHeader(): string {
+	return 'Basic ' + btoa(`${env.KIRBY_API_USER}:${env.KIRBY_API_PASSWORD}`);
+}
 
-	for (const block of blocks) {
-		const colonIndex = block.indexOf(':');
-		if (colonIndex === -1) continue;
-
-		const key = block.substring(0, colonIndex).trim();
-		const value = block.substring(colonIndex + 1).trim();
-
-		if (key && value) {
-			metadata[key.toLowerCase()] = value;
-		}
+async function kirbyFetch(path: string): Promise<{ data: any }> {
+	const res = await fetch(`${env.KIRBY_API_URL}/api/${path}`, {
+		headers: { Authorization: kirbyAuthHeader() }
+	});
+	if (!res.ok) {
+		throw new Error(`Kirby API ${path} → ${res.status}`);
 	}
+	return res.json();
+}
 
-	return metadata;
+function mapKirbyProject(page: any): ProjectMetadata {
+	const c = page.content ?? {};
+	return {
+		title: c.title,
+		subtitle: c.subtitle,
+		mainDescription: c.maindescription,
+		date: new Date(c.date || Date.now()),
+		priority: parseInt(c.priority || '0', 10),
+		isRestricted: c.isrestricted === 'true',
+		previewImage: c.previewimage,
+		nextCardImage: c.nextcardimage,
+		mainImage: c.mainimage,
+		slug: page.slug
+	};
 }
 
 /**
  * Get a single project by slug
  */
-export function getProject(slug: string): ProjectMetadata | null {
-	const projectPath = path.resolve(`./cms/content/projects/${slug}/project.txt`);
-
+export async function getProject(slug: string): Promise<ProjectMetadata | null> {
 	try {
-		const content = readFileSync(projectPath, 'utf-8');
-		const rawMetadata = parseKirbyFile(content);
-
-		return {
-			title: rawMetadata.title,
-			subtitle: rawMetadata.subtitle,
-			mainDescription: rawMetadata.maindescription,
-			date: new Date(rawMetadata.date || Date.now()),
-			priority: parseInt(rawMetadata.priority || '0', 10),
-			isRestricted: rawMetadata.isrestricted === 'true',
-			previewImage: rawMetadata.previewimage,
-			nextCardImage: rawMetadata.nextcardimage,
-			mainImage: rawMetadata.mainimage,
-			slug
-		};
+		const { data } = await kirbyFetch(`pages/projects+${slug}`);
+		return mapKirbyProject(data);
 	} catch (error) {
 		console.error(`Failed to load project ${slug}:`, error);
 		return null;
@@ -58,28 +50,15 @@ export function getProject(slug: string): ProjectMetadata | null {
 /**
  * Get all projects (optionally including restricted ones)
  */
-export function getProjects(includeRestricted = false): ProjectMetadata[] {
-	const projectsPath = path.resolve('./cms/content/projects');
-
+export async function getProjects(includeRestricted = false): Promise<ProjectMetadata[]> {
 	try {
-		const projectDirs = readdirSync(projectsPath).filter((dir) => {
-			const fullPath = path.join(projectsPath, dir);
-			return statSync(fullPath).isDirectory();
-		});
+		const { data } = await kirbyFetch('pages/projects/children?limit=100');
+		const projects: ProjectMetadata[] = data
+			.map(mapKirbyProject)
+			.filter((p: ProjectMetadata) => includeRestricted || !p.isRestricted);
 
-		const projects = projectDirs
-			.map((slug) => getProject(slug))
-			.filter((project): project is ProjectMetadata => {
-				if (!project) return false;
-				if (!includeRestricted && project.isRestricted) return false;
-				return true;
-			});
-
-		// Sort by priority (desc) then date (desc)
 		return projects.sort((a, b) => {
-			if (a.priority !== b.priority) {
-				return b.priority - a.priority;
-			}
+			if (a.priority !== b.priority) return b.priority - a.priority;
 			return b.date.getTime() - a.date.getTime();
 		});
 	} catch (error) {
@@ -91,93 +70,65 @@ export function getProjects(includeRestricted = false): ProjectMetadata[] {
 /**
  * Get the next project in order (wraps around)
  */
-export function getNextProjectInOrder(
+export async function getNextProjectInOrder(
 	currentSlug: string,
 	includeRestricted = false
-): ProjectMetadata | null {
-	const allProjects = getProjects(includeRestricted);
-	const currentIndex = allProjects.findIndex((project) => project.slug === currentSlug);
-
+): Promise<ProjectMetadata | null> {
+	const allProjects = await getProjects(includeRestricted);
+	const currentIndex = allProjects.findIndex((p) => p.slug === currentSlug);
 	if (currentIndex === -1 || allProjects.length <= 1) return null;
-
-	const nextIndex = (currentIndex + 1) % allProjects.length;
-	return allProjects[nextIndex];
+	return allProjects[(currentIndex + 1) % allProjects.length];
 }
 
 /**
- * Get the markdown content for a project
+ * Get the markdown content for a project (stored in the `text` field)
  */
-export function getProjectContent(slug: string): string {
-	const contentPath = path.resolve(`./cms/content/projects/${slug}/content.md`);
-
+export async function getProjectContent(slug: string): Promise<string> {
 	try {
-		return readFileSync(contentPath, 'utf-8');
-	} catch (error) {
-		// Content file is optional - some projects may not have one
+		const { data } = await kirbyFetch(`pages/projects+${slug}`);
+		return data.content?.text ?? '';
+	} catch {
 		return '';
 	}
 }
 
 /**
- * Get list of asset files for a project
+ * Get list of asset filenames for a project
  */
-export function getProjectAssets(slug: string): string[] {
-	const projectPath = path.resolve(`./cms/content/projects/${slug}`);
-
+export async function getProjectAssets(slug: string): Promise<string[]> {
 	try {
-		return readdirSync(projectPath).filter(
-			(file) => file !== 'project.txt' && !file.startsWith('.')
-		);
-	} catch (error) {
-		console.error(`Failed to load assets for ${slug}:`, error);
+		const { data } = await kirbyFetch(`pages/projects+${slug}/files`);
+		return data.map((f: any) => f.filename);
+	} catch {
 		return [];
 	}
 }
 
 /**
- * Verify a passcode for restricted content
+ * Verify a passcode for restricted content.
+ * Valid codes are stored in the PASSCODES env variable (comma-separated).
  */
 export function verifyPasscode(passcode: string): boolean {
-	const passcodesPath = path.resolve('./cms/content/passcodes.txt');
-
-	try {
-		const content = readFileSync(passcodesPath, 'utf-8');
-		const passcodes = parseKirbyFile(content);
-
-		// Check if the passcode exists and is active
-		const codes = passcodes.codes?.split(',').map((c) => c.trim()) || [];
-		return codes.includes(passcode);
-	} catch (error) {
-		console.error('Failed to verify passcode:', error);
-		return false;
-	}
+	const codes = (env.PASSCODES ?? '')
+		.split(',')
+		.map((c) => c.trim())
+		.filter(Boolean);
+	return codes.includes(passcode);
 }
 
 /**
  * Get about page content
  */
-export function getAboutPage(): { body: { text: string }[] } {
-	const aboutPath = path.resolve('./cms/content/about.txt');
-
+export async function getAboutPage(): Promise<{ body: { text: string }[] }> {
 	try {
-		const content = readFileSync(aboutPath, 'utf-8');
-		// Split by ---- and extract Body fields
-		const blocks = content.split('----').filter((block) => block.trim());
-		const bodyParagraphs: { text: string }[] = [];
-
-		for (const block of blocks) {
-			const colonIndex = block.indexOf(':');
-			if (colonIndex === -1) continue;
-
-			const key = block.substring(0, colonIndex).trim().toLowerCase();
-			const value = block.substring(colonIndex + 1).trim();
-
-			if (key === 'body' && value) {
-				bodyParagraphs.push({ text: value });
-			}
-		}
-
-		return { body: bodyParagraphs };
+		const { data } = await kirbyFetch('pages/about');
+		const body: string = data.content?.body ?? '';
+		// Split on blank lines to reproduce the multiple-paragraph structure
+		const paragraphs = body
+			.split(/\n{2,}/)
+			.map((p: string) => p.trim())
+			.filter(Boolean);
+		return { body: paragraphs.map((text) => ({ text })) };
 	} catch (error) {
 		console.error('Failed to load about page:', error);
 		return { body: [] };
@@ -188,27 +139,28 @@ export function getAboutPage(): { body: { text: string }[] } {
 // Blog Post Functions
 // ============================================
 
+function mapKirbyBlogPost(page: any): BlogPostMetadata {
+	const c = page.content ?? {};
+	return {
+		title: c.title || 'Untitled',
+		slug: page.slug,
+		excerpt: c.excerpt || '',
+		publishedAt: new Date(c.publishedat || Date.now()),
+		timeSpent: c.timespent ? parseInt(c.timespent, 10) : undefined,
+		githubLink: c.githublink,
+		instagramLink: c.instagramlink,
+		onshapeLink: c.onshapelink,
+		downloadableFile: c.downloadablefile
+	};
+}
+
 /**
  * Get a single blog post by slug
  */
-export function getBlogPost(slug: string): BlogPostMetadata | null {
-	const blogPath = path.resolve(`./cms/content/blog/${slug}/blog.txt`);
-
+export async function getBlogPost(slug: string): Promise<BlogPostMetadata | null> {
 	try {
-		const content = readFileSync(blogPath, 'utf-8');
-		const rawMetadata = parseKirbyFile(content);
-
-		return {
-			title: rawMetadata.title || 'Untitled',
-			slug: rawMetadata.slug || slug,
-			excerpt: rawMetadata.excerpt || '',
-			publishedAt: new Date(rawMetadata.publishedat || Date.now()),
-			timeSpent: rawMetadata.timespent ? parseInt(rawMetadata.timespent, 10) : undefined,
-			githubLink: rawMetadata.githublink,
-			instagramLink: rawMetadata.instagramlink,
-			onshapeLink: rawMetadata.onshapelink,
-			downloadableFile: rawMetadata.downloadablefile
-		};
+		const { data } = await kirbyFetch(`pages/blog+${slug}`);
+		return mapKirbyBlogPost(data);
 	} catch (error) {
 		console.error(`Failed to load blog post ${slug}:`, error);
 		return null;
@@ -218,21 +170,15 @@ export function getBlogPost(slug: string): BlogPostMetadata | null {
 /**
  * Get all blog posts sorted by date (newest first)
  */
-export function getBlogPosts(): BlogPostMetadata[] {
-	const blogPath = path.resolve('./cms/content/blog');
-
+export async function getBlogPosts(): Promise<BlogPostMetadata[]> {
 	try {
-		const blogDirs = readdirSync(blogPath).filter((dir) => {
-			const fullPath = path.join(blogPath, dir);
-			return statSync(fullPath).isDirectory();
-		});
-
-		const posts = blogDirs
-			.map((slug) => getBlogPost(slug))
-			.filter((post): post is BlogPostMetadata => post !== null);
-
-		// Sort by publishedAt date (newest first)
-		return posts.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+		const { data } = await kirbyFetch('pages/blog/children?limit=100');
+		return data
+			.map(mapKirbyBlogPost)
+			.sort(
+				(a: BlogPostMetadata, b: BlogPostMetadata) =>
+					b.publishedAt.getTime() - a.publishedAt.getTime()
+			);
 	} catch (error) {
 		console.error('Failed to load blog posts:', error);
 		return [];
@@ -240,15 +186,13 @@ export function getBlogPosts(): BlogPostMetadata[] {
 }
 
 /**
- * Get the markdown content for a blog post
+ * Get the markdown content for a blog post (stored in the `text` field)
  */
-export function getBlogPostContent(slug: string): string {
-	const contentPath = path.resolve(`./cms/content/blog/${slug}/content.md`);
-
+export async function getBlogPostContent(slug: string): Promise<string> {
 	try {
-		return readFileSync(contentPath, 'utf-8');
-	} catch (error) {
-		console.error(`Failed to load blog post content for ${slug}:`, error);
+		const { data } = await kirbyFetch(`pages/blog+${slug}`);
+		return data.content?.text ?? '';
+	} catch {
 		return '';
 	}
 }

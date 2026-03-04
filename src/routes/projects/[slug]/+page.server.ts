@@ -5,8 +5,8 @@ import { marked } from 'marked';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
-	const project = getProject(params.slug);
-	const next = getNextProjectInOrder(params.slug, hasRestricted);
+	const project = await getProject(params.slug);
+	const next = await getNextProjectInOrder(params.slug, hasRestricted);
 
 	if (!project) {
 		error(404, 'Not found');
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 		return { needsPassword: true, project: null, next, content: '' };
 	}
 
-	const contentMarkdown = getProjectContent(params.slug);
+	const contentMarkdown = await getProjectContent(params.slug);
 	const content = contentMarkdown ? await marked(contentMarkdown) : '';
 
 	return { project, next, content };
