@@ -7,7 +7,8 @@
 
 	let { data }: Props = $props();
 
-	const paragraphs = $derived((data.about?.body ?? []).map((b: { text: string }) => b.text));
+	const about = $derived(data.about);
+	const paragraphs = $derived(about?.body ?? []);
 </script>
 
 <svelte:head>
@@ -19,42 +20,70 @@
 	<div class="page-head">
 		<span class="label">/ about</span>
 		<h1>
-			engineer by <em>training</em>,<br />
-			designer &amp; developer<br />
-			by <em>practice</em>.
+			Hi, <br />
+			<em>I'm Ben</em>
 		</h1>
 	</div>
 
 	<div class="split">
 		<div class="panel">
 			<h4>bio</h4>
-			{#each paragraphs as text}<p>{text}</p>{/each}
-			{#if paragraphs.length === 0}
-				<p><strong>I'm Ben</strong> — an engineer by training and a designer &amp; developer by practice.</p>
-			{/if}
+			{#each paragraphs as p}<p>{@html p.html}</p>{/each}
 			<div class="linkgrid">
-				<a href="https://github.com/ben-coo-per" target="_blank" rel="noreferrer">
-					<span class="lbl">github</span><span>ben-coo-per <span class="arr">↗</span></span>
-				</a>
-				<a href="https://instagram.com/ben.coo.per" target="_blank" rel="noreferrer">
-					<span class="lbl">instagram</span><span>ben.coo.per <span class="arr">↗</span></span>
-				</a>
-				<a href="mailto:hello@bencooper.xyz">
-					<span class="lbl">email</span><span>hello@bencooper.xyz <span class="arr">↗</span></span>
-				</a>
-				<a href="/blog">
-					<span class="lbl">writing</span><span>/blog <span class="arr">↗</span></span>
-				</a>
+				{#if about?.github}
+					<a href="https://github.com/{about.github}" target="_blank" rel="noreferrer">
+						<span class="lbl">github</span><span>{about.github} <span class="arr">↗</span></span>
+					</a>
+				{/if}
+				{#if about?.instagram}
+					<a href="https://instagram.com/{about.instagram}" target="_blank" rel="noreferrer">
+						<span class="lbl">instagram</span><span
+							>{about.instagram} <span class="arr">↗</span></span
+						>
+					</a>
+				{/if}
+				{#if about?.email}
+					<a href="mailto:{about.email}">
+						<span class="lbl">email</span><span>{about.email} <span class="arr">↗</span></span>
+					</a>
+				{/if}
+				{#if about?.linkedin}
+					<a href="https://linkedin.com/in/{about.linkedin}" target="_blank" rel="noreferrer">
+						<span class="lbl">linkedin</span><span
+							>{about.linkedin} <span class="arr">↗</span></span
+						>
+					</a>
+				{/if}
 			</div>
 		</div>
 
 		<div class="panel">
-			<h4>now</h4>
-			<div class="now-row"><span class="k">working</span><span class="v">climate hardware prototypes <em>/ three days a week</em></span></div>
-			<div class="now-row"><span class="k">building</span><span class="v">a mast &amp; boom for a small lateen-rigged dinghy.</span></div>
-			<div class="now-row"><span class="k">reading</span><span class="v"><em>How to Make a Book</em> — Erik van Blokland.</span></div>
-			<div class="now-row"><span class="k">watching</span><span class="v"><em>Columbo</em>, mostly. It rains a lot lately.</span></div>
-			<div class="now-row"><span class="k">riding</span><span class="v">an aluminum Crust Bombora, on the dry days.</span></div>
+			<h4>Currently</h4>
+			{#if about?.working}
+				<div class="now-row">
+					<span class="k">working</span><span class="v">{@html about.working}</span>
+				</div>
+			{/if}
+			{#if about?.building}
+				<div class="now-row">
+					<span class="k">building</span><span class="v">{@html about.building}</span>
+				</div>
+			{/if}
+			{#if about?.reading}
+				<div class="now-row">
+					<span class="k">reading</span><span class="v">{@html about.reading}</span>
+				</div>
+			{/if}
+			{#if about?.watching}
+				<div class="now-row">
+					<span class="k">watching</span><span class="v">{@html about.watching}</span>
+				</div>
+			{/if}
+			{#if about?.playing}
+				<div class="now-row">
+					<span class="k">playing</span><span class="v">{@html about.playing}</span>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -85,5 +114,17 @@
 		font-weight: 400;
 	}
 
-	h1 em { font-style: italic; color: var(--amber); }
+	h1 em {
+		font-style: italic;
+		color: var(--amber);
+	}
+
+	.now-row .v :global(a) {
+		text-decoration: underline;
+		text-underline-offset: 5px;
+	}
+
+	.now-row .v :global(a):hover {
+		opacity: 0.8;
+	}
 </style>

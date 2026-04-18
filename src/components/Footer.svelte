@@ -8,8 +8,11 @@
 		<span>© {currentYear} Ben Cooper</span>
 		<div class="right">
 			<span>Rubik + Mondwest</span>
+			<span>|</span>
 			<span>SvelteKit</span>
+			<span>|</span>
 			<span>KirbyCMS</span>
+			<span>|</span>
 			<button onclick={() => cmdkOpen.set(true)}>⌘K</button>
 		</div>
 	</div>
@@ -52,5 +55,12 @@
 
 	button:hover {
 		color: var(--ink);
+	}
+
+	@media (max-width: 700px) {
+		button,
+		.right > span:last-of-type {
+			display: none;
+		}
 	}
 </style>

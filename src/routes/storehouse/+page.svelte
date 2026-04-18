@@ -55,26 +55,7 @@
 	</div>
 
 	<div class="workspace" class:has-panel={!!selected}>
-		<div class="list-col">
-			<ul class="list">
-				{#each data.projects as project}
-					<li>
-						<button
-							class="row"
-							class:active={selected?.slug === project.slug}
-							onclick={() => openProject(project)}
-							type="button"
-						>
-							<span class="cell-date">{formatDate(project.date)}</span>
-							<span class="cell-title">{project.title ?? ''}</span>
-							<span class="cell-sub">{project.subtitle ?? ''}</span>
-							<span class="cell-arrow">↗</span>
-						</button>
-					</li>
-				{/each}
-			</ul>
-		</div>
-
+		<!-- panel must precede the list so the float wraps correctly -->
 		<div class="panel-col" aria-hidden={!selected}>
 			<div class="panel-inner">
 				{#if selected}
@@ -122,29 +103,45 @@
 				{/if}
 			</div>
 		</div>
+
+		<ul class="list">
+			{#each data.projects as project}
+				<li class="list-item">
+					<button
+						class="row"
+						class:active={selected?.slug === project.slug}
+						onclick={() => openProject(project)}
+						type="button"
+					>
+						<span class="cell-date">{formatDate(project.date)}</span>
+						<span class="cell-title">{project.title ?? ''}</span>
+						<span class="cell-sub">{project.subtitle ?? ''}</span>
+						<span class="cell-arrow">↗</span>
+					</button>
+				</li>
+			{/each}
+		</ul>
 	</div>
 </div>
 
 <style>
-	/* ===== LAYOUT ===== */
-	.workspace {
-		display: flex;
-		align-items: flex-start;
-		gap: 0;
-	}
-
-	.list-col {
-		flex: 1;
-		min-width: 0;
+	/* ===== LAYOUT =====
+	   Float-based: panel floats right, list items establish a block formatting
+	   context (overflow: hidden on li) so they sit beside the float and
+	   automatically return to full width once the panel's height is exceeded. */
+	.workspace::after {
+		content: '';
+		display: block;
+		clear: both;
 	}
 
 	.panel-col {
-		flex-shrink: 0;
+		float: right;
 		width: 0;
-		overflow: auto;
-		transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+		overflow-x: hidden;
+		overflow-y: auto;
 		max-height: 80vh;
-		margin-bottom: 32px;
+		transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 	}
 
 	.workspace.has-panel .panel-col {
@@ -153,16 +150,21 @@
 
 	.panel-inner {
 		width: 460px;
-		padding-left: 32px;
-		border-left: 1px solid var(--rule);
+		padding: 18px 20px;
+		border: 1px solid var(--rule);
+		box-sizing: border-box;
 	}
 
-	/* ===== LIST / TABLE ===== */
+	/* ===== LIST ===== */
 	.list {
+		list-style: none;
 		margin: 0;
 		padding: 0;
-		list-style: none;
 		border-top: 1px solid var(--rule);
+	}
+
+	.list-item {
+		overflow: hidden; /* BFC: rows sit beside the panel float, not behind it */
 	}
 
 	.row {
@@ -218,7 +220,6 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		transition: opacity 0.2s;
 	}
 
 	.workspace.has-panel .cell-sub {
@@ -327,32 +328,30 @@
 	/* ===== RESPONSIVE ===== */
 	@media (max-width: 960px) {
 		.workspace.has-panel .panel-col {
-			width: 360px;
+			width: 340px;
 		}
 		.panel-inner {
-			width: 360px;
-			padding-left: 20px;
+			width: 340px;
 		}
 	}
 
 	@media (max-width: 700px) {
-		.workspace {
-			flex-direction: column;
-		}
 		.panel-col {
+			float: none;
 			width: 100% !important;
+			max-height: none;
 			overflow: visible;
-			border-top: 1px solid var(--rule);
 			margin-top: 0;
-		}
-		.workspace.has-panel .panel-col {
-			width: 100% !important;
 		}
 		.panel-inner {
 			width: 100%;
-			padding-left: 0;
+			border-top: 1px solid var(--rule);
 			border-left: none;
-			padding-top: 24px;
+			border-right: none;
+			border-bottom: none;
+		}
+		.list-item {
+			overflow: visible;
 		}
 		.cell-sub {
 			display: none;

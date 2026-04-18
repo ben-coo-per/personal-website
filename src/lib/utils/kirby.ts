@@ -1,10 +1,9 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
 import { env } from '$env/dynamic/private';
-import type { ProjectMetadata, BlogPostMetadata } from '$lib/types';
+import { marked } from 'marked';
+import type { ProjectMetadata, BlogPostMetadata, AboutData } from '$lib/types';
 
 // Re-export types for backward compatibility
-export type { ProjectMetadata, BlogPostMetadata, Project } from '$lib/types';
+export type { ProjectMetadata, BlogPostMetadata, Project, AboutData } from '$lib/types';
 
 function kirbyAuthHeader(): string {
 	return 'Basic ' + btoa(`${env.KIRBY_API_USER}:${env.KIRBY_API_PASSWORD}`);
@@ -105,12 +104,15 @@ export async function getStorehouseProjects(): Promise<ProjectMetadata[]> {
 }
 
 /**
- * Get the markdown content for a project (stored in content.md on disk)
+ * Get the markdown content for a project via the Kirby file API
  */
 export async function getProjectContent(slug: string): Promise<string> {
 	try {
-		const filePath = join(process.cwd(), 'cms', 'content', 'projects', slug, 'content.md');
-		return await readFile(filePath, 'utf-8');
+		const { data } = await kirbyFetch(`pages/projects+${slug}/files/content.md`);
+		if (!data?.url) return '';
+		const res = await fetch(data.url);
+		if (!res.ok) return '';
+		return await res.text();
 	} catch {
 		return '';
 	}
@@ -143,19 +145,43 @@ export function verifyPasscode(passcode: string): boolean {
 /**
  * Get about page content
  */
-export async function getAboutPage(): Promise<{ body: { text: string }[] }> {
+export async function getAboutPage(): Promise<AboutData> {
+	const fallback: AboutData = {
+		body: [] as { html: string }[],
+		email: '',
+		github: '',
+		instagram: '',
+		linkedin: '',
+		location: '',
+		working: '',
+		building: '',
+		reading: '',
+		watching: '',
+		playing: ''
+	};
 	try {
 		const { data } = await kirbyFetch('pages/about');
-		const body: string = data.content?.body ?? '';
-		// Split on blank lines to reproduce the multiple-paragraph structure
-		const paragraphs = body
+		const c = data.content ?? {};
+		const paragraphs = (c.body ?? '')
 			.split(/\n{2,}/)
 			.map((p: string) => p.trim())
 			.filter(Boolean);
-		return { body: paragraphs.map((text) => ({ text })) };
+		return {
+			body: paragraphs.map((text: string) => ({ html: marked.parseInline(text) as string })),
+			email: c.email ?? '',
+			github: c.github ?? '',
+			instagram: c.instagram ?? '',
+			linkedin: c.linkedin ?? '',
+			location: c.location ?? '',
+			working: marked.parseInline(c.working ?? '') as string,
+			building: marked.parseInline(c.building ?? '') as string,
+			reading: marked.parseInline(c.reading ?? '') as string,
+			watching: marked.parseInline(c.watching ?? '') as string,
+			playing: marked.parseInline(c.playing ?? '') as string
+		};
 	} catch (error) {
 		console.error('Failed to load about page:', error);
-		return { body: [] };
+		return fallback;
 	}
 }
 
@@ -210,12 +236,15 @@ export async function getBlogPosts(): Promise<BlogPostMetadata[]> {
 }
 
 /**
- * Get the markdown content for a blog post (stored in content.md on disk)
+ * Get the markdown content for a blog post via the Kirby file API
  */
 export async function getBlogPostContent(slug: string): Promise<string> {
 	try {
-		const filePath = join(process.cwd(), 'cms', 'content', 'blog', slug, 'content.md');
-		return await readFile(filePath, 'utf-8');
+		const { data } = await kirbyFetch(`pages/blog+${slug}/files/content.md`);
+		if (!data?.url) return '';
+		const res = await fetch(data.url);
+		if (!res.ok) return '';
+		return await res.text();
 	} catch {
 		return '';
 	}
