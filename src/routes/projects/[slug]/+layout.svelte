@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import SlugLayout from '../../../components/SlugLayout.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -11,21 +10,31 @@
 	let project = $derived($page.data.project);
 </script>
 
-{#if project}
-	<SlugLayout backHref="/projects">
-		{#snippet heading()}
-			<h1 class="text-4xl font-display text-gray-100">{project.title}</h1>
+<div class="site">
+	<a class="back" href="/projects">← projects</a>
+
+	{#if project}
+		<div class="article-head">
+			<div class="eyebrow">{project.date?.getFullYear() ?? ''}</div>
+			<h1>{project.title}</h1>
 			{#if project.subtitle}
-				<p class="text-lg text-gray-400 mb-4">{project.subtitle}</p>
+				<p class="subtitle">{project.subtitle}</p>
 			{/if}
-		{/snippet}
+			{#if project.mainDescription}
+				<p class="desc">{project.mainDescription}</p>
+			{/if}
+		</div>
+	{/if}
 
-		{#snippet sidebarContent()}
-			<p class="text-gray-300 text-sm leading-relaxed">{project.mainDescription}</p>
-		{/snippet}
-
-		{@render children?.()}
-	</SlugLayout>
-{:else}
 	{@render children?.()}
-{/if}
+</div>
+
+<style>
+	.desc {
+		margin-top: 14px;
+		font-size: 15px;
+		line-height: 1.6;
+		color: var(--ink-3);
+		max-width: var(--max-width-prose);
+	}
+</style>

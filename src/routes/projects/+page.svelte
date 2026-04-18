@@ -1,121 +1,212 @@
 <script lang="ts">
 	import Card from '../../components/Card.svelte';
+	import { cmdkOpen } from '$lib/stores/ui';
 	import type { PageData } from './$types';
-
-	import { fade } from 'svelte/transition';
-
-	import SplitType from 'split-type';
-	import { onMount } from 'svelte';
-	import { hasViewed } from '../page.config';
-	import type { Project } from '$lib/types';
-	import ContactSection from '../../components/ContactSection.svelte';
-	import ContentLayout from '../../components/ContentLayout.svelte';
-	import PasswordEntry from '../../components/PasswordEntry.svelte';
 
 	interface Props {
 		data: PageData;
 	}
 
 	let { data }: Props = $props();
-	type Paragraph = { id: number; text: string };
-	const paragraphs: Paragraph[] = data.about.body.map((block, i) => {
-		return {
-			id: i,
-			text: block.text
-		};
-	});
 
-	let restrictedAccess = data.restrictedAccess ?? false;
-
-	onMount(() => {
-		hasViewed.subscribe((viewed) => {
-			if (viewed) return;
-			const ps = new SplitType('.about-text', { types: 'words' });
-		});
-	});
-
-	const twoColumnIndices = [0, 3, 7, 12, 16, 18, 19, 22, 25, 27];
-	const twoRowIndices = [2, 6, 10, 13, 16, 17, 20, 22, 24, 27];
-
-	async function handlePasswordSuccess() {
-		// sets a flag for authenticated access
-		await fetch('/api/set-restricted-access', { method: 'POST' });
-		// reload the page to get new data from the server
-		window.location.reload();
-	}
+	const restrictedAccess = $derived(data.restrictedAccess ?? false);
+	const hasRestrictedProjects = $derived(data.hasRestrictedProjects ?? false);
+	// const aboutParagraphs = $derived(
+	// 	(data.about?.body ?? []).map((b: { text: string }) => b.text).filter(Boolean)
+	// );
+	const projectCount = $derived(data.projects.length);
 </script>
 
-{#snippet about(paragraphs: Paragraph[])}
-	<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
-		<div class="container mx-auto relative">
-			<div class="flex flex-col gap-3">
-				{#each paragraphs as { id, text }}
-					<div class="pb-6 md:pb-2">
-						<p class="text-xl md:text-base text-gray-200 about-text" id={`${id}`}>{text}</p>
-					</div>
-				{/each}
-			</div>
+<div class="site">
+	<header class="hero">
+		<div>
+			<div class="eyebrow">2026</div>
+			<h1>Ben Cooper</h1>
+			<h2>engineer, designer, developer</h2>
 		</div>
-	</section>
-{/snippet}
+		<div></div>
+	</header>
 
-{#snippet projects(projects: Project[])}
-	<section class="flex flex-col gap-8 pb-16">
-		<hr class="border-t border-gray-500 md:hidden" />
-		<div class="grid md:grid-flow-row-dense grid-cols-1 gap-2 mx-auto place-items-center">
-			{#each projects as project, i}
-				<div
-					class="h-full p-1 w-full"
-					class:lg:col-span-2={twoColumnIndices.includes(i)}
-					class:lg:row-span-2={twoRowIndices.includes(i)}
-				>
-					<Card {project} />
+	<!-- CURATED WORK -->
+	<div class="sec-head">
+		<span class="label">/ curated work</span>
+		<span class="count">{String(projectCount).padStart(2, '0')} projects</span>
+	</div>
+
+	<section class="projects-grid" id="curated">
+		{#each data.projects as project}
+			<Card {project} />
+		{/each}
+
+		{#if hasRestrictedProjects && !restrictedAccess}
+			<div
+				class="locked-card"
+				onclick={() => cmdkOpen.set(true)}
+				role="button"
+				tabindex="0"
+				onkeydown={(e) => {
+					if (e.key === 'Enter') cmdkOpen.set(true);
+				}}
+			>
+				<div class="locked-thumb"></div>
+				<div class="locked-body">
+					<div class="locked-meta">
+						<span class="dot"></span>
+						<span>confidential</span>
+						<span class="yr">⌘K</span>
+					</div>
+					<h3>confidential work <span class="arrow">↗</span></h3>
+					<p>Client &amp; NDA work lives here. Open the palette &amp; enter a passcode.</p>
 				</div>
-			{/each}
-			<div class="h-full p-1">
-				<a
-					class="group w-full h-full relative text-left px-6 py-12 bg-repeat bg-custom-black bg-opacity-0 transition-all cursor-pointer grid place-content-center border-gray-500 border-2 hover:border-amber-500 hover:border-opacity-75"
-					href="/blog"
-				>
-					<div
-						class="text-gray-400 group-hover:text-amber-300 flex flex-col justify-center gap-1 bg-custom-black pointer-events-none"
-					>
-						<h4 class="text-md font-display">Little Projects</h4>
-						<h3 class="text-2xl">Additional smaller projects can be found on my blog</h3>
-					</div>
-				</a>
-			</div>
-		</div>
-	</section>
-{/snippet}
-
-<ContentLayout>
-	{#snippet title()}
-		<h3 class="text-gray-100 font-display block text-4xl">
-			hi, I'm <i class="text-amber-400">Ben</i>
-		</h3>
-	{/snippet}
-
-	{#snippet sidebar()}
-		{@render about(paragraphs)}
-		<div class="hidden md:block">
-			<ContactSection />
-		</div>
-	{/snippet}
-
-	{#snippet sidebarFooter()}
-		{#if !restrictedAccess}
-			<PasswordEntry
-				title="Some projects are confidential"
-				label="If you were given a password, enter it here to show them."
-				on:success={handlePasswordSuccess}
-			/>
-		{:else}
-			<div class="text-gray-400 mt-4">
-				<p class="text-sm">Access granted. You can now view confidential projects.</p>
 			</div>
 		{/if}
-	{/snippet}
+	</section>
+</div>
 
-	{@render projects(data.projects)}
-</ContentLayout>
+<style>
+	/* ===== HERO ===== */
+	.hero {
+		display: grid;
+		grid-template-columns: 1.15fr 1fr;
+		gap: 40px;
+		align-items: end;
+		padding: 36px 6px 56px;
+	}
+
+	.eyebrow {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: var(--ink-3);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		margin-bottom: 20px;
+	}
+
+	h1 {
+		font-family: var(--font-display);
+		font-size: clamp(40px, 6vw, 86px);
+		line-height: 0.95;
+		letter-spacing: -0.03em;
+		margin: 0;
+		font-weight: 400;
+		color: var(--amber);
+	}
+
+	h2 {
+		font-size: 15px;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--ink-3);
+		margin: 12px 0 0;
+	}
+
+	/* ===== PROJECT GRID ===== */
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 20px;
+	}
+
+	/* ===== LOCKED CARD ===== */
+	.locked-card {
+		display: block;
+		border: 1px solid var(--rule);
+		background: rgba(17, 17, 20, 0.5);
+		border-radius: var(--radius);
+		overflow: hidden;
+		backdrop-filter: blur(4px);
+		cursor: pointer;
+		transition:
+			border-color 0.2s,
+			transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.locked-card:hover {
+		border-color: var(--rule-2);
+		transform: translateY(-2px);
+	}
+
+	.locked-thumb {
+		aspect-ratio: 4 / 3;
+		background:
+			repeating-linear-gradient(45deg, rgba(251, 191, 36, 0.07) 0 10px, transparent 10px 20px),
+			var(--bg-3);
+	}
+
+	.locked-body {
+		padding: 16px 18px 18px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.locked-meta {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-3);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+	}
+
+	.locked-meta .dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--ink-3);
+		flex-shrink: 0;
+	}
+	.locked-meta .yr {
+		margin-left: auto;
+	}
+
+	.locked-card h3 {
+		font-size: 20px;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+		margin: 2px 0 0;
+		font-weight: 500;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.locked-card .arrow {
+		font-family: var(--font-mono);
+		color: var(--ink-3);
+		font-size: 14px;
+		transition:
+			transform 0.25s,
+			color 0.25s;
+	}
+	.locked-card:hover .arrow {
+		transform: translate(3px, -3px);
+		color: var(--amber);
+	}
+	.locked-card p {
+		margin: 4px 0 0;
+		font-size: 14px;
+		line-height: 1.45;
+		color: var(--ink-2);
+		max-width: 40ch;
+	}
+
+	/* ===== RESPONSIVE ===== */
+	@media (max-width: 960px) {
+		.hero {
+			grid-template-columns: 1fr;
+			gap: 28px;
+			padding: 20px 0 36px;
+		}
+		.projects-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 600px) {
+		.projects-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

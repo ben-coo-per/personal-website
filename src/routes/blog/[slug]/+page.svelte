@@ -12,10 +12,11 @@
 </script>
 
 <svelte:head>
-	<title>{data.blogPost.title} - Ben Cooper</title>
+	<title>{data.blogPost.title} – Ben Cooper</title>
 	<meta name="description" content={data.blogPost.excerpt} />
 </svelte:head>
 
-<article class="prose prose-invert prose-lg max-w-none prose-headings:font-display prose-a:text-amber-400 prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow-xl">
+<!-- article-body is a global class from app.css -->
+<div class="article-body">
 	{@html renderedContent}
-</article>
+</div>

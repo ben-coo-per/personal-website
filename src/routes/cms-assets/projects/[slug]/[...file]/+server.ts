@@ -7,7 +7,7 @@ export const GET: RequestHandler = async ({ params }) => {
 
 	if (slug.includes('..') || file.includes('..')) error(400, 'Invalid path');
 
-	const { data } = await kirbyFetch(`pages/blog+${slug}/files/${encodeURIComponent(file)}`);
+	const { data } = await kirbyFetch(`pages/projects+${slug}/files/${encodeURIComponent(file)}`);
 
 	if (!data?.url) error(404, 'File not found');
 

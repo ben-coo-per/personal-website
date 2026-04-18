@@ -1,9 +1,6 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import BlogPostCard from '../../components/BlogPostCard.svelte';
-	import { fade } from 'svelte/transition';
-	import type { BlogPostMetadata } from '$lib/types';
-	import ContentLayout from '../../components/ContentLayout.svelte';
+	import type { PageData } from './$types';
 
 	interface Props {
 		data: PageData;
@@ -13,27 +10,42 @@
 </script>
 
 <svelte:head>
-	<title>Blog - Ben Cooper</title>
+	<title>Writing – Ben Cooper</title>
 	<meta name="description" content="Blog posts about projects, experiments, and learnings." />
 </svelte:head>
 
-<ContentLayout>
-	{#snippet sidebar()}
-		<section class="text-gray-100 bg-custom-black" in:fade={{ duration: 350 }}>
-			<div class="container mx-auto relative">
-				<div class="flex flex-col gap-3">
-					Well how about that. you've made it to the blog
-				</div>
-			</div>
-		</section>
-	{/snippet}
+<div class="site">
+	<div class="sec-head">
+		<span class="label">/ writing</span>
+		<h2>experiments, build logs, and occasional essays.</h2>
+		<span class="count">{String(data.blogPosts.length).padStart(2, '0')} posts</span>
+	</div>
 
-	<section class="flex flex-col gap-8 pb-16">
-		<hr class="border-t border-gray-500 md:hidden" />
-		<div class="grid md:grid-flow-row-dense grid-cols-2 gap-2 mx-auto place-items-center">
-			{#each data.blogPosts as post}
-				<BlogPostCard blogPost={post} />
-			{/each}
-		</div>
-	</section>
-</ContentLayout>
+	<div class="posts-grid">
+		{#each data.blogPosts as post}
+			<BlogPostCard blogPost={post} />
+		{/each}
+
+		{#if data.blogPosts.length === 0}
+			<p class="empty">nothing here yet.</p>
+		{/if}
+	</div>
+</div>
+
+<style>
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 20px;
+	}
+
+	.empty {
+		font-family: var(--font-mono);
+		font-size: 13px;
+		color: var(--ink-3);
+		padding: 40px 6px;
+	}
+
+	@media (max-width: 960px) { .posts-grid { grid-template-columns: repeat(2, 1fr); } }
+	@media (max-width: 600px) { .posts-grid { grid-template-columns: 1fr; } }
+</style>

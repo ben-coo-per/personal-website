@@ -1,19 +1,56 @@
 <script lang="ts">
+	import { cmdkOpen } from '$lib/stores/ui';
 	const currentYear = new Date().getFullYear();
 </script>
 
-<footer class="">
-	<div class="text-xs text-gray-400">
-		<p>&copy; {currentYear} Ben Cooper</p>
-		<p>Built with SvelteKit & TailwindCSS</p>
-		<p>
-			Typography by <a
-				class="hover:text-amber-200"
-				href="https://pangrampangram.com/products/bitmap-mondwest"
-				target="_blank"
-			>
-				PangramPangram
-			</a>
-		</p>
+<footer class="foot">
+	<div class="inner">
+		<span>© {currentYear} Ben Cooper</span>
+		<div class="right">
+			<span>Rubik + Mondwest</span>
+			<span>SvelteKit</span>
+			<span>KirbyCMS</span>
+			<button onclick={() => cmdkOpen.set(true)}>⌘K</button>
+		</div>
 	</div>
 </footer>
+
+<style>
+	.foot {
+		margin-top: auto;
+	}
+
+	.inner {
+		max-width: var(--maxw);
+		margin: 0 auto;
+		padding: 22px var(--pad) 40px;
+		border-top: 1px solid var(--rule);
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: var(--ink-3);
+		letter-spacing: 0.02em;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.right {
+		display: flex;
+		gap: 14px;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	button {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: var(--ink-3);
+		transition: color 0.15s;
+	}
+
+	button:hover {
+		color: var(--ink);
+	}
+</style>

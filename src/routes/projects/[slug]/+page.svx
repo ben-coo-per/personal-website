@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
-	import PasswordEntry from '../../../components/PasswordEntry.svelte';
+	import { cmdkOpen } from '$lib/stores/ui';
 
 	interface Props {
 		data: PageData;
@@ -21,95 +21,73 @@
 <svelte:head>
 	<title>{project?.title ? `${project.title} – Ben Cooper` : 'Project – Ben Cooper'}</title>
 	<meta name="description" content={project?.mainDescription || 'Project by Ben Cooper'} />
-	<meta property="og:title" content={project?.title || 'Project'} />
-	<meta property="og:description" content={project?.mainDescription || 'Project by Ben Cooper'} />
 </svelte:head>
 
 {#if data.needsPassword}
-	<div class="min-h-screen flex items-center justify-center bg-custom-black">
-		<PasswordEntry onSuccess={handlePasswordSuccess} />
+	<div class="pw-gate">
+		<div class="panel">
+			<h4>restricted project</h4>
+			<p>You need a passcode to view this project.</p>
+			<button class="unlock-btn" onclick={() => cmdkOpen.set(true)}>
+				<kbd>⌘K</kbd> enter passcode
+			</button>
+		</div>
 	</div>
 {:else if project}
-	<!-- Hero image -->
 	{#if project.mainImage}
-		<div class="mb-8">
-			<img
-				src="/cms-assets/projects/{project.slug}/{project.mainImage}"
-				alt={project.title}
-				class="w-full h-auto rounded-lg shadow-xl"
-			/>
-		</div>
+		<img
+			src="/cms-assets/projects/{project.slug}/{project.mainImage}"
+			alt={project.title}
+			class="main-image"
+		/>
 	{/if}
 
-	<!-- Gallery/body content -->
 	{#if content}
-		<div class="gallery-content">
+		<div class="article-body">
 			{@html content}
 		</div>
 	{/if}
 
-	<!-- Next project -->
 	{#if next && next.slug !== project.slug}
-		<div class="mt-16 pt-8 border-t border-gray-700">
+		<div class="next-project">
 			<NextProjectCard project={next} />
 		</div>
 	{/if}
 {/if}
 
 <style>
-	.gallery-content {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
+	.pw-gate {
+		padding: 20px 0;
 	}
 
-	.gallery-content :global(img) {
+	.unlock-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 14px;
+		padding: 10px 16px;
+		background: var(--amber);
+		color: #0a0a0b;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		font-weight: 600;
+		border-radius: 8px;
+		cursor: pointer;
+	}
+
+	.unlock-btn kbd { font-family: var(--font-mono); }
+
+	.main-image {
 		width: 100%;
 		height: auto;
-		border-radius: 0.5rem;
-		box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+		border-radius: var(--radius);
+		border: 1px solid var(--rule);
+		margin-bottom: 2em;
 	}
 
-	.gallery-content :global(p) {
-		font-size: 1.125rem;
-		line-height: 1.75;
-		color: #d1d5db;
-	}
-
-	.gallery-content :global(ul),
-	.gallery-content :global(ol) {
-		padding-left: 1.5rem;
-		font-size: 1.125rem;
-		line-height: 1.75;
-		color: #d1d5db;
-	}
-
-	.gallery-content :global(li) {
-		margin-bottom: 0.5rem;
-	}
-
-	.gallery-content :global(h2) {
-		font-size: 1.5rem;
-		font-weight: bold;
-		color: #f3f4f6;
-		margin-top: 2rem;
-		margin-bottom: 1rem;
-	}
-
-	.gallery-content :global(h3) {
-		font-size: 1.25rem;
-		font-weight: 600;
-		color: #f3f4f6;
-		margin-top: 1.5rem;
-		margin-bottom: 0.75rem;
-	}
-
-	.gallery-content :global(a) {
-		color: #fbbf24;
-		text-decoration: none;
-	}
-
-	.gallery-content :global(a:hover) {
-		text-decoration: underline;
+	.next-project {
+		margin-top: 60px;
+		padding-top: 32px;
+		border-top: 1px solid var(--rule);
 	}
 </style>

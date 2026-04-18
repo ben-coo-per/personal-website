@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import { formatDate } from '$lib/utils/format';
 	import { IconBrandGithub, IconBrandInstagram, IconBox, IconDownload } from '@tabler/icons-svelte';
-	import SlugLayout from '../../../components/SlugLayout.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -13,79 +12,69 @@
 	let blogPost = $derived($page.data.blogPost);
 </script>
 
-{#if blogPost}
-	<SlugLayout backHref="/blog">
-		{#snippet heading()}
-			<h1 class="text-4xl font-display text-gray-100">{blogPost.title}</h1>
-			<p class="text-lg text-gray-400 mb-4">{formatDate(blogPost.publishedAt)}</p>
-		{/snippet}
+<div class="site">
+	<a class="back" href="/blog">← writing</a>
 
-		{#snippet sidebarContent()}
-			<div class="flex flex-col gap-4">
-				{#if blogPost.timeSpent}
-					<div class="bg-gray-800 rounded-lg px-4 py-3">
-						<p class="text-xs text-gray-400 mb-1">Time spent</p>
-						<p class="text-xl font-bold" class:text-red-400={blogPost.timeSpent > 7}>
-							{blogPost.timeSpent}
-							<span class="text-xs text-gray-400">hrs</span>
-						</p>
-					</div>
+	{#if blogPost}
+		<div class="article-head">
+			<div class="eyebrow">{formatDate(blogPost.publishedAt)}{#if blogPost.timeSpent} · {blogPost.timeSpent}h{/if}</div>
+			<h1>{blogPost.title}</h1>
+			{#if blogPost.excerpt}
+				<p class="subtitle">{blogPost.excerpt}</p>
+			{/if}
+		</div>
+
+		{#if blogPost.githubLink || blogPost.instagramLink || blogPost.onshapeLink || blogPost.downloadableFile}
+			<div class="links-panel">
+				{#if blogPost.githubLink}
+					<a href={blogPost.githubLink} target="_blank" rel="noreferrer" class="link-item">
+						<IconBrandGithub size={14} /><span>GitHub</span>
+					</a>
 				{/if}
-
-				{#if blogPost.githubLink || blogPost.instagramLink || blogPost.onshapeLink}
-					<div class="bg-gray-800 rounded-lg px-4 py-3 flex flex-col gap-2">
-						<p class="text-xs text-gray-400 mb-1">Links</p>
-						{#if blogPost.githubLink}
-							<a
-								href={blogPost.githubLink}
-								target="_blank"
-								class="flex items-center gap-2 text-sm text-gray-300 hover:text-amber-300"
-							>
-								<IconBrandGithub size={16} />
-								GitHub
-							</a>
-						{/if}
-						{#if blogPost.instagramLink}
-							<a
-								href={blogPost.instagramLink}
-								target="_blank"
-								class="flex items-center gap-2 text-sm text-gray-300 hover:text-amber-300"
-							>
-								<IconBrandInstagram size={16} />
-								Instagram
-							</a>
-						{/if}
-						{#if blogPost.onshapeLink}
-							<a
-								href={blogPost.onshapeLink}
-								target="_blank"
-								class="flex items-center gap-2 text-sm text-gray-300 hover:text-amber-300"
-							>
-								<IconBox size={16} />
-								Onshape
-							</a>
-						{/if}
-					</div>
+				{#if blogPost.instagramLink}
+					<a href={blogPost.instagramLink} target="_blank" rel="noreferrer" class="link-item">
+						<IconBrandInstagram size={14} /><span>Instagram</span>
+					</a>
 				{/if}
-
+				{#if blogPost.onshapeLink}
+					<a href={blogPost.onshapeLink} target="_blank" rel="noreferrer" class="link-item">
+						<IconBox size={14} /><span>Onshape</span>
+					</a>
+				{/if}
 				{#if blogPost.downloadableFile}
-					<div class="bg-gray-800 rounded-lg px-4 py-3">
-						<p class="text-xs text-gray-400 mb-1">Files</p>
-						<a
-							href="/cms-assets/blog/{blogPost.slug}/{blogPost.downloadableFile}"
-							download
-							class="flex items-center gap-2 text-sm text-gray-300 hover:text-amber-300"
-						>
-							<IconDownload size={16} />
-							Download
-						</a>
-					</div>
+					<a href="/cms-assets/blog/{blogPost.slug}/{blogPost.downloadableFile}" download class="link-item">
+						<IconDownload size={14} /><span>Download</span>
+					</a>
 				{/if}
 			</div>
-		{/snippet}
+		{/if}
+	{/if}
 
+	<div class="article-body">
 		{@render children?.()}
-	</SlugLayout>
-{:else}
-	{@render children?.()}
-{/if}
+	</div>
+</div>
+
+<style>
+	.links-panel {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin-bottom: 36px;
+	}
+
+	.link-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		color: var(--ink-2);
+		border: 1px solid var(--rule-2);
+		border-radius: 999px;
+		padding: 5px 12px;
+		transition: color 0.15s, border-color 0.15s;
+	}
+
+	.link-item:hover { color: var(--amber); border-color: var(--amber); }
+</style>

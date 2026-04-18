@@ -1,3 +1,5 @@
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 import { env } from '$env/dynamic/private';
 import type { ProjectMetadata, BlogPostMetadata } from '$lib/types';
 
@@ -8,7 +10,7 @@ function kirbyAuthHeader(): string {
 	return 'Basic ' + btoa(`${env.KIRBY_API_USER}:${env.KIRBY_API_PASSWORD}`);
 }
 
-async function kirbyFetch(path: string): Promise<{ data: any }> {
+export async function kirbyFetch(path: string): Promise<{ data: any }> {
 	const res = await fetch(`${env.KIRBY_API_URL}/api/${path}`, {
 		headers: { Authorization: kirbyAuthHeader() }
 	});
@@ -52,7 +54,7 @@ export async function getProject(slug: string): Promise<ProjectMetadata | null> 
  */
 export async function getProjects(includeRestricted = false): Promise<ProjectMetadata[]> {
 	try {
-		const { data } = await kirbyFetch('pages/projects/children?limit=100');
+		const { data } = await kirbyFetch('pages/projects/children?limit=100&select=id,slug,content');
 		const projects: ProjectMetadata[] = data
 			.map(mapKirbyProject)
 			.filter((p: ProjectMetadata) => includeRestricted || !p.isRestricted);
@@ -81,12 +83,12 @@ export async function getNextProjectInOrder(
 }
 
 /**
- * Get the markdown content for a project (stored in the `text` field)
+ * Get the markdown content for a project (stored in content.md on disk)
  */
 export async function getProjectContent(slug: string): Promise<string> {
 	try {
-		const { data } = await kirbyFetch(`pages/projects+${slug}`);
-		return data.content?.text ?? '';
+		const filePath = join(process.cwd(), 'cms', 'content', 'projects', slug, 'content.md');
+		return await readFile(filePath, 'utf-8');
 	} catch {
 		return '';
 	}
@@ -172,7 +174,7 @@ export async function getBlogPost(slug: string): Promise<BlogPostMetadata | null
  */
 export async function getBlogPosts(): Promise<BlogPostMetadata[]> {
 	try {
-		const { data } = await kirbyFetch('pages/blog/children?limit=100');
+		const { data } = await kirbyFetch('pages/blog/children?limit=100&select=id,slug,content');
 		return data
 			.map(mapKirbyBlogPost)
 			.sort(
@@ -186,12 +188,12 @@ export async function getBlogPosts(): Promise<BlogPostMetadata[]> {
 }
 
 /**
- * Get the markdown content for a blog post (stored in the `text` field)
+ * Get the markdown content for a blog post (stored in content.md on disk)
  */
 export async function getBlogPostContent(slug: string): Promise<string> {
 	try {
-		const { data } = await kirbyFetch(`pages/blog+${slug}`);
-		return data.content?.text ?? '';
+		const filePath = join(process.cwd(), 'cms', 'content', 'blog', slug, 'content.md');
+		return await readFile(filePath, 'utf-8');
 	} catch {
 		return '';
 	}
