@@ -29,6 +29,12 @@ function mapKirbyProject(page: any): ProjectMetadata {
 		date: new Date(c.date || Date.now()),
 		priority: parseInt(c.priority || '0', 10),
 		isRestricted: c.isrestricted === 'true',
+		archived: c.archived === 'true',
+		timeSpent: c.timespent ? parseFloat(c.timespent) : undefined,
+		githubLink: c.githublink || undefined,
+		instagramLink: c.instagramlink || undefined,
+		onshapeLink: c.onshapelink || undefined,
+		downloadableFile: c.downloadablefile || undefined,
 		previewImage: c.previewimage,
 		nextCardImage: c.nextcardimage,
 		mainImage: c.mainimage,
@@ -57,7 +63,7 @@ export async function getProjects(includeRestricted = false): Promise<ProjectMet
 		const { data } = await kirbyFetch('pages/projects/children?limit=100&select=id,slug,content');
 		const projects: ProjectMetadata[] = data
 			.map(mapKirbyProject)
-			.filter((p: ProjectMetadata) => includeRestricted || !p.isRestricted);
+			.filter((p: ProjectMetadata) => !p.archived && (includeRestricted || !p.isRestricted));
 
 		return projects.sort((a, b) => {
 			if (a.priority !== b.priority) return b.priority - a.priority;
@@ -80,6 +86,22 @@ export async function getNextProjectInOrder(
 	const currentIndex = allProjects.findIndex((p) => p.slug === currentSlug);
 	if (currentIndex === -1 || allProjects.length <= 1) return null;
 	return allProjects[(currentIndex + 1) % allProjects.length];
+}
+
+/**
+ * Get all archived (storehouse) projects, sorted by date descending
+ */
+export async function getStorehouseProjects(): Promise<ProjectMetadata[]> {
+	try {
+		const { data } = await kirbyFetch('pages/projects/children?limit=100&select=id,slug,content');
+		return data
+			.map(mapKirbyProject)
+			.filter((p: ProjectMetadata) => p.archived)
+			.sort((a: ProjectMetadata, b: ProjectMetadata) => b.date.getTime() - a.date.getTime());
+	} catch (error) {
+		console.error('Failed to load storehouse projects:', error);
+		return [];
+	}
 }
 
 /**

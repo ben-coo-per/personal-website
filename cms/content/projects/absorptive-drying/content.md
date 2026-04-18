@@ -40,17 +40,17 @@ The other approach to trying to stay on the left-side of curve is drying the abs
 
 For this experiment I printed a quick rig to blow air over the top surface of the absorptive material.
 
-![](/cms-assets/blog/absorptive-drying/image-1.png)
+![](/cms-assets/projects/absorptive-drying/image-1.png)
 
-![](/cms-assets/blog/absorptive-drying/image-2.jpg)
+![](/cms-assets/projects/absorptive-drying/image-2.jpg)
 
 I added water to the polyester (sandwiched under the blue chamois you see in the frame) and began recording its mass every minute.
 
-![](/cms-assets/blog/absorptive-drying/image-3.png)
+![](/cms-assets/projects/absorptive-drying/image-3.png)
 
 The rate of water removal did slow down, however it was still enough to dry the 85x55mm piece of polyester completely in just 11 minutes, leading me to believe there may be some potential in this drying approach.
 
-![](/cms-assets/blog/absorptive-drying/image-4.jpg)
+![](/cms-assets/projects/absorptive-drying/image-4.jpg)
 
 ## Next steps
 I want to keep testing this approach to drying clothes and start building out the concept for a way to make workout clothes clean and ready to wear **everyday** without any effort. 

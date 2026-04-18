@@ -1,15 +1,37 @@
 Title: 🧼 Soap Dish
+
 ----
-Slug: soap-dish
+
+Subtitle: A fix for gunky, stuck, soggy bar soap
+
 ----
-Excerpt: A fix for gunky, stuck, soggy bar soap
+
+Date: 2024-07-18
+
 ----
-PublishedAt: 2024-07-18
+
+Priority: 0
+
 ----
+
+IsRestricted: false
+
+----
+
+Archived: true
+
+----
+
 TimeSpent: 4.5
+
 ----
+
 InstagramLink: https://www.instagram.com/p/C9kbp5bxgtu/
+
 ----
+
 OnshapeLink: https://cad.onshape.com/documents/0cc4a029c8b52dc4e96c66e3/w/1499fe5a1e78ed0ccf1c69f9/e/0b185d11ba2202d5755b7795?renderMode=0&uiState=6699309dc4ba190305111d67
+
 ----
+
 DownloadableFile: Soap Dish.stl

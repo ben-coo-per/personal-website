@@ -1,12 +1,12 @@
 import { getBlogPost, getBlogPostContent } from '$lib/utils/kirby';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const blogPost = await getBlogPost(params.slug);
 
 	if (!blogPost) {
-		error(404, 'Blog post not found');
+		redirect(301, `/projects/${params.slug}`);
 	}
 
 	const content = await getBlogPostContent(params.slug);

@@ -17,7 +17,6 @@
 <div class="site">
 	<div class="sec-head">
 		<span class="label">/ writing</span>
-		<h2>experiments, build logs, and occasional essays.</h2>
 		<span class="count">{String(data.blogPosts.length).padStart(2, '0')} posts</span>
 	</div>
 
@@ -46,6 +45,14 @@
 		padding: 40px 6px;
 	}
 
-	@media (max-width: 960px) { .posts-grid { grid-template-columns: repeat(2, 1fr); } }
-	@media (max-width: 600px) { .posts-grid { grid-template-columns: 1fr; } }
+	@media (max-width: 960px) {
+		.posts-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 600px) {
+		.posts-grid {
+			grid-template-columns: 1fr;
+		}
+	}
 </style>

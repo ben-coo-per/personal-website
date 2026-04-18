@@ -1,4 +1,4 @@
-![](/cms-assets/blog/ballpark/image-1.jpg)
+![](/cms-assets/projects/ballpark/image-1.jpg)
 
 I wanted to make a game built around solving Fermi Problems, or problems that require making many assumptions and finding answers within an order of magnitude. This is a skill that I believe is quite important - being able to make rough assumptions and build a mental model that gets you within an order of magnitude of an answer can help sift through numbers and judge ideas faster than any other method.
 

@@ -21,9 +21,9 @@ I had to switch my approach to a fuzzy-match window that I could bring in as a s
 -> you can find a [csv of the detailed results on github](https://github.com/ben-coo-per/flag-symmetry/blob/main/results.csv)
 
 
-![](/cms-assets/blog/flag-symmetry/image-1.png)
+![](/cms-assets/projects/flag-symmetry/image-1.png)
 
-![](/cms-assets/blog/flag-symmetry/image-2.png)
+![](/cms-assets/projects/flag-symmetry/image-2.png)
 
 
 

@@ -9,6 +9,12 @@ export interface ProjectMetadata {
 	nextCardImage?: string;
 	mainImage?: string;
 	slug: string;
+	archived?: boolean;
+	timeSpent?: number;
+	githubLink?: string;
+	instagramLink?: string;
+	onshapeLink?: string;
+	downloadableFile?: string;
 }
 
 // Type alias for compatibility with existing components

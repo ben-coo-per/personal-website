@@ -1,4 +1,4 @@
-![](/cms-assets/blog/magic-macros/image-1.gif)
+![](/cms-assets/projects/magic-macros/image-1.gif)
 
 # Current nutritional tracking apps are not working
 

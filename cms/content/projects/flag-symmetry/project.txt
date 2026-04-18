@@ -1,13 +1,33 @@
 Title: 🇨🇭 Flag Symmetry
+
 ----
-Slug: flag-symmetry
+
+Subtitle: How many of the world flags are symmetrical?
+
 ----
-Excerpt: How many of the world flags are symmetrical?
+
+Date: 2024-07-06
+
 ----
-PublishedAt: 2024-07-06
+
+Priority: 0
+
 ----
+
+IsRestricted: false
+
+----
+
+Archived: true
+
+----
+
 TimeSpent: 7
+
 ----
+
 GithubLink: https://github.com/ben-coo-per/flag-symmetry
+
 ----
+
 InstagramLink: https://instagram.com/p/C9F03HevOH7/
