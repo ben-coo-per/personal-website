@@ -342,6 +342,8 @@
 		overflow-y: auto;
 		z-index: 2;
 		transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+		background: rgba(17, 17, 20, 0.6);
+		backdrop-filter: blur(8px);
 		border: 1px solid var(--rule);
 		scrollbar-width: thin;
 		scrollbar-color: var(--ink-2) rgba(255, 255, 255, 0.04);
@@ -431,12 +433,13 @@
 		text-align: left;
 		cursor: pointer;
 		color: var(--ink);
-		background: transparent;
+		background: rgba(17, 17, 20, 0.5);
+		backdrop-filter: blur(4px);
 		transition: background 0.12s;
 	}
 
 	.row:hover {
-		background: rgba(255, 255, 255, 0.025);
+		background: rgba(23, 23, 28, 0.7);
 	}
 
 	.row.active {

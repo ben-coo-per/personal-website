@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { cmdkOpen } from '$lib/stores/ui';
+	import BrandLogo from './BrandLogo.svelte';
 
 	let mobileMenuOpen = false;
 
@@ -23,22 +24,7 @@
 <div class="nav-wrapper">
 	<nav class="nav" class:menu-open={mobileMenuOpen}>
 		<a class="brand nav-item" href="/projects">
-			<!-- TODO: Add dynamic logo -->
-			<svg
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					d="M3 12L12 3L21 12M3 12L12 21L21 12"
-					stroke="currentColor"
-					stroke-width="1.5"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				/>
-			</svg>
+			<BrandLogo />
 		</a>
 		<ul class="nav-links desktop-links">
 			<li><a href="/projects" class:is-active={isActive('/projects')}>projects</a></li>
@@ -92,8 +78,6 @@
 		position: sticky;
 		top: 0;
 		z-index: 30;
-		/* extend bg behind the wrapper so sticky doesn't show gaps */
-		background: var(--bg);
 	}
 
 	.nav {
