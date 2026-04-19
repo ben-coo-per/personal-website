@@ -23,6 +23,16 @@
 			{#if project.mainDescription}
 				<p class="desc">{project.mainDescription}</p>
 			{/if}
+			{#if project.websiteUrl || project.githubLink}
+				<div class="head-links">
+					{#if project.websiteUrl}
+						<a href={project.websiteUrl} target="_blank" rel="noopener noreferrer">website ↗</a>
+					{/if}
+					{#if project.githubLink}
+						<a href={project.githubLink} target="_blank" rel="noopener noreferrer">github ↗</a>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	{/if}
 
@@ -36,5 +46,29 @@
 		line-height: 1.6;
 		color: var(--ink-3);
 		max-width: var(--max-width-prose);
+	}
+
+	.head-links {
+		display: flex;
+		gap: 6px;
+		flex-wrap: wrap;
+		margin-top: 16px;
+	}
+
+	.head-links a {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--ink-3);
+		border: 1px solid var(--rule);
+		border-radius: 20px;
+		padding: 4px 10px;
+		transition: border-color 0.15s, color 0.15s;
+	}
+
+	.head-links a:hover {
+		border-color: var(--amber);
+		color: var(--amber);
 	}
 </style>

@@ -1,8 +1,8 @@
-import { getProjects } from '$lib/utils/kirby';
+import { getProjects, getAiProfile } from '$lib/utils/kirby';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
-	const projects = await getProjects(hasRestricted);
-	return { projects };
+	const [projects, aiProfile] = await Promise.all([getProjects(hasRestricted), getAiProfile()]);
+	return { projects, aiProfile };
 };

@@ -14,9 +14,6 @@
 		<div class="post-meta">
 			<span class="dot"></span>
 			<span>{formatDate(blogPost.publishedAt)}</span>
-			{#if blogPost.timeSpent}
-				<span class="time">{blogPost.timeSpent}h</span>
-			{/if}
 		</div>
 		<h3>{blogPost.title} <span class="arrow">↗</span></h3>
 		{#if blogPost.excerpt}
@@ -58,7 +55,6 @@
 	}
 
 	.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
-	.time { margin-left: auto; }
 
 	h3 {
 		font-size: 20px;

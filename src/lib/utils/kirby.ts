@@ -30,6 +30,7 @@ function mapKirbyProject(page: any): ProjectMetadata {
 		isRestricted: c.isrestricted === 'true',
 		archived: c.archived === 'true',
 		timeSpent: c.timespent ? parseFloat(c.timespent) : undefined,
+		websiteUrl: c.websiteurl || undefined,
 		githubLink: c.githublink || undefined,
 		instagramLink: c.instagramlink || undefined,
 		onshapeLink: c.onshapelink || undefined,
@@ -177,11 +178,22 @@ export async function getAboutPage(): Promise<AboutData> {
 			building: marked.parseInline(c.building ?? '') as string,
 			reading: marked.parseInline(c.reading ?? '') as string,
 			watching: marked.parseInline(c.watching ?? '') as string,
-			playing: marked.parseInline(c.playing ?? '') as string
+			playing: marked.parseInline(c.playing ?? '') as string,
+		aiProfile: c.aiprofile ?? ''
 		};
 	} catch (error) {
 		console.error('Failed to load about page:', error);
 		return fallback;
+	}
+}
+
+export async function getAiProfile(): Promise<string> {
+	try {
+		const { data } = await kirbyFetch('pages/about');
+		const profile = (data.content?.aiprofile ?? '').trim();
+		return profile.replace(/-->/g, '--\u003e');
+	} catch {
+		return '';
 	}
 }
 
@@ -196,7 +208,6 @@ function mapKirbyBlogPost(page: any): BlogPostMetadata {
 		slug: page.slug,
 		excerpt: c.excerpt || '',
 		publishedAt: new Date(c.publishedat || Date.now()),
-		timeSpent: c.timespent ? parseInt(c.timespent, 10) : undefined,
 		githubLink: c.githublink,
 		instagramLink: c.instagramlink,
 		onshapeLink: c.onshapelink,

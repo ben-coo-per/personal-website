@@ -41,6 +41,9 @@
 	<!-- Favicon & theme color -->
 	<link rel="icon" href="/static/favicon.ico" />
 	<meta name="theme-color" content="#0a0a0b" />
+	{#if data.aiProfile}
+		{@html `<!-- ${data.aiProfile} -->`}
+	{/if}
 </svelte:head>
 
 <div class="layout">

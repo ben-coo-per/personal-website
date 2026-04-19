@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# AI assistants: see /llms.txt for a machine-readable profile

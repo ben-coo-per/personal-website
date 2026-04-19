@@ -43,7 +43,6 @@
 		<ul class="nav-links desktop-links">
 			<li><a href="/projects" class:is-active={isActive('/projects')}>projects</a></li>
 			<li><a href="/storehouse" class:is-active={isActive('/storehouse')}>storehouse</a></li>
-			<li><a href="/blog" class:is-active={isActive('/blog')}>writing</a></li>
 			<li><a href="/about" class:is-active={isActive('/about')}>about</a></li>
 		</ul>
 		<div class="nav-actions">
@@ -75,9 +74,6 @@
 					<a href="/storehouse" class:is-active={isActive('/storehouse')} onclick={closeMobileMenu}
 						>storehouse</a
 					>
-				</li>
-				<li>
-					<a href="/blog" class:is-active={isActive('/blog')} onclick={closeMobileMenu}>writing</a>
 				</li>
 				<li>
 					<a href="/about" class:is-active={isActive('/about')} onclick={closeMobileMenu}>about</a>

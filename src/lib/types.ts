@@ -11,6 +11,7 @@ export interface ProjectMetadata {
 	slug: string;
 	archived?: boolean;
 	timeSpent?: number;
+	websiteUrl?: string;
 	githubLink?: string;
 	instagramLink?: string;
 	onshapeLink?: string;
@@ -32,6 +33,7 @@ export interface AboutData {
 	reading: string;
 	watching: string;
 	playing: string;
+	aiProfile?: string;
 }
 
 export interface BlogPostMetadata {
@@ -39,7 +41,6 @@ export interface BlogPostMetadata {
 	slug: string;
 	excerpt: string;
 	publishedAt: Date;
-	timeSpent?: number;
 	githubLink?: string;
 	instagramLink?: string;
 	onshapeLink?: string;

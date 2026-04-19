@@ -17,37 +17,36 @@
 
 	{#if blogPost}
 		<div class="article-head">
-			<div class="eyebrow">{formatDate(blogPost.publishedAt)}{#if blogPost.timeSpent} · {blogPost.timeSpent}h{/if}</div>
+			<div class="eyebrow">{formatDate(blogPost.publishedAt)}</div>
 			<h1>{blogPost.title}</h1>
 			{#if blogPost.excerpt}
 				<p class="subtitle">{blogPost.excerpt}</p>
 			{/if}
+			{#if blogPost.githubLink || blogPost.instagramLink || blogPost.onshapeLink || blogPost.downloadableFile}
+				<div class="links-panel">
+					{#if blogPost.githubLink}
+						<a href={blogPost.githubLink} target="_blank" rel="noreferrer" class="link-item">
+							<IconBrandGithub size={14} /><span>GitHub</span>
+						</a>
+					{/if}
+					{#if blogPost.instagramLink}
+						<a href={blogPost.instagramLink} target="_blank" rel="noreferrer" class="link-item">
+							<IconBrandInstagram size={14} /><span>Instagram</span>
+						</a>
+					{/if}
+					{#if blogPost.onshapeLink}
+						<a href={blogPost.onshapeLink} target="_blank" rel="noreferrer" class="link-item">
+							<IconBox size={14} /><span>Onshape</span>
+						</a>
+					{/if}
+					{#if blogPost.downloadableFile}
+						<a href="/cms-assets/blog/{blogPost.slug}/{blogPost.downloadableFile}" download class="link-item">
+							<IconDownload size={14} /><span>Download</span>
+						</a>
+					{/if}
+				</div>
+			{/if}
 		</div>
-
-		{#if blogPost.githubLink || blogPost.instagramLink || blogPost.onshapeLink || blogPost.downloadableFile}
-			<div class="links-panel">
-				{#if blogPost.githubLink}
-					<a href={blogPost.githubLink} target="_blank" rel="noreferrer" class="link-item">
-						<IconBrandGithub size={14} /><span>GitHub</span>
-					</a>
-				{/if}
-				{#if blogPost.instagramLink}
-					<a href={blogPost.instagramLink} target="_blank" rel="noreferrer" class="link-item">
-						<IconBrandInstagram size={14} /><span>Instagram</span>
-					</a>
-				{/if}
-				{#if blogPost.onshapeLink}
-					<a href={blogPost.onshapeLink} target="_blank" rel="noreferrer" class="link-item">
-						<IconBox size={14} /><span>Onshape</span>
-					</a>
-				{/if}
-				{#if blogPost.downloadableFile}
-					<a href="/cms-assets/blog/{blogPost.slug}/{blogPost.downloadableFile}" download class="link-item">
-						<IconDownload size={14} /><span>Download</span>
-					</a>
-				{/if}
-			</div>
-		{/if}
 	{/if}
 
 	<div class="article-body">
@@ -60,7 +59,7 @@
 		display: flex;
 		gap: 8px;
 		flex-wrap: wrap;
-		margin-bottom: 36px;
+		margin-top: 24px;
 	}
 
 	.link-item {
