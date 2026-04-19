@@ -111,7 +111,7 @@ export async function getProjectContent(slug: string): Promise<string> {
 	try {
 		const { data } = await kirbyFetch(`pages/projects+${slug}/files/content.md`);
 		if (!data?.url) return '';
-		const res = await fetch(data.url);
+		const res = await fetch(data.url, { headers: { Authorization: kirbyAuthHeader() } });
 		if (!res.ok) return '';
 		return await res.text();
 	} catch {
