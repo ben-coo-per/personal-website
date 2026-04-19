@@ -1,38 +1,31 @@
-# create-svelte
+# app/ — Frontend
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+SvelteKit + TailwindCSS 4 frontend for bencooper.xyz. Deployed to Vercel.
 
-## Creating a project
+Content is fetched from the Kirby CMS backend (`kirby-server/`) via `src/lib/utils/kirby.ts`.
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Dev
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+npm install
+npm run dev     # → http://localhost:5173
 ```
 
-## Building
+## Env vars
 
-To create a production version of your app:
+Copy `.env.example` if present, or set these:
+
+| Variable | Purpose |
+|---|---|
+| `KIRBY_API_URL` | Base URL of the Kirby backend |
+| `KIRBY_API_AUTH` | Basic auth token for Kirby API |
+| `PASSCODES` | Comma-separated restricted content codes |
+
+## Build & deploy
 
 ```bash
-npm run build
+npm run build    # production build
+npm run preview  # preview production build locally
 ```
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Vercel deploys automatically on push to `main`. Set root directory to `app` in Vercel project settings.
