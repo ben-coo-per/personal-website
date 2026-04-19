@@ -19,6 +19,7 @@
 	let searchInput: HTMLInputElement = $state()!;
 	let pwInput: HTMLInputElement = $state()!;
 	let listEl: HTMLElement = $state()!;
+	let usingKeyboard = $state(false);
 
 	// Sync with store
 	$effect(() => {
@@ -93,6 +94,14 @@
 		}
 	];
 
+	const GROUP_ORDER = ['actions', 'jump', 'projects', 'social'] as const;
+	const GROUP_LABELS: Record<string, string> = {
+		actions: 'actions',
+		jump: 'jump to',
+		projects: 'projects',
+		social: 'social'
+	};
+
 	const projectItems = $derived(
 		projects.map((p): Item => ({
 			id: 'p-' + p.slug,
@@ -104,7 +113,11 @@
 		}))
 	);
 
-	const allItems = $derived([...baseItems, ...projectItems]);
+	const allItems = $derived(
+		GROUP_ORDER.flatMap((g) =>
+			g === 'projects' ? projectItems : baseItems.filter((i) => i.group === g)
+		)
+	);
 
 	const filtered = $derived(() => {
 		const q = query.trim().toLowerCase();
@@ -170,6 +183,7 @@
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
+		usingKeyboard = true;
 		const items = filtered();
 		if (e.key === 'ArrowDown') {
 			e.preventDefault();
@@ -223,14 +237,6 @@
 		return () => window.removeEventListener('keydown', onKey);
 	});
 
-	const GROUP_ORDER = ['actions', 'jump', 'projects', 'social'] as const;
-	const GROUP_LABELS: Record<string, string> = {
-		actions: 'actions',
-		jump: 'jump to',
-		projects: 'projects',
-		social: 'social'
-	};
-
 	function groupedFiltered() {
 		const items = filtered();
 		const groups: Record<string, (Item & { globalIdx: number })[]> = {};
@@ -269,7 +275,7 @@
 				<span class="esc">esc</span>
 			</div>
 
-			<div class="cmdk-list" bind:this={listEl}>
+			<div class="cmdk-list" bind:this={listEl} onpointermove={() => { usingKeyboard = false; }}>
 				{#if filtered().length === 0}
 					<div class="cmdk-empty">no matches. try "email", "unlock", "storehouse", or a project name.</div>
 				{:else}
@@ -282,7 +288,7 @@
 									class="cmdk-opt"
 									class:sel={item.globalIdx === selected}
 									onclick={() => selectItem(item)}
-									onmouseenter={() => { selected = item.globalIdx; }}
+									onmouseenter={() => { if (!usingKeyboard) selected = item.globalIdx; }}
 									role="option"
 									aria-selected={item.globalIdx === selected}
 									tabindex="0"
