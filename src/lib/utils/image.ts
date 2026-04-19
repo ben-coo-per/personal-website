@@ -1,8 +1,4 @@
-/**
- * Simple image URL builder for Kirby assets
- * Since we're using local files, we don't need complex transformations
- * Images are served from /cms-assets/{slug}/filename
- */
+import { PUBLIC_R2_URL } from '$env/static/public';
 
 export interface ImageUrlBuilder {
 	width: (w: number) => ImageUrlBuilder;
@@ -11,12 +7,13 @@ export interface ImageUrlBuilder {
 }
 
 export function urlFor(imagePath: string, slug?: string, type: 'projects' | 'blog' = 'projects'): ImageUrlBuilder {
-	// If it's already a full path, return it
-	const basePath = imagePath.startsWith('/') ? imagePath : `/cms-assets/${type}/${slug}/${imagePath}`;
+	const url = imagePath.startsWith('/')
+		? imagePath
+		: `${PUBLIC_R2_URL}/${type}/${slug}/${imagePath}`;
 
 	return {
-		width: (w: number) => urlFor(imagePath, slug), // No-op for now, browser handles sizing
-		height: (h: number) => urlFor(imagePath, slug), // No-op for now, browser handles sizing
-		url: () => basePath
+		width: (_w: number) => urlFor(imagePath, slug, type),
+		height: (_h: number) => urlFor(imagePath, slug, type),
+		url: () => url
 	};
 }

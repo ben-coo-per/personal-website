@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 	import { cmdkOpen } from '$lib/stores/ui';
+	import { PUBLIC_R2_URL } from '$env/static/public';
 
 	interface Props {
 		data: PageData;
@@ -36,7 +37,7 @@
 {:else if project}
 	{#if project.mainImage}
 		<img
-			src="/cms-assets/projects/{project.slug}/{project.mainImage}"
+			src="{PUBLIC_R2_URL}/projects/{project.slug}/{project.mainImage}"
 			alt={project.title}
 			class="main-image"
 		/>
