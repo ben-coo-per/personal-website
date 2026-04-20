@@ -6,8 +6,6 @@ export interface ProjectMetadata {
 	priority: number;
 	isRestricted: boolean;
 	previewImage?: string;
-	nextCardImage?: string;
-	mainImage?: string;
 	slug: string;
 	archived?: boolean;
 	timeSpent?: number;

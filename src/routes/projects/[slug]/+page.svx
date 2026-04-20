@@ -2,7 +2,6 @@
 	import type { PageData } from './$types';
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 	import { cmdkOpen } from '$lib/stores/ui';
-	import { PUBLIC_R2_URL } from '$env/static/public';
 
 	interface Props {
 		data: PageData;
@@ -35,14 +34,6 @@
 		</div>
 	</div>
 {:else if project}
-	{#if project.mainImage}
-		<img
-			src="{PUBLIC_R2_URL}/projects/{project.slug}/{project.mainImage}"
-			alt={project.title}
-			class="main-image"
-		/>
-	{/if}
-
 	{#if content}
 		<div class="article-body">
 			{@html content}
@@ -77,14 +68,6 @@
 	}
 
 	.unlock-btn kbd { font-family: var(--font-mono); }
-
-	.main-image {
-		width: 100%;
-		height: auto;
-		border-radius: var(--radius);
-		border: 1px solid var(--rule);
-		margin-bottom: 2em;
-	}
 
 	.next-project {
 		margin-top: 60px;

@@ -36,8 +36,6 @@ function mapKirbyProject(page: any): ProjectMetadata {
 		onshapeLink: c.onshapelink || undefined,
 		downloadableFile: c.downloadablefile || undefined,
 		previewImage: c.previewimage,
-		nextCardImage: c.nextcardimage,
-		mainImage: c.mainimage,
 		slug: page.slug
 	};
 }

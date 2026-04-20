@@ -221,6 +221,17 @@ button {
 	color: var(--amber);
 }
 
+@media (max-width: 480px) {
+	.linkgrid {
+		grid-template-columns: 1fr;
+	}
+
+	.linkgrid a {
+		flex-direction: column;
+		gap: 2px;
+	}
+}
+
 /* ===== NOW ROWS ===== */
 
 .now-row {
