@@ -65,16 +65,20 @@
 			group: 'jump',
 			icon: '/',
 			label: 'Home',
-			meta: 'G H',
-			action: () => { window.location.href = '/projects'; }
+			meta: '',
+			action: () => {
+				window.location.href = '/projects';
+			}
 		},
 		{
 			id: 'store',
 			group: 'jump',
 			icon: '▦',
 			label: 'Storehouse',
-			meta: 'G S',
-			action: () => { window.location.href = '/blog'; }
+			meta: '',
+			action: () => {
+				window.location.href = '/blog';
+			}
 		},
 		{
 			id: 'gh',
@@ -82,7 +86,9 @@
 			icon: '◉',
 			label: 'GitHub',
 			meta: 'ben-coo-per',
-			action: () => { window.open('https://github.com/ben-coo-per', '_blank'); }
+			action: () => {
+				window.open('https://github.com/ben-coo-per', '_blank');
+			}
 		},
 		{
 			id: 'ig',
@@ -90,11 +96,23 @@
 			icon: '◉',
 			label: 'Instagram',
 			meta: 'ben.coo.per',
-			action: () => { window.open('https://instagram.com/ben.coo.per', '_blank'); }
+			action: () => {
+				window.open('https://instagram.com/ben.coo.per', '_blank');
+			}
+		},
+		{
+			id: 'li',
+			group: 'social',
+			icon: '◉',
+			label: 'LinkedIn',
+			meta: 'ben-coo-per',
+			action: () => {
+				window.open('https://linkedin.com/in/ben-coo-per', '_blank');
+			}
 		}
 	];
 
-	const GROUP_ORDER = ['actions', 'jump', 'projects', 'social'] as const;
+	const GROUP_ORDER = ['actions', 'jump', 'social', 'projects'] as const;
 	const GROUP_LABELS: Record<string, string> = {
 		actions: 'actions',
 		jump: 'jump to',
@@ -103,14 +121,18 @@
 	};
 
 	const projectItems = $derived(
-		projects.map((p): Item => ({
-			id: 'p-' + p.slug,
-			group: 'projects',
-			icon: '●',
-			label: p.title ?? p.slug,
-			meta: (p.date?.getFullYear() ?? '') + (p.subtitle ? ' · ' + p.subtitle : ''),
-			action: () => { window.location.href = '/projects/' + p.slug; }
-		}))
+		projects.map(
+			(p): Item => ({
+				id: 'p-' + p.slug,
+				group: 'projects',
+				icon: '●',
+				label: p.title ?? p.slug,
+				meta: (p.date?.getFullYear() ?? '') + (p.subtitle ? ' · ' + p.subtitle : ''),
+				action: () => {
+					window.location.href = '/projects/' + p.slug;
+				}
+			})
+		)
 	);
 
 	const allItems = $derived(
@@ -165,7 +187,10 @@
 				await fetch('/api/set-restricted-access', { method: 'POST' });
 				pwStatus = 'ok';
 				pwMsg = 'unlocked · reloading…';
-				setTimeout(() => { closePalette(); window.location.reload(); }, 450);
+				setTimeout(() => {
+					closePalette();
+					window.location.reload();
+				}, 450);
 			} else {
 				pwStatus = 'err';
 				pwMsg = 'nope. try again.';
@@ -215,7 +240,9 @@
 			'padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);' +
 			'box-shadow:0 10px 30px rgba(0,0,0,.5);transition:opacity 0.4s;';
 		document.body.appendChild(t);
-		setTimeout(() => { t.style.opacity = '0'; }, 1800);
+		setTimeout(() => {
+			t.style.opacity = '0';
+		}, 1800);
 		setTimeout(() => t.remove(), 2200);
 	}
 
@@ -255,7 +282,9 @@
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div
 		class="scrim"
-		onclick={(e) => { if (e.target === e.currentTarget) closePalette(); }}
+		onclick={(e) => {
+			if (e.target === e.currentTarget) closePalette();
+		}}
 		role="dialog"
 		aria-modal="true"
 		aria-label="Command palette"
@@ -267,7 +296,9 @@
 					bind:this={searchInput}
 					bind:value={query}
 					onkeydown={handleKeydown}
-					oninput={() => { selected = 0; }}
+					oninput={() => {
+						selected = 0;
+					}}
 					type="text"
 					placeholder="search projects, jump to a page, copy email…"
 					autocomplete="off"
@@ -275,9 +306,17 @@
 				<span class="esc">esc</span>
 			</div>
 
-			<div class="cmdk-list" bind:this={listEl} onpointermove={() => { usingKeyboard = false; }}>
+			<div
+				class="cmdk-list"
+				bind:this={listEl}
+				onpointermove={() => {
+					usingKeyboard = false;
+				}}
+			>
 				{#if filtered().length === 0}
-					<div class="cmdk-empty">no matches. try "email", "unlock", "storehouse", or a project name.</div>
+					<div class="cmdk-empty">
+						no matches. try "email", "unlock", "storehouse", or a project name.
+					</div>
 				{:else}
 					{#each groupedFiltered() as group}
 						<div class="cmdk-grp">
@@ -288,13 +327,18 @@
 									class="cmdk-opt"
 									class:sel={item.globalIdx === selected}
 									onclick={() => selectItem(item)}
-									onmouseenter={() => { if (!usingKeyboard) selected = item.globalIdx; }}
+									onmouseenter={() => {
+										if (!usingKeyboard) selected = item.globalIdx;
+									}}
 									role="option"
 									aria-selected={item.globalIdx === selected}
 									tabindex="0"
 								>
 									<span class="icon">{item.icon}</span>
-									<span class="lbl">{item.label} {#if item.meta}<span class="meta">{item.meta}</span>{/if}</span>
+									<span class="lbl"
+										>{item.label}
+										{#if item.meta}<span class="meta">{item.meta}</span>{/if}</span
+									>
 									<span class="kbdkey">↵</span>
 								</div>
 							{/each}
@@ -308,7 +352,9 @@
 					<input
 						bind:this={pwInput}
 						bind:value={passcode}
-						onkeydown={(e) => { if (e.key === 'Enter') submitPassword(); }}
+						onkeydown={(e) => {
+							if (e.key === 'Enter') submitPassword();
+						}}
 						type="password"
 						placeholder="passcode"
 						autocomplete="off"
@@ -357,8 +403,14 @@
 	}
 
 	@keyframes slideIn {
-		from { transform: translateY(-10px); opacity: 0; }
-		to { transform: translateY(0); opacity: 1; }
+		from {
+			transform: translateY(-10px);
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0);
+			opacity: 1;
+		}
 	}
 
 	.cmdk-search {
