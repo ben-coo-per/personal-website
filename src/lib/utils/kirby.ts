@@ -144,6 +144,14 @@ export function verifyPasscode(passcode: string): boolean {
 /**
  * Get about page content
  */
+function parseEntries(raw: string | undefined): string[] {
+	return (raw ?? '')
+		.split('\n')
+		.map((l) => l.trim())
+		.filter(Boolean)
+		.map((l) => marked.parseInline(l) as string);
+}
+
 export async function getAboutPage(): Promise<AboutData> {
 	const fallback: AboutData = {
 		body: [] as { html: string }[],
@@ -152,11 +160,10 @@ export async function getAboutPage(): Promise<AboutData> {
 		instagram: '',
 		linkedin: '',
 		location: '',
-		working: '',
-		building: '',
-		reading: '',
-		watching: '',
-		playing: ''
+		building: [],
+		reading: [],
+		watching: [],
+		playing: []
 	};
 	try {
 		const { data } = await kirbyFetch('pages/about');
@@ -172,12 +179,11 @@ export async function getAboutPage(): Promise<AboutData> {
 			instagram: c.instagram ?? '',
 			linkedin: c.linkedin ?? '',
 			location: c.location ?? '',
-			working: marked.parseInline(c.working ?? '') as string,
-			building: marked.parseInline(c.building ?? '') as string,
-			reading: marked.parseInline(c.reading ?? '') as string,
-			watching: marked.parseInline(c.watching ?? '') as string,
-			playing: marked.parseInline(c.playing ?? '') as string,
-		aiProfile: c.aiprofile ?? ''
+			building: parseEntries(c.building),
+			reading: parseEntries(c.reading),
+			watching: parseEntries(c.watching),
+			playing: parseEntries(c.playing),
+			aiProfile: c.aiprofile ?? ''
 		};
 	} catch (error) {
 		console.error('Failed to load about page:', error);

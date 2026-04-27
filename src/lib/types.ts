@@ -26,11 +26,10 @@ export interface AboutData {
 	instagram: string;
 	linkedin: string;
 	location: string;
-	working: string;
-	building: string;
-	reading: string;
-	watching: string;
-	playing: string;
+	building: string[];
+	reading: string[];
+	watching: string[];
+	playing: string[];
 	aiProfile?: string;
 }
 

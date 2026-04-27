@@ -9,6 +9,13 @@
 
 	const about = $derived(data.about);
 	const paragraphs = $derived(about?.body ?? []);
+
+	const nowRows = $derived<[string, string[]][]>([
+		['building', about?.building ?? []],
+		['reading', about?.reading ?? []],
+		['watching', about?.watching ?? []],
+		['playing', about?.playing ?? []]
+	]);
 </script>
 
 <svelte:head>
@@ -59,31 +66,18 @@
 
 		<div class="panel">
 			<h4>Currently</h4>
-			{#if about?.working}
-				<div class="now-row">
-					<span class="k">working</span><span class="v">{@html about.working}</span>
-				</div>
-			{/if}
-			{#if about?.building}
-				<div class="now-row">
-					<span class="k">building</span><span class="v">{@html about.building}</span>
-				</div>
-			{/if}
-			{#if about?.reading}
-				<div class="now-row">
-					<span class="k">reading</span><span class="v">{@html about.reading}</span>
-				</div>
-			{/if}
-			{#if about?.watching}
-				<div class="now-row">
-					<span class="k">watching</span><span class="v">{@html about.watching}</span>
-				</div>
-			{/if}
-			{#if about?.playing}
-				<div class="now-row">
-					<span class="k">playing</span><span class="v">{@html about.playing}</span>
-				</div>
-			{/if}
+			{#each nowRows as [label, entries]}
+				{#if entries.length > 0}
+					<div class="now-row">
+						<span class="k">{label}</span>
+						<span class="v">
+							{#each entries as entry}
+								<span class="entry">{@html entry}</span>
+							{/each}
+						</span>
+					</div>
+				{/if}
+			{/each}
 		</div>
 	</div>
 </div>
@@ -117,6 +111,16 @@
 	h1 em {
 		font-style: italic;
 		color: var(--amber);
+	}
+
+	.now-row .v {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.now-row .v .entry {
+		display: block;
 	}
 
 	.now-row .v :global(a) {

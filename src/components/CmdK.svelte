@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { cmdkOpen } from '$lib/stores/ui';
 	import type { ProjectMetadata } from '$lib/types';
 
@@ -39,6 +40,13 @@
 		action: () => void;
 	};
 
+	type JumpRoute = {
+		id: string;
+		path: string;
+		icon: string;
+		label: string;
+	};
+
 	const baseItems: Item[] = [
 		{
 			id: 'unlock',
@@ -58,26 +66,6 @@
 				navigator.clipboard?.writeText('hello@bencooper.xyz');
 				toast('email copied');
 				closePalette();
-			}
-		},
-		{
-			id: 'home',
-			group: 'jump',
-			icon: '/',
-			label: 'Home',
-			meta: '',
-			action: () => {
-				window.location.href = '/projects';
-			}
-		},
-		{
-			id: 'store',
-			group: 'jump',
-			icon: '▦',
-			label: 'Storehouse',
-			meta: '',
-			action: () => {
-				window.location.href = '/blog';
 			}
 		},
 		{
@@ -112,6 +100,12 @@
 		}
 	];
 
+	const jumpRoutes: JumpRoute[] = [
+		{ id: 'projects', path: '/projects', icon: '/', label: 'projects' },
+		{ id: 'about', path: '/about', icon: '◌', label: 'about' },
+		{ id: 'storehouse', path: '/storehouse', icon: '▦', label: 'storehouse' }
+	];
+
 	const GROUP_ORDER = ['actions', 'jump', 'social', 'projects'] as const;
 	const GROUP_LABELS: Record<string, string> = {
 		actions: 'actions',
@@ -135,9 +129,33 @@
 		)
 	);
 
+	const jumpItems = $derived(
+		jumpRoutes
+			.filter((route) => {
+				const pathname = $page.url.pathname;
+				return pathname !== route.path && !pathname.startsWith(route.path + '/');
+			})
+			.map(
+				(route): Item => ({
+					id: route.id,
+					group: 'jump',
+					icon: route.icon,
+					label: route.label,
+					meta: '',
+					action: () => {
+						window.location.href = route.path;
+					}
+				})
+			)
+	);
+
 	const allItems = $derived(
 		GROUP_ORDER.flatMap((g) =>
-			g === 'projects' ? projectItems : baseItems.filter((i) => i.group === g)
+			g === 'projects'
+				? projectItems
+				: g === 'jump'
+					? jumpItems
+					: baseItems.filter((i) => i.group === g)
 		)
 	);
 
