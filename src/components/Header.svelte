@@ -103,6 +103,12 @@
 		font-size: 15px;
 		text-decoration: none;
 		color: var(--ink);
+		transition: color 0.15s;
+	}
+
+	.brand:hover,
+	.brand:focus-visible {
+		color: var(--amber);
 	}
 
 	.nav-links {
