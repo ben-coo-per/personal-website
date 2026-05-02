@@ -7,6 +7,16 @@
  */
 const PROCESSED = 'ditherProcessed';
 
+function randomizeGlimmer(wrapper: HTMLElement) {
+	const duration = 11 + Math.random() * 9; // 11–20s
+	const delay = -(Math.random() * duration); // negative → start mid-loop
+	const direction = Math.random() < 0.5 ? 'normal' : 'reverse';
+	wrapper.style.setProperty('--dither-glimmer-duration', `${duration.toFixed(2)}s`);
+	wrapper.style.setProperty('--dither-glimmer-delay', `${delay.toFixed(2)}s`);
+	wrapper.style.setProperty('--dither-glimmer-direction', direction);
+	wrapper.dataset.glimmerReady = 'true';
+}
+
 function wrap(img: HTMLImageElement) {
 	if (img.dataset[PROCESSED] === 'true') return;
 	if (img.closest('.dither-media')) {
@@ -16,6 +26,7 @@ function wrap(img: HTMLImageElement) {
 
 	const wrapper = document.createElement('span');
 	wrapper.className = 'dither-media';
+	randomizeGlimmer(wrapper);
 	if (img.complete && img.naturalWidth > 0) {
 		wrapper.dataset.loaded = 'true';
 	}
