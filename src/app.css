@@ -400,6 +400,275 @@ button {
 	color: var(--ink-2);
 }
 
+/* ===== DITHER MEDIA (on-brand loading states) ===== */
+
+.dither-media {
+	position: relative;
+	display: block;
+	width: 100%;
+	overflow: hidden;
+	background: var(--bg-3);
+	isolation: isolate;
+}
+
+/* "fill" variant: container has a fixed aspect ratio; image is absolutely positioned and object-fit: cover. */
+.dither-media[data-fill='true'] {
+	height: 100%;
+}
+
+.dither-media[data-aspect='4/3'] {
+	aspect-ratio: 4 / 3;
+}
+
+.dither-media[data-aspect='16/9'] {
+	aspect-ratio: 16 / 9;
+}
+
+.dither-media[data-aspect='1/1'] {
+	aspect-ratio: 1 / 1;
+}
+
+.dither-media[data-fill='true'] .dither-media__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.dither-media[data-fill='true'] .dither-media__img[data-fit='contain'] {
+	object-fit: contain;
+}
+
+/* Default (flow) variant — image sizes the wrapper naturally; placeholder + dither overlay it absolutely. */
+.dither-media__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	opacity: 0;
+	transition: opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms;
+}
+
+/* Reserve a minimum visible loading area before natural dimensions resolve. */
+.dither-media:not([data-loaded='true']):not([data-fill='true']) {
+	min-height: 220px;
+}
+
+.dither-media__placeholder {
+	position: absolute;
+	inset: 0;
+	background:
+		radial-gradient(circle at 60% 55%, rgba(251, 191, 36, 0.18) 0%, transparent 60%),
+		repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 9px),
+		repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 9px),
+		var(--bg-3);
+	pointer-events: none;
+	transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1) 120ms;
+}
+
+/* Tiled brand-mark glyph (the same 8×8 diamond ring used by the cursor and DitherBackground).
+   Sparse: glyphs sit on a 14-px grid. Glimmer: two soft radial highlights drift across the
+   tile, gating each glyph's alpha so individual diamonds fade in/out as the highlight passes. */
+.dither-media__dither {
+	position: absolute;
+	inset: 0;
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path fill='%23fbbf24' d='M6 4h2v1H6zM5 5h4v1H5zM4 6h2v2H4zM8 6h2v2H8zM5 8h4v1H5zM6 9h2v1H6z'/></svg>");
+	background-size: 14px 14px;
+	background-repeat: repeat;
+	-webkit-mask-image:
+		radial-gradient(
+			circle at center,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 35%,
+			transparent 70%
+		),
+		radial-gradient(
+			circle at center,
+			rgba(255, 255, 255, 0.95) 0%,
+			rgba(255, 255, 255, 0.35) 35%,
+			transparent 65%
+		),
+		linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.22));
+	mask-image:
+		radial-gradient(
+			circle at center,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.5) 35%,
+			transparent 70%
+		),
+		radial-gradient(
+			circle at center,
+			rgba(255, 255, 255, 0.95) 0%,
+			rgba(255, 255, 255, 0.35) 35%,
+			transparent 65%
+		),
+		linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.22));
+	-webkit-mask-size:
+		70% 80%,
+		55% 60%,
+		100% 100%;
+	mask-size:
+		70% 80%,
+		55% 60%,
+		100% 100%;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-composite: source-over;
+	mask-composite: add;
+	/* Hidden until per-instance randomization is applied (data-glimmer-ready) — otherwise the
+	   first paint shows every overlay parked at the keyframe-0% positions before the random
+	   negative delay kicks them mid-loop, which reads as a synchronized "flash". */
+	opacity: 0;
+	pointer-events: none;
+	transform-origin: center;
+	/* Per-instance variables (set inline) randomize phase, speed, and direction so a grid of
+	   images doesn't visibly march in lockstep. Defaults are present in case nothing's set. */
+	animation: dither-media-glimmer var(--dither-glimmer-duration, 14s) ease-in-out infinite;
+	animation-delay: var(--dither-glimmer-delay, 0s);
+	animation-direction: var(--dither-glimmer-direction, normal);
+	transition:
+		opacity 700ms cubic-bezier(0.4, 0, 0.2, 1),
+		filter 700ms cubic-bezier(0.4, 0, 0.2, 1),
+		transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Two highlights drift on irregular paths; the third (linear-gradient) mask layer is the
+   ambient floor and stays put. The mask-position list mirrors the mask-image list. Position
+   values reach beyond 0–100% so the spots can leave/enter the frame, giving more apparent
+   motion than a tightly bounded range. */
+@keyframes dither-media-glimmer {
+	0%,
+	100% {
+		-webkit-mask-position:
+			-30% -20%,
+			120% 130%,
+			0% 0%;
+		mask-position:
+			-30% -20%,
+			120% 130%,
+			0% 0%;
+	}
+	16% {
+		-webkit-mask-position:
+			40% -25%,
+			-20% 70%,
+			0% 0%;
+		mask-position:
+			40% -25%,
+			-20% 70%,
+			0% 0%;
+	}
+	34% {
+		-webkit-mask-position:
+			110% 30%,
+			60% -15%,
+			0% 0%;
+		mask-position:
+			110% 30%,
+			60% -15%,
+			0% 0%;
+	}
+	52% {
+		-webkit-mask-position:
+			90% 110%,
+			-25% 20%,
+			0% 0%;
+		mask-position:
+			90% 110%,
+			-25% 20%,
+			0% 0%;
+	}
+	68% {
+		-webkit-mask-position:
+			15% 125%,
+			115% 65%,
+			0% 0%;
+		mask-position:
+			15% 125%,
+			115% 65%,
+			0% 0%;
+	}
+	84% {
+		-webkit-mask-position:
+			-25% 55%,
+			45% 110%,
+			0% 0%;
+		mask-position:
+			-25% 55%,
+			45% 110%,
+			0% 0%;
+	}
+}
+
+/* Once randomization has been applied client-side, fade the overlay in (the animation has
+   been running silently this whole time, so it picks up at a random mid-loop position rather
+   than parked at 0%). */
+.dither-media[data-glimmer-ready='true']:not([data-loaded='true']) .dither-media__dither {
+	opacity: 0.85;
+	transition: opacity 220ms ease-out;
+}
+
+/* Loaded — image fades in, dither sublimates (bloom + blur + fade). */
+.dither-media[data-loaded='true'] .dither-media__img {
+	opacity: 1;
+}
+
+.dither-media[data-loaded='true'] .dither-media__placeholder {
+	opacity: 0;
+}
+
+.dither-media[data-loaded='true'] .dither-media__dither {
+	opacity: 0;
+	filter: blur(3px);
+	transform: scale(1.35);
+	animation: none;
+}
+
+/* No source — hold the placeholder, no pulse, no image. */
+.dither-media[data-empty='true'] .dither-media__dither,
+.dither-media[data-empty='true'] .dither-media__img {
+	display: none;
+}
+
+/* Errored — drop the dither overlay; show placeholder only. */
+.dither-media[data-errored='true'] .dither-media__dither {
+	display: none;
+}
+
+.dither-media[data-errored='true'] .dither-media__img {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dither-media__dither {
+		animation: none;
+		opacity: 0.35;
+		transition: opacity 200ms linear;
+	}
+	.dither-media[data-loaded='true'] .dither-media__dither {
+		filter: none;
+		transform: none;
+	}
+	.dither-media__img,
+	.dither-media__placeholder {
+		transition-duration: 200ms;
+		transition-delay: 0s;
+	}
+}
+
+/* Article-body images: the action wraps each <img> in .dither-media; the wrapper carries the spacing/border, image sits inside cleanly. */
+.article-body .dither-media {
+	margin: 2em 0;
+	border-radius: var(--radius);
+	border: 1px solid var(--rule);
+}
+
+.article-body .dither-media .dither-media__img {
+	margin: 0;
+	border: none;
+	border-radius: var(--radius);
+}
+
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 960px) {

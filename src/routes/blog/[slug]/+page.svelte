@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { marked } from 'marked';
+	import { ditherImages } from '$lib/actions/ditherImages';
 
 	interface Props {
 		data: PageData;
@@ -17,6 +18,6 @@
 </svelte:head>
 
 <!-- article-body is a global class from app.css -->
-<div class="article-body">
+<div class="article-body" use:ditherImages>
 	{@html renderedContent}
 </div>
