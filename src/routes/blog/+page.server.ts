@@ -1,4 +1,4 @@
-import { getBlogPosts } from '$lib/utils/kirby';
+import { getBlogPosts } from '$lib/utils/content';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {

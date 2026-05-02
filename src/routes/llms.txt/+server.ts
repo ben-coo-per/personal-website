@@ -1,4 +1,4 @@
-import { getAiProfile } from '$lib/utils/kirby';
+import { getAiProfile } from '$lib/utils/content';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {

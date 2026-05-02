@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getNextProjectInOrder, getProject, getProjectContent } from '$lib/utils/kirby';
+import { getNextProjectInOrder, getProject, getProjectContent } from '$lib/utils/content';
 import { marked } from 'marked';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {

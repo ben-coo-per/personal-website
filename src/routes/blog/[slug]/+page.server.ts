@@ -1,4 +1,4 @@
-import { getBlogPost, getBlogPostContent } from '$lib/utils/kirby';
+import { getBlogPost, getBlogPostContent } from '$lib/utils/content';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
