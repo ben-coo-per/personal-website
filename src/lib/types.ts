@@ -6,6 +6,7 @@ export interface ProjectMetadata {
 	priority: number;
 	isRestricted: boolean;
 	previewImage?: string;
+	bgColor?: string;
 	slug: string;
 	archived?: boolean;
 	timeSpent?: number;

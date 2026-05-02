@@ -8,7 +8,21 @@
 	let { children }: Props = $props();
 
 	let project = $derived($page.data.project);
+	// Allow #hex, rgb()/rgba()/hsl()/hsla(), and bare CSS color keywords.
+	let safeBg = $derived.by(() => {
+		const raw = project?.bgColor?.trim();
+		if (!raw) return undefined;
+		return /^(#[0-9a-fA-F]{3,8}|(rgb|rgba|hsl|hsla)\([\d\s.,%/-]+\)|[a-zA-Z]+)$/.test(raw)
+			? raw
+			: undefined;
+	});
 </script>
+
+<svelte:head>
+	{#if safeBg}
+		{@html `<style>html, body { background-color: ${safeBg} !important; }</style>`}
+	{/if}
+</svelte:head>
 
 <div class="site">
 	<a class="back" href="/projects">← projects</a>

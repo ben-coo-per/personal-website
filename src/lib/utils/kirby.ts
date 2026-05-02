@@ -9,14 +9,40 @@ function kirbyAuthHeader(): string {
 	return 'Basic ' + btoa(`${env.KIRBY_API_USER}:${env.KIRBY_API_PASSWORD}`);
 }
 
+// In-process cache decoupling the frontend from Kirby uptime.
+// - Within FRESH_MS we serve cached data without re-fetching.
+// - On any fetch failure we serve stale data up to STALE_MS old, so brief Fly
+//   outages or cold starts don't error pages on bencooper.xyz.
+// On Vercel, this lives per warm lambda instance, which is enough to absorb
+// most flakiness; cold starts re-prime the cache from Kirby on first request.
+const FRESH_MS = 60 * 1000;
+const STALE_MS = 24 * 60 * 60 * 1000;
+type CacheEntry = { body: { data: any }; storedAt: number };
+const responseCache = new Map<string, CacheEntry>();
+
 export async function kirbyFetch(path: string): Promise<{ data: any }> {
-	const res = await fetch(`${env.KIRBY_API_URL}/api/${path}`, {
-		headers: { Authorization: kirbyAuthHeader() }
-	});
-	if (!res.ok) {
-		throw new Error(`Kirby API ${path} → ${res.status}`);
+	const now = Date.now();
+	const cached = responseCache.get(path);
+	if (cached && now - cached.storedAt < FRESH_MS) {
+		return cached.body;
 	}
-	return res.json();
+	try {
+		const res = await fetch(`${env.KIRBY_API_URL}/api/${path}`, {
+			headers: { Authorization: kirbyAuthHeader() }
+		});
+		if (!res.ok) {
+			throw new Error(`Kirby API ${path} → ${res.status}`);
+		}
+		const body = (await res.json()) as { data: any };
+		responseCache.set(path, { body, storedAt: now });
+		return body;
+	} catch (err) {
+		if (cached && now - cached.storedAt < STALE_MS) {
+			console.warn(`Kirby fetch failed for ${path}, serving stale (${Math.round((now - cached.storedAt) / 1000)}s old):`, err);
+			return cached.body;
+		}
+		throw err;
+	}
 }
 
 function mapKirbyProject(page: any): ProjectMetadata {
@@ -36,9 +62,22 @@ function mapKirbyProject(page: any): ProjectMetadata {
 		onshapeLink: c.onshapelink || undefined,
 		downloadableFile: c.downloadablefile || undefined,
 		previewImage: c.previewimage,
+		bgColor: c.bgcolor || undefined,
 		slug: page.slug
 	};
 }
+
+// Kirby exposes `status` as a top-level page property (draft | unlisted | listed).
+// We whitelist (rather than blacklist 'draft') so a page with missing/unexpected
+// status fails closed — collection endpoints with `?select=` have at times
+// returned pages without `status` populated, which let drafts slip through as
+// empty cards on the live site.
+const isListed = (page: any) => page?.status === 'listed';
+// Direct-URL fetches accept unlisted too — that's what "unlisted" is for.
+const isAccessible = (page: any) => page?.status === 'listed' || page?.status === 'unlisted';
+// Belt-and-suspenders: a listed page without a title is broken content, not
+// something we want to render in a card.
+const hasTitle = (page: any) => typeof page?.content?.title === 'string' && page.content.title.trim().length > 0;
 
 /**
  * Get a single project by slug
@@ -46,6 +85,7 @@ function mapKirbyProject(page: any): ProjectMetadata {
 export async function getProject(slug: string): Promise<ProjectMetadata | null> {
 	try {
 		const { data } = await kirbyFetch(`pages/projects+${slug}`);
+		if (!isAccessible(data)) return null;
 		return mapKirbyProject(data);
 	} catch (error) {
 		console.error(`Failed to load project ${slug}:`, error);
@@ -58,8 +98,9 @@ export async function getProject(slug: string): Promise<ProjectMetadata | null> 
  */
 export async function getProjects(includeRestricted = false): Promise<ProjectMetadata[]> {
 	try {
-		const { data } = await kirbyFetch('pages/projects/children?limit=100&select=id,slug,content');
+		const { data } = await kirbyFetch('pages/projects/children?limit=100&select=id,slug,content,status');
 		const projects: ProjectMetadata[] = data
+			.filter((p: any) => isListed(p) && hasTitle(p))
 			.map(mapKirbyProject)
 			.filter((p: ProjectMetadata) => !p.archived && (includeRestricted || !p.isRestricted));
 
@@ -91,8 +132,9 @@ export async function getNextProjectInOrder(
  */
 export async function getStorehouseProjects(): Promise<ProjectMetadata[]> {
 	try {
-		const { data } = await kirbyFetch('pages/projects/children?limit=100&select=id,slug,content');
+		const { data } = await kirbyFetch('pages/projects/children?limit=100&select=id,slug,content,status');
 		return data
+			.filter((p: any) => isListed(p) && hasTitle(p))
 			.map(mapKirbyProject)
 			.filter((p: ProjectMetadata) => p.archived)
 			.sort((a: ProjectMetadata, b: ProjectMetadata) => b.date.getTime() - a.date.getTime());
@@ -225,6 +267,7 @@ function mapKirbyBlogPost(page: any): BlogPostMetadata {
 export async function getBlogPost(slug: string): Promise<BlogPostMetadata | null> {
 	try {
 		const { data } = await kirbyFetch(`pages/blog+${slug}`);
+		if (!isAccessible(data)) return null;
 		return mapKirbyBlogPost(data);
 	} catch (error) {
 		console.error(`Failed to load blog post ${slug}:`, error);
@@ -237,8 +280,9 @@ export async function getBlogPost(slug: string): Promise<BlogPostMetadata | null
  */
 export async function getBlogPosts(): Promise<BlogPostMetadata[]> {
 	try {
-		const { data } = await kirbyFetch('pages/blog/children?limit=100&select=id,slug,content');
+		const { data } = await kirbyFetch('pages/blog/children?limit=100&select=id,slug,content,status');
 		return data
+			.filter((p: any) => isListed(p) && hasTitle(p))
 			.map(mapKirbyBlogPost)
 			.sort(
 				(a: BlogPostMetadata, b: BlogPostMetadata) =>

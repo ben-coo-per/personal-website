@@ -77,7 +77,6 @@
 						</span>
 					</div>
 				{/if}
-				<!-- test to get it working? -->
 			{/each}
 		</div>
 	</div>
