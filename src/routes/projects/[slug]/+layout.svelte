@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -16,6 +17,8 @@
 			? raw
 			: undefined;
 	});
+
+	let next = $derived($page.data.next);
 </script>
 
 <svelte:head>
@@ -51,6 +54,12 @@
 	{/if}
 
 	{@render children?.()}
+
+	{#if next && next.slug !== project.slug}
+		<div class="next-project h-96">
+			<NextProjectCard project={next} />
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -78,11 +87,20 @@
 		border: 1px solid var(--rule);
 		border-radius: 20px;
 		padding: 4px 10px;
-		transition: border-color 0.15s, color 0.15s;
+		transition:
+			border-color 0.15s,
+			color 0.15s;
 	}
 
 	.head-links a:hover {
 		border-color: var(--amber);
 		color: var(--amber);
+	}
+
+	.next-project {
+		margin-top: 0px;
+		padding: 0px;
+		border-top: 1px solid var(--rule);
+		margin-bottom: -80px;
 	}
 </style>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 	import { cmdkOpen } from '$lib/stores/ui';
 	import { ditherImages } from '$lib/actions/ditherImages';
 
@@ -10,7 +9,6 @@
 
 	let { data }: Props = $props();
 	let project = $derived(data.project);
-	let next = $derived(data.next);
 	let content = $derived(data.content);
 
 	async function handlePasswordSuccess() {
@@ -40,12 +38,6 @@
 			{@html content}
 		</div>
 	{/if}
-
-	{#if next && next.slug !== project.slug}
-		<div class="next-project">
-			<NextProjectCard project={next} />
-		</div>
-	{/if}
 {/if}
 
 <style>
@@ -70,9 +62,4 @@
 
 	.unlock-btn kbd { font-family: var(--font-mono); }
 
-	.next-project {
-		margin-top: 60px;
-		padding-top: 32px;
-		border-top: 1px solid var(--rule);
-	}
 </style>

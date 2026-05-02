@@ -2,7 +2,6 @@
 	import { urlFor } from '$lib/utils/image';
 	import type { Project } from '$lib/types';
 	import { fade } from 'svelte/transition';
-	import DitherMedia from './DitherMedia.svelte';
 
 	let hovering: boolean = $state(false);
 	interface Props {
@@ -23,7 +22,7 @@
 <!-- I still want the card images to be preloaded so I'm going to handle that here -->
 <img class="hidden" src={projectBGImage} alt="" />
 <button
-	class="group cursor-pointer block w-full border-b relative text-left border-gray-500 px-6 py-12 hover:text-amber-200 bg-custom-black bg-opacity-0 transition-all"
+	class="group cursor-pointer block w-full border-b relative text-left border-gray-500 px-6 py-12 hover:text-amber-200 bg-custom-black bg-opacity-0 transition-all h-full"
 	class:py-40={scrollTransition}
 	class:border-t={scrollTransition}
 	onclick={gotoProject}
@@ -42,16 +41,11 @@
 			class="absolute inset-0 z-10 bg-gradient-to-r from-custom-black from-5% via-transparent via-80% to-custom-black to-98%"
 		></div>
 		{#if projectBGImage}
-			<div in:fade|global={{ duration: 1500 }} class="absolute inset-0">
-				<DitherMedia
-					src={projectBGImage}
-					alt=""
-					fill
-					loading="eager"
-					objectFit="cover"
-					class="next-project-media"
-				/>
-			</div>
+			<div
+				in:fade|global={{ duration: 1500 }}
+				class="absolute inset-0 bg-cover bg-center"
+				style="background-image: url({projectBGImage})"
+			></div>
 		{:else}
 			<div
 				in:fade|global={{ duration: 1500 }}
@@ -60,10 +54,3 @@
 		{/if}
 	{/if}
 </button>
-
-<style>
-	:global(.next-project-media) {
-		width: 100%;
-		height: 100%;
-	}
-</style>
