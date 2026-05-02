@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import { verifyPasscode } from '$lib/utils/kirby';
+import { verifyPasscode } from '$lib/utils/content';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
