@@ -400,6 +400,167 @@ button {
 	color: var(--ink-2);
 }
 
+/* ===== DITHER MEDIA (on-brand loading states) ===== */
+
+.dither-media {
+	position: relative;
+	display: block;
+	width: 100%;
+	overflow: hidden;
+	background: var(--bg-3);
+	isolation: isolate;
+}
+
+/* "fill" variant: container has a fixed aspect ratio; image is absolutely positioned and object-fit: cover. */
+.dither-media[data-fill='true'] {
+	height: 100%;
+}
+
+.dither-media[data-aspect='4/3'] {
+	aspect-ratio: 4 / 3;
+}
+
+.dither-media[data-aspect='16/9'] {
+	aspect-ratio: 16 / 9;
+}
+
+.dither-media[data-aspect='1/1'] {
+	aspect-ratio: 1 / 1;
+}
+
+.dither-media[data-fill='true'] .dither-media__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.dither-media[data-fill='true'] .dither-media__img[data-fit='contain'] {
+	object-fit: contain;
+}
+
+/* Default (flow) variant — image sizes the wrapper naturally; placeholder + dither overlay it absolutely. */
+.dither-media__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	opacity: 0;
+	transition: opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms;
+}
+
+/* Reserve a minimum visible loading area before natural dimensions resolve. */
+.dither-media:not([data-loaded='true']):not([data-fill='true']) {
+	min-height: 220px;
+}
+
+.dither-media__placeholder {
+	position: absolute;
+	inset: 0;
+	background:
+		radial-gradient(circle at 60% 55%, rgba(251, 191, 36, 0.18) 0%, transparent 60%),
+		repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 9px),
+		repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 9px),
+		var(--bg-3);
+	pointer-events: none;
+	transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1) 120ms;
+}
+
+/* Tiled brand-mark glyph (the same 8×8 diamond ring used by the cursor and DitherBackground). */
+.dither-media__dither {
+	position: absolute;
+	inset: 0;
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path fill='%23fbbf24' d='M3 1h2v1H3zM2 2h4v1H2zM1 3h2v2H1zM5 3h2v2H5zM2 5h4v1H2zM3 6h2v1H3z'/></svg>");
+	background-size: 8px 8px;
+	background-repeat: repeat;
+	/* Bayer-ordered dither mask: 4×4 cells with varying alphas from the same matrix used in DitherBackground. */
+	-webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'><rect x='0' y='0' width='1' height='1' fill='white' fill-opacity='1.0'/><rect x='1' y='0' width='1' height='1' fill='white' fill-opacity='0.5'/><rect x='2' y='0' width='1' height='1' fill='white' fill-opacity='0.875'/><rect x='3' y='0' width='1' height='1' fill='white' fill-opacity='0.375'/><rect x='0' y='1' width='1' height='1' fill='white' fill-opacity='0.25'/><rect x='1' y='1' width='1' height='1' fill='white' fill-opacity='0.75'/><rect x='2' y='1' width='1' height='1' fill='white' fill-opacity='0.125'/><rect x='3' y='1' width='1' height='1' fill='white' fill-opacity='0.625'/><rect x='0' y='2' width='1' height='1' fill='white' fill-opacity='0.8125'/><rect x='1' y='2' width='1' height='1' fill='white' fill-opacity='0.3125'/><rect x='2' y='2' width='1' height='1' fill='white' fill-opacity='0.9375'/><rect x='3' y='2' width='1' height='1' fill='white' fill-opacity='0.4375'/><rect x='0' y='3' width='1' height='1' fill='white' fill-opacity='0.0625'/><rect x='1' y='3' width='1' height='1' fill='white' fill-opacity='0.5625'/><rect x='2' y='3' width='1' height='1' fill='white' fill-opacity='0.1875'/><rect x='3' y='3' width='1' height='1' fill='white' fill-opacity='0.6875'/></svg>");
+	mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'><rect x='0' y='0' width='1' height='1' fill='white' fill-opacity='1.0'/><rect x='1' y='0' width='1' height='1' fill='white' fill-opacity='0.5'/><rect x='2' y='0' width='1' height='1' fill='white' fill-opacity='0.875'/><rect x='3' y='0' width='1' height='1' fill='white' fill-opacity='0.375'/><rect x='0' y='1' width='1' height='1' fill='white' fill-opacity='0.25'/><rect x='1' y='1' width='1' height='1' fill='white' fill-opacity='0.75'/><rect x='2' y='1' width='1' height='1' fill='white' fill-opacity='0.125'/><rect x='3' y='1' width='1' height='1' fill='white' fill-opacity='0.625'/><rect x='0' y='2' width='1' height='1' fill='white' fill-opacity='0.8125'/><rect x='1' y='2' width='1' height='1' fill='white' fill-opacity='0.3125'/><rect x='2' y='2' width='1' height='1' fill='white' fill-opacity='0.9375'/><rect x='3' y='2' width='1' height='1' fill='white' fill-opacity='0.4375'/><rect x='0' y='3' width='1' height='1' fill='white' fill-opacity='0.0625'/><rect x='1' y='3' width='1' height='1' fill='white' fill-opacity='0.5625'/><rect x='2' y='3' width='1' height='1' fill='white' fill-opacity='0.1875'/><rect x='3' y='3' width='1' height='1' fill='white' fill-opacity='0.6875'/></svg>");
+	-webkit-mask-size: 32px 32px;
+	mask-size: 32px 32px;
+	-webkit-mask-repeat: repeat;
+	mask-repeat: repeat;
+	opacity: 0.55;
+	pointer-events: none;
+	transform-origin: center;
+	animation: dither-media-pulse 2.5s ease-in-out infinite;
+	transition:
+		opacity 700ms cubic-bezier(0.4, 0, 0.2, 1),
+		filter 700ms cubic-bezier(0.4, 0, 0.2, 1),
+		transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dither-media-pulse {
+	0%,
+	100% {
+		opacity: 0.45;
+	}
+	50% {
+		opacity: 0.7;
+	}
+}
+
+/* Loaded — image fades in, dither sublimates (bloom + blur + fade). */
+.dither-media[data-loaded='true'] .dither-media__img {
+	opacity: 1;
+}
+
+.dither-media[data-loaded='true'] .dither-media__placeholder {
+	opacity: 0;
+}
+
+.dither-media[data-loaded='true'] .dither-media__dither {
+	opacity: 0;
+	filter: blur(3px);
+	transform: scale(1.35);
+	animation: none;
+}
+
+/* No source — hold the placeholder, no pulse, no image. */
+.dither-media[data-empty='true'] .dither-media__dither,
+.dither-media[data-empty='true'] .dither-media__img {
+	display: none;
+}
+
+/* Errored — drop the dither overlay; show placeholder only. */
+.dither-media[data-errored='true'] .dither-media__dither {
+	display: none;
+}
+
+.dither-media[data-errored='true'] .dither-media__img {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dither-media__dither {
+		animation: none;
+		opacity: 0.4;
+		transition: opacity 200ms linear;
+	}
+	.dither-media[data-loaded='true'] .dither-media__dither {
+		filter: none;
+		transform: none;
+	}
+	.dither-media__img,
+	.dither-media__placeholder {
+		transition-duration: 200ms;
+		transition-delay: 0s;
+	}
+}
+
+/* Article-body images: the action wraps each <img> in .dither-media; the wrapper carries the spacing/border, image sits inside cleanly. */
+.article-body .dither-media {
+	margin: 2em 0;
+	border-radius: var(--radius);
+	border: 1px solid var(--rule);
+}
+
+.article-body .dither-media .dither-media__img {
+	margin: 0;
+	border: none;
+	border-radius: var(--radius);
+}
+
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 960px) {

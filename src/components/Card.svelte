@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { urlFor } from '$lib/utils/image';
 	import type { Project } from '$lib/types';
+	import DitherMedia from './DitherMedia.svelte';
 
 	interface Props {
 		project: Project;
@@ -30,12 +31,9 @@
 	}}
 >
 	<div class="thumb">
-		{#if thumbUrl}
-			<img src={thumbUrl} alt={project.title ?? ''} loading="lazy" />
-		{:else}
-			<div class="thumb-placeholder"></div>
-		{/if}
-		<span class="corner">{year}</span>
+		<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
+			<span class="corner">{year}</span>
+		</DitherMedia>
 	</div>
 	<div class="body">
 		<div class="meta">
@@ -85,29 +83,18 @@
 		inset: 0;
 		background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.3) 100%);
 		pointer-events: none;
+		z-index: 1;
 	}
 
-	.thumb img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-		transition: opacity 0.3s;
-		opacity: 0.7;
+	.card :global(.thumb .dither-media[data-loaded='true'] .dither-media__img) {
+		opacity: 0.78;
+		transition:
+			opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms;
 	}
 
-	.card:hover .thumb img {
+	.card:hover :global(.thumb .dither-media[data-loaded='true'] .dither-media__img) {
 		opacity: 1;
-	}
-
-	.thumb-placeholder {
-		position: absolute;
-		inset: 0;
-		background:
-			radial-gradient(circle at 60% 55%, rgba(251, 191, 36, 0.18) 0%, transparent 60%),
-			repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 9px),
-			repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 9px),
-			var(--bg-3);
+		transition: opacity 0.3s ease-out;
 	}
 
 	.corner {

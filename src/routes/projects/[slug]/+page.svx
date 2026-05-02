@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 	import { cmdkOpen } from '$lib/stores/ui';
+	import { ditherImages } from '$lib/actions/ditherImages';
 
 	interface Props {
 		data: PageData;
@@ -35,7 +36,7 @@
 	</div>
 {:else if project}
 	{#if content}
-		<div class="article-body">
+		<div class="article-body" use:ditherImages>
 			{@html content}
 		</div>
 	{/if}
