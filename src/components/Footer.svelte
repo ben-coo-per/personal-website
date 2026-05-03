@@ -11,8 +11,6 @@
 			<span>|</span>
 			<span>SvelteKit</span>
 			<span>|</span>
-			<span>KirbyCMS</span>
-			<span>|</span>
 			<button onclick={() => cmdkOpen.set(true)}>⌘K</button>
 		</div>
 	</div>
