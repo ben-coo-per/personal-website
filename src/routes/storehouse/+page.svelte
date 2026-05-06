@@ -211,10 +211,13 @@
 					{#if selected.websiteUrl || selected.githubLink || selected.instagramLink || selected.onshapeLink || selected.downloadableFile}
 						<div class="panel-links">
 							{#if selected.websiteUrl}
-								<a href={selected.websiteUrl} target="_blank" rel="noopener noreferrer">website ↗</a>
+								<a href={selected.websiteUrl} target="_blank" rel="noopener noreferrer"
+									>website ↗</a
+								>
 							{/if}
 							{#if selected.githubLink}
-								<a href={selected.githubLink} target="_blank" rel="noopener noreferrer">github ↗</a>
+								<a href={selected.githubLink} target="_blank" rel="noopener noreferrer">github ↗</a
+								>
 							{/if}
 							{#if selected.instagramLink}
 								<a href={selected.instagramLink} target="_blank" rel="noopener noreferrer"
@@ -283,7 +286,9 @@
 							{#if selected.websiteUrl || selected.githubLink || selected.instagramLink || selected.onshapeLink || selected.downloadableFile}
 								<div class="panel-links">
 									{#if selected.websiteUrl}
-										<a href={selected.websiteUrl} target="_blank" rel="noopener noreferrer">website ↗</a>
+										<a href={selected.websiteUrl} target="_blank" rel="noopener noreferrer"
+											>website ↗</a
+										>
 									{/if}
 									{#if selected.githubLink}
 										<a href={selected.githubLink} target="_blank" rel="noopener noreferrer"
@@ -330,7 +335,7 @@
 	/* ===== LAYOUT ===== */
 	.workspace {
 		position: relative;
-		--desktop-panel-width: 540px;
+		--desktop-panel-width: min(50vw, 640px);
 	}
 
 	.panel-col {
