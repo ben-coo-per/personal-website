@@ -2,9 +2,9 @@ import { env } from '$env/dynamic/private';
 import { PUBLIC_R2_URL } from '$env/static/public';
 import { marked } from 'marked';
 import { parse as yamlParse } from 'yaml';
-import type { ProjectMetadata, BlogPostMetadata, AboutData } from '$lib/types';
+import type { ProjectMetadata, BlogPostMetadata, AboutData, HomeData } from '$lib/types';
 
-export type { ProjectMetadata, BlogPostMetadata, Project, AboutData } from '$lib/types';
+export type { ProjectMetadata, BlogPostMetadata, Project, AboutData, HomeData } from '$lib/types';
 
 // Decouple the frontend from R2 latency / blips: serve cached responses for
 // FRESH_MS without re-fetching, and fall back to stale responses up to STALE_MS
@@ -238,6 +238,25 @@ export async function getAboutPage(): Promise<AboutData> {
 		playing: toInlineList(raw.playing),
 		aiProfile: raw.aiProfile ?? ''
 	};
+}
+
+type RawHome = {
+	taglines?: string[];
+};
+
+const FALLBACK_HOME: HomeData = {
+	taglines: ['engineer, designer, developer']
+};
+
+export async function getHomePage(): Promise<HomeData> {
+	try {
+		const raw = await fetchYaml<RawHome>('pages/home.yml');
+		const taglines = (raw.taglines ?? []).map((t) => t.trim()).filter(Boolean);
+		return { taglines: taglines.length ? taglines : FALLBACK_HOME.taglines };
+	} catch (error) {
+		console.error('Failed to load home page:', error);
+		return FALLBACK_HOME;
+	}
 }
 
 export async function getAiProfile(): Promise<string> {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Card from '../../components/Card.svelte';
+	import TaglineCycler from '../../components/TaglineCycler.svelte';
 	import { cmdkOpen } from '$lib/stores/ui';
 	import type { PageData } from './$types';
 
@@ -15,14 +16,14 @@
 	// 	(data.about?.body ?? []).map((b: { text: string }) => b.text).filter(Boolean)
 	// );
 	const projectCount = $derived(data.projects.length);
+	const taglines = $derived(data.home?.taglines ?? ['engineer, designer, developer']);
 </script>
 
 <div class="site">
 	<header class="hero">
 		<div>
-			<div class="eyebrow">2026</div>
 			<h1>Ben Cooper</h1>
-			<h2>engineer, designer, developer</h2>
+			<TaglineCycler {taglines} />
 		</div>
 		<div></div>
 	</header>
@@ -73,15 +74,6 @@
 		padding: 36px 6px 56px;
 	}
 
-	.eyebrow {
-		font-family: var(--font-mono);
-		font-size: 11.5px;
-		color: var(--ink-3);
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		margin-bottom: 20px;
-	}
-
 	h1 {
 		font-family: var(--font-display);
 		font-size: clamp(40px, 6vw, 86px);
@@ -90,14 +82,6 @@
 		margin: 0;
 		font-weight: 400;
 		color: var(--amber);
-	}
-
-	h2 {
-		font-size: 15px;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: var(--ink-3);
-		margin: 12px 0 0;
 	}
 
 	/* ===== PROJECT GRID ===== */

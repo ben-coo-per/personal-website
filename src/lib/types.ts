@@ -20,6 +20,10 @@ export interface ProjectMetadata {
 // Type alias for compatibility with existing components
 export type Project = ProjectMetadata;
 
+export interface HomeData {
+	taglines: string[];
+}
+
 export interface AboutData {
 	body: { html: string }[];
 	email: string;
