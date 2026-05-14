@@ -49,6 +49,7 @@ type RawProject = {
 	restricted?: boolean;
 	unlisted?: boolean;
 	archived?: boolean;
+	draft?: boolean;
 	timeSpent?: number;
 	websiteUrl?: string;
 	githubLink?: string;
@@ -129,7 +130,7 @@ async function loadBlogIndex(): Promise<RawBlogPost[]> {
 export async function getProject(slug: string): Promise<ProjectMetadata | null> {
 	const index = await loadProjectIndex();
 	const raw = index.find((p) => p.slug === slug);
-	if (!raw || !hasTitle(raw)) return null;
+	if (!raw || !hasTitle(raw) || raw.draft) return null;
 	return toProject(raw);
 }
 
@@ -137,7 +138,7 @@ export async function getProjects(includeRestricted = false): Promise<ProjectMet
 	const index = await loadProjectIndex();
 	const projects = index
 		.filter(hasTitle)
-		.filter((p) => !p.unlisted && !p.archived)
+		.filter((p) => !p.unlisted && !p.archived && !p.draft)
 		.map(toProject)
 		.filter((p) => includeRestricted || !p.isRestricted);
 
@@ -161,7 +162,7 @@ export async function getStorehouseProjects(): Promise<ProjectMetadata[]> {
 	const index = await loadProjectIndex();
 	return index
 		.filter(hasTitle)
-		.filter((p) => !p.unlisted && p.archived)
+		.filter((p) => !p.unlisted && p.archived && !p.draft)
 		.map(toProject)
 		.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
