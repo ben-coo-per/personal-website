@@ -20,6 +20,14 @@
 	let desktopPanelHeight = $state(0);
 	let panelScrollHintDismissed = $state(false);
 	let showPanelScrollCue = $state(false);
+	let panelExpanded = $state(false);
+	let panelFixedTop = $state(0);
+	let panelFixedLeft = $state(0);
+	let panelFixedWidth = $state(0);
+	let panelFixedHeight = $state(0);
+
+	const EXPANDED_HEADER_GAP = 16;
+	const EXPANDED_BOTTOM_GAP = 24;
 
 	const PANEL_VISIBLE_ROW_COUNT = 9;
 	const MOBILE_BREAKPOINT = 700;
@@ -52,6 +60,7 @@
 		if (selected?.slug === project.slug) {
 			selected = null;
 			showPanelScrollCue = false;
+			panelExpanded = false;
 			return;
 		}
 		selected = project;
@@ -79,10 +88,27 @@
 			typeof window === 'undefined' ||
 			window.innerWidth <= MOBILE_BREAKPOINT ||
 			!selected ||
-			panelStartIndex < 0 ||
-			panelEndIndex < 0 ||
 			!listEl
 		) {
+			desktopPanelTop = 0;
+			desktopPanelHeight = 0;
+			return;
+		}
+
+		if (panelExpanded) {
+			const workspaceEl = listEl.closest('.workspace');
+			const headerEl = document.querySelector('.nav-wrapper');
+			const wsRect = workspaceEl?.getBoundingClientRect();
+			const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+			const top = headerBottom + EXPANDED_HEADER_GAP;
+			panelFixedTop = top;
+			panelFixedLeft = wsRect ? wsRect.left : 0;
+			panelFixedWidth = wsRect ? wsRect.width : 0;
+			panelFixedHeight = Math.max(0, window.innerHeight - top - EXPANDED_BOTTOM_GAP);
+			return;
+		}
+
+		if (panelStartIndex < 0 || panelEndIndex < 0) {
 			desktopPanelTop = 0;
 			desktopPanelHeight = 0;
 			return;
@@ -142,6 +168,7 @@
 		panelEndIndex;
 		panelHtml;
 		panelLoading;
+		panelExpanded;
 		void tick().then(() => {
 			updateDesktopPanelGeometry();
 			updatePanelScrollCue();
@@ -162,10 +189,33 @@
 		};
 	});
 
+	$effect(() => {
+		if (typeof document === 'undefined') {
+			return;
+		}
+		document.body.style.overflow = panelExpanded ? 'hidden' : '';
+		return () => {
+			document.body.style.overflow = '';
+		};
+	});
+
 	function closePanel() {
 		selected = null;
 		panelScrollHintDismissed = false;
 		showPanelScrollCue = false;
+		panelExpanded = false;
+	}
+
+	function toggleExpand() {
+		panelExpanded = !panelExpanded;
+		panelScrollHintDismissed = false;
+		void tick().then(() => {
+			if (panelColEl) {
+				panelColEl.scrollTop = 0;
+			}
+			updateDesktopPanelGeometry();
+			updatePanelScrollCue();
+		});
 	}
 
 	function formatDate(date: Date) {
@@ -191,11 +241,14 @@
 		<!-- panel is absolutely positioned and aligned to a row window on desktop -->
 		<div
 			class="panel-col"
+			class:expanded={panelExpanded}
 			bind:this={panelColEl}
 			onscroll={handlePanelScroll}
 			aria-hidden={!selected}
-			style:top={selected ? `${desktopPanelTop}px` : '0px'}
-			style:height={selected ? `${desktopPanelHeight}px` : '0px'}
+			style:top={selected ? `${panelExpanded ? panelFixedTop : desktopPanelTop}px` : '0px'}
+			style:height={selected ? `${panelExpanded ? panelFixedHeight : desktopPanelHeight}px` : '0px'}
+			style:left={panelExpanded ? `${panelFixedLeft}px` : null}
+			style:width={panelExpanded ? `${panelFixedWidth}px` : null}
 		>
 			<div class="panel-inner">
 				{#if selected}
@@ -206,7 +259,50 @@
 								<p class="panel-sub">{selected.subtitle}</p>
 							{/if}
 						</div>
-						<button class="close-btn" onclick={closePanel} aria-label="Close panel">×</button>
+						<div class="panel-actions">
+							<button
+								class="icon-btn"
+								onclick={toggleExpand}
+								aria-label={panelExpanded ? 'Contract panel' : 'Expand panel'}
+							>
+								{#if panelExpanded}
+									<svg
+										width="13"
+										height="13"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										aria-hidden="true"
+									>
+										<path d="M8 3v3a2 2 0 0 1-2 2H3" />
+										<path d="M21 8h-3a2 2 0 0 1-2-2V3" />
+										<path d="M3 16h3a2 2 0 0 1 2 2v3" />
+										<path d="M16 21v-3a2 2 0 0 1 2-2h3" />
+									</svg>
+								{:else}
+									<svg
+										width="13"
+										height="13"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										aria-hidden="true"
+									>
+										<path d="M8 3H5a2 2 0 0 0-2 2v3" />
+										<path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+										<path d="M3 16v3a2 2 0 0 0 2 2h3" />
+										<path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+									</svg>
+								{/if}
+							</button>
+							<button class="icon-btn" onclick={closePanel} aria-label="Close panel">×</button>
+						</div>
 					</div>
 
 					{#if selected.websiteUrl || selected.githubLink || selected.instagramLink || selected.onshapeLink || selected.downloadableFile}
@@ -348,7 +444,10 @@
 		overflow-x: hidden;
 		overflow-y: auto;
 		z-index: 2;
-		transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+		transition:
+			width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+			height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+			top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 		background: rgba(17, 17, 20, 0.6);
 		backdrop-filter: blur(8px);
 		border: 1px solid var(--rule);
@@ -405,10 +504,31 @@
 		width: var(--desktop-panel-width);
 	}
 
+	.panel-col.expanded {
+		position: fixed;
+		right: auto;
+		z-index: 25;
+	}
+
 	.panel-inner {
 		width: var(--desktop-panel-width);
 		padding: 18px 20px;
 		box-sizing: border-box;
+	}
+
+	.panel-col.expanded .panel-inner {
+		width: 100%;
+		padding-top: 0;
+	}
+
+	.panel-col.expanded .panel-head {
+		position: sticky;
+		top: 0;
+		z-index: 3;
+		margin-left: -20px;
+		margin-right: -20px;
+		padding: 18px 20px;
+		background: color-mix(in oklab, var(--bg) 82%, black 18%);
 	}
 
 	/* ===== LIST ===== */
@@ -548,6 +668,36 @@
 	}
 
 	.close-btn:hover {
+		border-color: var(--rule-2);
+		color: var(--ink);
+	}
+
+	.panel-actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-shrink: 0;
+	}
+
+	.icon-btn {
+		flex-shrink: 0;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		border: 1px solid var(--rule);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 14px;
+		line-height: 1;
+		color: var(--ink-3);
+		cursor: pointer;
+		transition:
+			border-color 0.15s,
+			color 0.15s;
+	}
+
+	.icon-btn:hover {
 		border-color: var(--rule-2);
 		color: var(--ink);
 	}
