@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import { cmdkOpen } from '$lib/stores/ui';
 	import { ditherImages } from '$lib/actions/ditherImages';
+	import { imageScrollers } from '$lib/actions/imageScrollers';
 
 	interface Props {
 		data: PageData;
@@ -34,7 +35,7 @@
 	</div>
 {:else if project}
 	{#if content}
-		<div class="article-body" use:ditherImages>
+		<div class="article-body" use:ditherImages use:imageScrollers>
 			{@html content}
 		</div>
 	{/if}

@@ -669,6 +669,128 @@ button {
 	border-radius: var(--radius);
 }
 
+/* ===== IMAGE SCROLLER =====
+   Markdown: wrap images in `:::scroller … :::` (see lib/utils/markdown.ts).
+   Renders as a horizontally-scrolling row with images sized to a uniform height.
+   The `imageScrollers` action wraps it in `.image-scroller-wrap` + nav buttons. */
+.article-body .image-scroller-wrap {
+	position: relative;
+	margin: 2em 0;
+}
+
+.article-body .image-scroller {
+	display: flex;
+	gap: 16px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	margin: 2em 0;
+	padding-bottom: 12px;
+	scroll-snap-type: x proximity;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-color: var(--rule) transparent;
+}
+
+/* Once wrapped by the action, the wrapper owns the vertical spacing. */
+.article-body .image-scroller-wrap .image-scroller {
+	margin: 0;
+}
+
+.article-body .image-scroller__nav {
+	position: absolute;
+	top: 50%;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	margin-top: -6px;
+	transform: translateY(-50%);
+	border: 1px solid var(--rule);
+	border-radius: 999px;
+	background: var(--bg-2);
+	color: var(--ink-2);
+	cursor: pointer;
+	transition:
+		opacity 0.15s,
+		border-color 0.15s,
+		color 0.15s,
+		background 0.15s;
+}
+
+.article-body .image-scroller__nav svg {
+	width: 18px;
+	height: 18px;
+}
+
+.article-body .image-scroller__nav--prev {
+	left: 8px;
+}
+
+.article-body .image-scroller__nav--next {
+	right: 8px;
+}
+
+.article-body .image-scroller__nav:hover:not(:disabled) {
+	border-color: var(--amber);
+	color: var(--amber);
+}
+
+.article-body .image-scroller__nav:disabled {
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* No overflow → no need for buttons at all. */
+.article-body .image-scroller-wrap[data-overflow='false'] .image-scroller__nav {
+	display: none;
+}
+
+.article-body .image-scroller::-webkit-scrollbar {
+	height: 8px;
+}
+
+.article-body .image-scroller::-webkit-scrollbar-thumb {
+	background: var(--rule);
+	border-radius: 4px;
+}
+
+.article-body .image-scroller > p,
+.article-body .image-scroller > .dither-media {
+	flex: 0 0 auto;
+	margin: 0;
+	height: clamp(220px, 42vh, 420px);
+	scroll-snap-align: center;
+}
+
+.article-body .image-scroller > p {
+	display: flex;
+}
+
+.article-body .image-scroller .dither-media {
+	width: auto;
+	height: 100%;
+	margin: 0;
+	display: inline-block;
+}
+
+.article-body .image-scroller .dither-media__img,
+.article-body .image-scroller img {
+	height: 100%;
+	width: auto;
+	margin: 0;
+	display: block;
+	border: none;
+	border-radius: var(--radius);
+}
+
+@media (max-width: 600px) {
+	.article-body .image-scroller > p,
+	.article-body .image-scroller > .dither-media {
+		height: 260px;
+	}
+}
+
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 960px) {

@@ -3,6 +3,7 @@
 	import type { PageData } from './$types';
 	import type { ProjectMetadata } from '$lib/types';
 	import { ditherImages } from '$lib/actions/ditherImages';
+	import { imageScrollers } from '$lib/actions/imageScrollers';
 
 	interface Props {
 		data: PageData;
@@ -242,7 +243,7 @@
 						{#if panelLoading}
 							<p class="loading">loading…</p>
 						{:else if panelHtml}
-							<div class="article-body" use:ditherImages>{@html panelHtml}</div>
+							<div class="article-body" use:ditherImages use:imageScrollers>{@html panelHtml}</div>
 						{/if}
 					</div>
 				{/if}
@@ -320,7 +321,7 @@
 								{#if panelLoading}
 									<p class="loading">loading…</p>
 								{:else if panelHtml}
-									<div class="article-body" use:ditherImages>{@html panelHtml}</div>
+									<div class="article-body" use:ditherImages use:imageScrollers>{@html panelHtml}</div>
 								{/if}
 							</div>
 						</div>

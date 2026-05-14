@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getNextProjectInOrder, getProject, getProjectContent } from '$lib/utils/content';
-import { marked } from 'marked';
+import { marked } from '$lib/utils/markdown';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 	}
 
 	const contentMarkdown = await getProjectContent(params.slug);
-	const content = contentMarkdown ? await marked(contentMarkdown) : '';
+	const content = contentMarkdown ? await marked.parse(contentMarkdown) : '';
 
 	return { project, next, content };
 };
