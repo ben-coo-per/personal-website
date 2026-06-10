@@ -50,7 +50,7 @@
 		{#if project.subtitle || project.mainDescription}
 			<p>{project.subtitle ?? project.mainDescription}</p>
 		{:else if project.wip}
-			<p>Still in the works — full write-up coming soon.</p>
+			<p>Full write-up coming soon.</p>
 		{/if}
 	</div>
 </a>
@@ -96,8 +96,7 @@
 
 	.card :global(.thumb .dither-media[data-loaded='true'] .dither-media__img) {
 		opacity: 0.78;
-		transition:
-			opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms;
+		transition: opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms;
 	}
 
 	.card:hover :global(.thumb .dither-media[data-loaded='true'] .dither-media__img) {
@@ -202,10 +201,6 @@
 
 	.card.wip .status {
 		color: var(--amber);
-	}
-
-	.wip-dot {
-		animation: wip-pulse 2s ease-in-out infinite;
 	}
 
 	@keyframes wip-pulse {
