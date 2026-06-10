@@ -15,7 +15,9 @@
 
 	const year = $derived(project.date ? project.date.getFullYear() : '');
 
-	const status = $derived(project.isRestricted ? 'confidential' : '');
+	const status = $derived(
+		project.wip ? 'work in progress' : project.isRestricted ? 'confidential' : ''
+	);
 
 	function navigate() {
 		window.location.href = `/projects/${project.slug}`;
@@ -24,6 +26,7 @@
 
 <a
 	class="card"
+	class:wip={project.wip}
 	href="/projects/{project.slug}"
 	onclick={(e) => {
 		e.preventDefault();
@@ -37,12 +40,17 @@
 	</div>
 	<div class="body">
 		<div class="meta">
-			<span>{status}</span>
+			{#if project.wip}
+				<span class="dot wip-dot"></span>
+			{/if}
+			<span class="status">{status}</span>
 			<span class="year-right">{year}</span>
 		</div>
 		<h3>{project.title ?? 'Untitled'} <span class="arrow">↗</span></h3>
 		{#if project.subtitle || project.mainDescription}
 			<p>{project.subtitle ?? project.mainDescription}</p>
+		{:else if project.wip}
+			<p>Still in the works — full write-up coming soon.</p>
 		{/if}
 	</div>
 </a>
@@ -174,5 +182,39 @@
 		line-height: 1.45;
 		color: var(--ink-2);
 		max-width: 40ch;
+	}
+
+	/* ===== WORK IN PROGRESS ===== */
+	.card.wip {
+		border: 1px dashed rgba(251, 191, 36, 0.4);
+		background: rgba(251, 191, 36, 0.03);
+	}
+
+	.card.wip:hover {
+		border-color: var(--amber);
+	}
+
+	.card.wip .thumb {
+		background:
+			repeating-linear-gradient(45deg, rgba(251, 191, 36, 0.07) 0 10px, transparent 10px 20px),
+			var(--bg-3);
+	}
+
+	.card.wip .status {
+		color: var(--amber);
+	}
+
+	.wip-dot {
+		animation: wip-pulse 2s ease-in-out infinite;
+	}
+
+	@keyframes wip-pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.3;
+		}
 	}
 </style>
