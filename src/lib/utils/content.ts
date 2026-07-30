@@ -58,6 +58,7 @@ type RawProject = {
 	onshapeLink?: string;
 	downloadableFile?: string;
 	previewImage?: string;
+	hoverImage?: string;
 	bgColor?: string;
 };
 
@@ -90,6 +91,7 @@ function toProject(raw: RawProject): ProjectMetadata {
 		onshapeLink: raw.onshapeLink,
 		downloadableFile: raw.downloadableFile,
 		previewImage: raw.previewImage,
+		hoverImage: raw.hoverImage,
 		bgColor: raw.bgColor,
 		slug: raw.slug
 	};

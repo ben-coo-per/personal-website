@@ -13,6 +13,10 @@
 		project.previewImage ? urlFor(project.previewImage, project.slug).url() : null
 	);
 
+	const hoverUrl = $derived(
+		project.hoverImage ? urlFor(project.hoverImage, project.slug).url() : null
+	);
+
 	const year = $derived(project.date ? project.date.getFullYear() : '');
 
 	const status = $derived(
@@ -37,6 +41,11 @@
 		<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
 			<span class="corner">{year}</span>
 		</DitherMedia>
+		{#if hoverUrl}
+			<div class="thumb-hover" aria-hidden="true">
+				<DitherMedia src={hoverUrl} alt="" aspect="4/3" fill loading="lazy" />
+			</div>
+		{/if}
 	</div>
 	<div class="body">
 		<div class="meta">
@@ -83,6 +92,19 @@
 		overflow: hidden;
 		background: var(--bg-3);
 		border-bottom: 1px solid var(--rule);
+	}
+
+	.thumb-hover {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		opacity: 0;
+		transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+		pointer-events: none;
+	}
+
+	.card:hover .thumb-hover {
+		opacity: 1;
 	}
 
 	.thumb::after {

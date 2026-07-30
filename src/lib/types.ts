@@ -7,6 +7,7 @@ export interface ProjectMetadata {
 	isRestricted: boolean;
 	wip?: boolean;
 	previewImage?: string;
+	hoverImage?: string;
 	bgColor?: string;
 	slug: string;
 	archived?: boolean;
