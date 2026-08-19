@@ -107,6 +107,21 @@
 		color: var(--ink-3);
 		margin: 12px 0 0;
 		font-weight: 400;
-		white-space: pre;
+		line-height: 1.5;
+		/* pre-wrap, not pre: the padded string keeps a fixed width on wide screens,
+		   but is allowed to break at spaces instead of pushing the page sideways. */
+		white-space: pre-wrap;
+		/* `anywhere`, not `break-word`: mid-transition the string can be one long
+		   unbroken run of dither glyphs, which `break-word` refuses to split. */
+		overflow-wrap: anywhere;
+		max-width: 100%;
+	}
+
+	/* Once wrapping is in play, taglines of different lengths occupy a different
+	   number of lines — reserve two so the grid below doesn't jump on each cycle. */
+	@media (max-width: 600px) {
+		.cycler {
+			min-height: 3em;
+		}
 	}
 </style>
