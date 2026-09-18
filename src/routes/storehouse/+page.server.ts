@@ -1,7 +1,8 @@
 import { getStorehouseProjects } from '$lib/utils/content';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ url }) => {
 	const projects = await getStorehouseProjects();
-	return { projects };
+	const linkedSlug = url.searchParams.get('project');
+	return { projects, linkedSlug };
 };

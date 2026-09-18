@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { tick } from 'svelte';
+	import { onMount, tick } from 'svelte';
+	import { replaceState } from '$app/navigation';
 	import type { PageData } from './$types';
 	import type { ProjectMetadata } from '$lib/types';
 	import { ditherImages } from '$lib/actions/ditherImages';
@@ -11,7 +12,11 @@
 
 	let { data }: Props = $props();
 
-	let selected: ProjectMetadata | null = $state(null);
+	const PROJECT_PARAM = 'project';
+
+	let selected: ProjectMetadata | null = $state(
+		data.projects.find((project) => project.slug === data.linkedSlug) ?? null
+	);
 	let panelHtml = $state('');
 	let panelLoading = $state(false);
 	let listEl: HTMLUListElement | null = $state(null);
@@ -56,14 +61,27 @@
 		return Math.min(data.projects.length - 1, panelStartIndex + PANEL_VISIBLE_ROW_COUNT - 1);
 	});
 
+	function syncUrl(slug: string | null) {
+		const url = new URL(window.location.href);
+		if (slug) {
+			url.searchParams.set(PROJECT_PARAM, slug);
+		} else {
+			url.searchParams.delete(PROJECT_PARAM);
+		}
+		replaceState(url, {});
+	}
+
 	async function openProject(project: ProjectMetadata) {
 		if (selected?.slug === project.slug) {
-			selected = null;
-			showPanelScrollCue = false;
-			panelExpanded = false;
+			closePanel();
 			return;
 		}
 		selected = project;
+		syncUrl(project.slug);
+		await loadPanel(project);
+	}
+
+	async function loadPanel(project: ProjectMetadata) {
 		panelHtml = '';
 		panelLoading = true;
 		panelScrollHintDismissed = false;
@@ -77,11 +95,32 @@
 		try {
 			const res = await fetch(`/api/project-content/${project.slug}`);
 			const body = await res.json();
-			panelHtml = body.html;
+			if (selected?.slug === project.slug) {
+				panelHtml = body.html;
+			}
 		} finally {
-			panelLoading = false;
+			if (selected?.slug === project.slug) {
+				panelLoading = false;
+			}
 		}
 	}
+
+	onMount(() => {
+		if (!selected) {
+			// Drop unknown/stale slugs so the URL reflects what's on screen.
+			if (data.linkedSlug) {
+				syncUrl(null);
+			}
+			return;
+		}
+		const project = selected;
+		void loadPanel(project);
+		void tick().then(() => {
+			const index = data.projects.findIndex((p) => p.slug === project.slug);
+			const row = listEl?.querySelectorAll<HTMLElement>('.list-item .row')[index];
+			row?.scrollIntoView({ block: 'center' });
+		});
+	});
 
 	function updateDesktopPanelGeometry() {
 		if (
@@ -201,6 +240,7 @@
 
 	function closePanel() {
 		selected = null;
+		syncUrl(null);
 		panelScrollHintDismissed = false;
 		showPanelScrollCue = false;
 		panelExpanded = false;
@@ -224,10 +264,11 @@
 </script>
 
 <svelte:head>
-	<title>Storehouse – Ben Cooper</title>
+	<title>{selected ? `${selected.title} – Storehouse` : 'Storehouse'} – Ben Cooper</title>
 	<meta
 		name="description"
-		content="A dense archive of every project — big, small, and half-finished."
+		content={selected?.subtitle ??
+			'A dense archive of every project — big, small, and half-finished.'}
 	/>
 </svelte:head>
 
