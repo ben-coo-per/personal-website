@@ -21,6 +21,10 @@ Copy `.env.example` if present, or set these:
 | `KIRBY_API_AUTH` | Basic auth token for Kirby API |
 | `PASSCODES` | Comma-separated restricted content codes |
 
+## PDF export
+
+`/export` (unlisted — reachable by typing "export" in the ⌘K palette, `noindex` and disallowed in `robots.txt`) turns project pages into a portfolio book. It's rendered entirely in the browser with `pdfkit` (`src/lib/export/`): real embedded type (Mondwest, Rubik, JetBrains Mono from `static/fonts/pdf/`), clickable links, a PDF outline, cover + contents, and a page-set per project. Images are pulled through `/api/export/asset/…` (R2 has no CORS) and re-encoded as JPEG. Output modes: one bound book, one PDF per project (zip), or a single project. Restricted projects only export once unlocked.
+
 ## Build & deploy
 
 ```bash

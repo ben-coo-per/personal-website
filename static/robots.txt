@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /export
 
 # AI assistants: see /llms.txt for a machine-readable profile
