@@ -37,6 +37,8 @@
 		icon: string;
 		label: string;
 		meta?: string;
+		/** Not listed by default — only surfaces once the query matches it. */
+		hidden?: boolean;
 		action: () => void;
 	};
 
@@ -66,6 +68,17 @@
 				navigator.clipboard?.writeText('hello@bencooper.xyz');
 				toast('email copied');
 				closePalette();
+			}
+		},
+		{
+			id: 'export',
+			group: 'actions',
+			icon: '⇩',
+			label: 'Export projects',
+			meta: 'pdf portfolio',
+			hidden: true,
+			action: () => {
+				window.location.href = '/export';
 			}
 		},
 		{
@@ -161,9 +174,11 @@
 
 	const filtered = $derived(() => {
 		const q = query.trim().toLowerCase();
-		if (!q) return allItems;
+		if (!q) return allItems.filter((it) => !it.hidden);
 		return allItems.filter((it) =>
-			(it.label + ' ' + (it.meta ?? '') + ' ' + it.group).toLowerCase().includes(q)
+			(it.label + ' ' + (it.meta ?? '') + ' ' + (it.hidden ? '' : it.group))
+				.toLowerCase()
+				.includes(q)
 		);
 	});
 
