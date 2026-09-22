@@ -23,6 +23,19 @@
 	const all = $derived([...data.curated, ...data.storehouse]);
 	const chosen = $derived(all.filter((p) => selected.has(p.slug)));
 
+	// The preset buttons reflect the live selection: exactly these projects, no more, no fewer.
+	const isExactly = (projects: ProjectMetadata[]) =>
+		selected.size === projects.length && projects.every((p) => selected.has(p.slug));
+	const preset = $derived<'all' | 'curated' | 'none' | null>(
+		selected.size === 0
+			? 'none'
+			: isExactly(all)
+				? 'all'
+				: isExactly(data.curated)
+					? 'curated'
+					: null
+	);
+
 	function toggle(slug: string) {
 		const next = new Set(selected);
 		if (next.has(slug)) next.delete(slug);
@@ -97,9 +110,11 @@
 			<div class="opt-row">
 				<span class="k">select</span>
 				<div class="seg">
-					<button onclick={() => select(all)}>all</button>
-					<button onclick={() => select(data.curated)}>curated</button>
-					<button onclick={() => select([])}>none</button>
+					<button class:on={preset === 'all'} onclick={() => select(all)}>all</button>
+					<button class:on={preset === 'curated'} onclick={() => select(data.curated)}
+						>curated</button
+					>
+					<button class:on={preset === 'none'} onclick={() => select([])}>none</button>
 				</div>
 			</div>
 			<div class="opt-row">
