@@ -9,11 +9,6 @@
 	let { data }: Props = $props();
 </script>
 
-<svelte:head>
-	<title>Writing – Ben Cooper</title>
-	<meta name="description" content="Blog posts about projects, experiments, and learnings." />
-</svelte:head>
-
 <div class="site">
 	<div class="sec-head">
 		<span class="label">/ writing</span>

@@ -37,7 +37,6 @@ export interface AboutData {
 	reading: string[];
 	watching: string[];
 	playing: string[];
-	aiProfile?: string;
 }
 
 export interface BlogPostMetadata {

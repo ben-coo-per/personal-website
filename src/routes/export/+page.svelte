@@ -83,11 +83,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Export – Ben Cooper</title>
-	<meta name="robots" content="noindex, nofollow" />
-</svelte:head>
-
 <div class="site">
 	<a class="back" href="/projects">← projects</a>
 

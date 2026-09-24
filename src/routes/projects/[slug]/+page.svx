@@ -18,11 +18,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{project?.title ? `${project.title} – Ben Cooper` : 'Project – Ben Cooper'}</title>
-	<meta name="description" content={project?.mainDescription || 'Project by Ben Cooper'} />
-</svelte:head>
-
 {#if data.needsPassword}
 	<div class="pw-gate">
 		<div class="panel">

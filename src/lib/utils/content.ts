@@ -240,8 +240,7 @@ export async function getAboutPage(): Promise<AboutData> {
 		building: toInlineList(raw.building),
 		reading: toInlineList(raw.reading),
 		watching: toInlineList(raw.watching),
-		playing: toInlineList(raw.playing),
-		aiProfile: raw.aiProfile ?? ''
+		playing: toInlineList(raw.playing)
 	};
 }
 

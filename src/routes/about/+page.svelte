@@ -18,11 +18,6 @@
 	]);
 </script>
 
-<svelte:head>
-	<title>About – Ben Cooper</title>
-	<meta name="description" content="About Ben Cooper — engineer, designer, developer." />
-</svelte:head>
-
 <div class="site">
 	<div class="page-head">
 		<span class="label">/ about</span>
