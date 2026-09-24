@@ -11,6 +11,8 @@
 			<span>|</span>
 			<span>SvelteKit</span>
 			<span>|</span>
+			<a href="/for-robots">For robots</a>
+			<span>|</span>
 			<button onclick={() => cmdkOpen.set(true)}>⌘K</button>
 		</div>
 	</div>
@@ -44,14 +46,16 @@
 		align-items: center;
 	}
 
-	button {
+	button,
+	a {
 		font-family: var(--font-mono);
 		font-size: 11.5px;
 		color: var(--ink-3);
 		transition: color 0.15s;
 	}
 
-	button:hover {
+	button:hover,
+	a:hover {
 		color: var(--ink);
 	}
 

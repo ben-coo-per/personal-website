@@ -1,0 +1,11 @@
+/* TEAM */
+	Name: Ben Cooper
+	Role: Product and design engineer
+	Location: Brooklyn, NY
+	Contact: me@bencooper.xyz
+	Site: https://www.bencooper.xyz
+
+/* SITE */
+	Components: SvelteKit, Tailwind CSS
+	Fonts: Rubik, Mondwest, JetBrains Mono
+	Hosting: Vercel

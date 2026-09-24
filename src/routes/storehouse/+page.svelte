@@ -263,15 +263,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{selected ? `${selected.title} – Storehouse` : 'Storehouse'} – Ben Cooper</title>
-	<meta
-		name="description"
-		content={selected?.subtitle ??
-			'A dense archive of every project — big, small, and half-finished.'}
-	/>
-</svelte:head>
-
 <div class="site">
 	<div class="sec-head">
 		<span class="label">/ storehouse</span>

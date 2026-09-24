@@ -2,4 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /export
 
+Sitemap: https://www.bencooper.xyz/sitemap.xml
+
 # AI assistants: see /llms.txt for a machine-readable profile
