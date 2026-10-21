@@ -23,13 +23,12 @@ export const GET: RequestHandler = async () => {
 			const images = post.images
 				.map((img) => `<p><img src="${xmlEscape(SITE + img.url)}" alt="${xmlEscape(img.alt)}" /></p>`)
 				.join('');
-			const place = post.place ? `<p>@ ${xmlEscape(post.place)}</p>` : '';
 			return `		<item>
 			<title>${xmlEscape(titleFor(post.text))}</title>
 			<link>${link}</link>
 			<guid isPermaLink="true">${link}</guid>
 			<pubDate>${post.publishedAt.toUTCString()}</pubDate>
-			<description>${cdata(`<p>${post.html}</p>${place}${images}`)}</description>
+			<description>${cdata(`<p>${post.html}</p>${images}`)}</description>
 		</item>`;
 		})
 		.join('\n');

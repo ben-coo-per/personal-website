@@ -60,7 +60,6 @@ export interface StatusPost {
 	text: string;
 	html: string;
 	publishedAt: Date;
-	place?: string;
 	images: StatusImage[];
 	syndication: { threads?: string; bluesky?: string };
 }

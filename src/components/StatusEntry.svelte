@@ -5,7 +5,7 @@
 
 	interface Props {
 		post: StatusPost;
-		/** Newest post on the feed: larger type and a "latest" marker. */
+		/** Newest post on the feed: larger type. */
 		featured?: boolean;
 		/** Render as a standalone permalink page entry (no self-link on the timestamp). */
 		standalone?: boolean;
@@ -39,9 +39,6 @@
 
 <article class="status h-entry" class:featured class:standalone>
 	<div class="meta">
-		{#if featured}
-			<span class="latest"><span class="pulse"></span>latest</span>
-		{/if}
 		{#if standalone}
 			<time class="dt-published" datetime={post.publishedAt.toISOString()}
 				>{formatStatusTime(post.publishedAt)}</time
@@ -53,9 +50,6 @@
 					>{formatStatusTime(post.publishedAt)}</time
 				>
 			</a>
-		{/if}
-		{#if post.place}
-			<span class="place p-location">@ {post.place}</span>
 		{/if}
 	</div>
 
@@ -70,18 +64,13 @@
 			style={count === 1 ? `aspect-ratio: ${soloRatio}` : undefined}
 		>
 			{#each tiles as img, i}
-				<a
-					class="tile u-photo"
-					href={img.url}
-					target="_blank"
-					rel="noreferrer"
-					aria-label={img.alt ? `Open image: ${img.alt}` : 'Open image'}
-				>
+				<div class="tile">
 					<DitherMedia src={img.url} alt={img.alt} fill />
+					<data class="u-photo" value={img.url}></data>
 					{#if overflow > 0 && i === tiles.length - 1}
 						<span class="more">+{overflow}</span>
 					{/if}
-				</a>
+				</div>
 			{/each}
 		</div>
 	{/if}
@@ -99,14 +88,21 @@
 
 <style>
 	.status {
-		padding: 22px 0 24px;
-		border-bottom: 1px dashed var(--rule);
 		min-width: 0;
+		padding: 20px 22px 22px;
+		margin-bottom: 14px;
+		border: 1px solid var(--rule);
+		border-radius: var(--radius);
+		background: rgba(17, 17, 20, 0.55);
+		backdrop-filter: blur(4px);
 	}
 
 	.status.standalone {
-		border-bottom: none;
-		padding-top: 0;
+		padding: 0;
+		margin-bottom: 0;
+		border: none;
+		background: none;
+		backdrop-filter: none;
 	}
 
 	.meta {
@@ -128,38 +124,6 @@
 
 	.stamp:hover {
 		color: var(--amber);
-	}
-
-	.place {
-		color: var(--ink-2);
-		text-transform: lowercase;
-		letter-spacing: 0.02em;
-	}
-
-	.latest {
-		display: inline-flex;
-		align-items: center;
-		gap: 7px;
-		color: var(--amber);
-	}
-
-	.pulse {
-		width: 7px;
-		height: 7px;
-		border-radius: 50%;
-		background: var(--amber);
-		box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6);
-		animation: pulse 2.4s ease-out infinite;
-	}
-
-	@keyframes pulse {
-		0% {
-			box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.55);
-		}
-		70%,
-		100% {
-			box-shadow: 0 0 0 8px rgba(251, 191, 36, 0);
-		}
 	}
 
 	.text {
@@ -235,16 +199,6 @@
 		height: 100%;
 	}
 
-	.tile :global(.dither-media__img) {
-		transition:
-			opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms,
-			transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-	}
-
-	.tile:hover :global(.dither-media__img) {
-		transform: scale(1.025);
-	}
-
 	.more {
 		position: absolute;
 		inset: 0;
@@ -289,17 +243,14 @@
 	}
 
 	@media (max-width: 600px) {
+		.status:not(.standalone) {
+			padding: 16px 16px 18px;
+		}
 		.text {
 			font-size: 16px;
 		}
 		.grid[data-count='2'] {
 			aspect-ratio: 4 / 3;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.pulse {
-			animation: none;
 		}
 	}
 </style>

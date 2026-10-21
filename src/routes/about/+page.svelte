@@ -141,6 +141,7 @@
 		justify-content: space-between;
 		gap: 14px;
 		padding-bottom: 6px;
+		margin-bottom: 16px;
 		border-bottom: 1px solid var(--rule);
 	}
 

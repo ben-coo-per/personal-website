@@ -292,7 +292,6 @@ type RawStatus = {
 	slug: string;
 	text?: string;
 	publishedAt?: string;
-	place?: string;
 	images?: { file?: string; alt?: string; width?: number; height?: number }[];
 	syndication?: { threads?: string; bluesky?: string };
 };
@@ -332,7 +331,6 @@ function toStatus(raw: RawStatus): StatusPost {
 		text,
 		html: statusTextToHtml(text),
 		publishedAt: new Date(raw.publishedAt || 0),
-		place: raw.place?.trim() || undefined,
 		images: (raw.images ?? [])
 			.filter((img) => typeof img.file === 'string' && !img.file.includes('..'))
 			.map((img) => ({
