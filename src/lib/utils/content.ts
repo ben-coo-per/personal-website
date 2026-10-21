@@ -2,9 +2,16 @@ import { env } from '$env/dynamic/private';
 import { PUBLIC_R2_URL } from '$env/static/public';
 import { marked } from 'marked';
 import { parse as yamlParse } from 'yaml';
-import type { ProjectMetadata, BlogPostMetadata, AboutData, HomeData } from '$lib/types';
+import type { ProjectMetadata, BlogPostMetadata, AboutData, HomeData, StatusPost } from '$lib/types';
 
-export type { ProjectMetadata, BlogPostMetadata, Project, AboutData, HomeData } from '$lib/types';
+export type {
+	ProjectMetadata,
+	BlogPostMetadata,
+	Project,
+	AboutData,
+	HomeData,
+	StatusPost
+} from '$lib/types';
 
 // Decouple the frontend from R2 latency / blips: serve cached responses for
 // FRESH_MS without re-fetching, and fall back to stale responses up to STALE_MS
@@ -189,10 +196,6 @@ export function verifyPasscode(passcode: string): boolean {
 
 type RawAbout = {
 	body?: string;
-	building?: string[];
-	reading?: string[];
-	watching?: string[];
-	playing?: string[];
 	aiProfile?: string;
 	email?: string;
 	github?: string;
@@ -207,16 +210,8 @@ const FALLBACK_ABOUT: AboutData = {
 	github: '',
 	instagram: '',
 	linkedin: '',
-	location: '',
-	building: [],
-	reading: [],
-	watching: [],
-	playing: []
+	location: ''
 };
-
-function toInlineList(items: string[] | undefined): string[] {
-	return (items ?? []).map((s) => marked.parseInline(s) as string);
-}
 
 export async function getAboutPage(): Promise<AboutData> {
 	let raw: RawAbout;
@@ -237,10 +232,6 @@ export async function getAboutPage(): Promise<AboutData> {
 		instagram: raw.instagram ?? '',
 		linkedin: raw.linkedin ?? '',
 		location: raw.location ?? '',
-		building: toInlineList(raw.building),
-		reading: toInlineList(raw.reading),
-		watching: toInlineList(raw.watching),
-		playing: toInlineList(raw.playing),
 		aiProfile: raw.aiProfile ?? ''
 	};
 }
@@ -295,4 +286,91 @@ export async function getBlogPostContent(slug: string): Promise<string> {
 	} catch {
 		return '';
 	}
+}
+
+type RawStatus = {
+	slug: string;
+	text?: string;
+	publishedAt?: string;
+	place?: string;
+	images?: { file?: string; alt?: string; width?: number; height?: number }[];
+	syndication?: { threads?: string; bluesky?: string };
+};
+
+const escapeHtml = (s: string) =>
+	s
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+
+const URL_RE = /\bhttps?:\/\/[^\s<>"']+[^\s<>"'.,;:!?)\]]/g;
+
+/** Plain status text → safe HTML: escaped, bare URLs linked, line breaks kept. */
+export function statusTextToHtml(text: string): string {
+	let html = '';
+	let last = 0;
+	for (const m of text.matchAll(URL_RE)) {
+		const i = m.index ?? 0;
+		html += escapeHtml(text.slice(last, i));
+		const url = escapeHtml(m[0]);
+		const label = escapeHtml(m[0].replace(/^https?:\/\/(www\.)?/, ''));
+		html += `<a href="${url}" target="_blank" rel="noreferrer">${label}</a>`;
+		last = i + m[0].length;
+	}
+	html += escapeHtml(text.slice(last));
+	return html.replace(/\r?\n/g, '<br />');
+}
+
+const isSafeUrl = (u?: string) => typeof u === 'string' && /^https:\/\//.test(u);
+
+function toStatus(raw: RawStatus): StatusPost {
+	const text = (raw.text ?? '').trim();
+	return {
+		slug: raw.slug,
+		text,
+		html: statusTextToHtml(text),
+		publishedAt: new Date(raw.publishedAt || 0),
+		place: raw.place?.trim() || undefined,
+		images: (raw.images ?? [])
+			.filter((img) => typeof img.file === 'string' && !img.file.includes('..'))
+			.map((img) => ({
+				file: img.file as string,
+				url: `/cms-assets/status/${raw.slug}/${img.file}`,
+				alt: img.alt ?? '',
+				width: img.width,
+				height: img.height
+			})),
+		syndication: {
+			threads: isSafeUrl(raw.syndication?.threads) ? raw.syndication?.threads : undefined,
+			bluesky: isSafeUrl(raw.syndication?.bluesky) ? raw.syndication?.bluesky : undefined
+		}
+	};
+}
+
+async function loadStatusIndex(): Promise<RawStatus[]> {
+	try {
+		return await fetchJson<RawStatus[]>('status/_index.json');
+	} catch (e) {
+		console.error('Failed to load status/_index.json:', e);
+		return [];
+	}
+}
+
+const hasText = (s: RawStatus) => typeof s.text === 'string' && s.text.trim().length > 0;
+
+export async function getStatuses(limit = 30): Promise<StatusPost[]> {
+	const index = await loadStatusIndex();
+	return index
+		.filter((s) => hasText(s) || (s.images?.length ?? 0) > 0)
+		.map(toStatus)
+		.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())
+		.slice(0, limit);
+}
+
+export async function getStatus(slug: string): Promise<StatusPost | null> {
+	const index = await loadStatusIndex();
+	const raw = index.find((s) => s.slug === slug);
+	return raw ? toStatus(raw) : null;
 }

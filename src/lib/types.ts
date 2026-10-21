@@ -33,10 +33,6 @@ export interface AboutData {
 	instagram: string;
 	linkedin: string;
 	location: string;
-	building: string[];
-	reading: string[];
-	watching: string[];
-	playing: string[];
 	aiProfile?: string;
 }
 
@@ -49,4 +45,22 @@ export interface BlogPostMetadata {
 	instagramLink?: string;
 	onshapeLink?: string;
 	downloadableFile?: string;
+}
+
+export interface StatusImage {
+	file: string;
+	url: string;
+	alt: string;
+	width?: number;
+	height?: number;
+}
+
+export interface StatusPost {
+	slug: string;
+	text: string;
+	html: string;
+	publishedAt: Date;
+	place?: string;
+	images: StatusImage[];
+	syndication: { threads?: string; bluesky?: string };
 }
