@@ -60,6 +60,9 @@ type RawProject = {
 	previewImage?: string;
 	hoverImage?: string;
 	bgColor?: string;
+	heroVideo?: string;
+	heroPoster?: string;
+	heroTone?: string;
 };
 
 type RawBlogPost = {
@@ -93,6 +96,9 @@ function toProject(raw: RawProject): ProjectMetadata {
 		previewImage: raw.previewImage,
 		hoverImage: raw.hoverImage,
 		bgColor: raw.bgColor,
+		heroVideo: raw.heroVideo,
+		heroPoster: raw.heroPoster,
+		heroTone: raw.heroTone === 'dark' ? 'dark' : raw.heroVideo ? 'light' : undefined,
 		slug: raw.slug
 	};
 }
