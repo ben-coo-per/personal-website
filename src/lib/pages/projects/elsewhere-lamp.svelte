@@ -13,7 +13,9 @@
 		shot('gallery-5.jpg', 'Bench prototype with a lit LED column'),
 		shot('gallery-8.jpg', 'Testing the size with an off-the-shelf globe'),
 		shot('gallery-6.jpg', 'Orange prototype globe sitting in its ring'),
-		shot('gallery-7.jpg', 'Prototype ring with contact pins')
+		shot('gallery-7.jpg', 'Prototype ring with contact pins'),
+		shot('gallery-13.jpg', 'Two 3D-printed dodecahedron shells stacked on a table'),
+		shot('gallery-14.jpg', 'Notebook sketch of the U-shaped base board and motor mounts')
 	];
 </script>
 
@@ -31,6 +33,13 @@
 </FullBleed>
 
 <MediaStack spacious>
+	<Clip
+		class="slim"
+		src={asset('video-2.mp4')}
+		poster={asset('video-2-poster.jpg')}
+		autoplay
+		label="A pink dusk sky with planes passing overhead"
+	/>
 	<Figure
 		class="narrow"
 		aspect="3/4"
