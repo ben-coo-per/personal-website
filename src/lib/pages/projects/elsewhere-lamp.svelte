@@ -15,7 +15,9 @@
 		shot('gallery-6.jpg', 'Orange prototype globe sitting in its ring'),
 		shot('gallery-7.jpg', 'Prototype ring with contact pins'),
 		shot('gallery-13.jpg', 'Two 3D-printed dodecahedron shells stacked on a table'),
-		shot('gallery-14.jpg', 'Notebook sketch of the U-shaped base board and motor mounts')
+		shot('gallery-14.jpg', 'Notebook sketch of the U-shaped base board and motor mounts'),
+		shot('gallery-3.jpg', 'The painted plaster globe build in the light tent'),
+		shot('gallery-12.jpg', 'The lamp lit up, glowing orange through the fluted glass')
 	];
 </script>
 
@@ -40,18 +42,6 @@
 		autoplay
 		label="A pink dusk sky with planes passing overhead"
 	/>
-	<Figure
-		class="narrow"
-		aspect="3/4"
-		src={asset('gallery-3.jpg')}
-		alt="The painted plaster globe build in the light tent"
-	/>
-	<Figure
-		class="narrow"
-		src={asset('gallery-12.jpg')}
-		alt="The lamp lit up, glowing orange through the fluted glass"
-	/>
-	<Clip src={asset('video-1.mp4')} autoplay label="The lamp changing colour" />
 </MediaStack>
 
 <p class="section-label">Process</p>
@@ -62,6 +52,7 @@
 			<Figure {src} {alt} />
 		{/each}
 	</MediaGrid>
+	<Clip src={asset('video-1.mp4')} autoplay label="The lamp changing colour" />
 	<Figure src={asset('gallery-10.jpg')} alt="Render of the base circuit board" />
 </MediaStack>
 
