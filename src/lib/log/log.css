@@ -410,6 +410,14 @@
 	margin-right: auto;
 }
 
+/* A slimmer centred column, for portrait clips and phone-shot video. */
+.article-body .slim,
+.article-body .media-stack > .slim {
+	width: min(100%, 432px);
+	margin-left: auto;
+	margin-right: auto;
+}
+
 /* A quiet centred label between runs of media: "process". */
 .article-body .section-label {
 	font-family: var(--font-mono);
