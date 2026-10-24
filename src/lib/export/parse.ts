@@ -67,10 +67,38 @@ function blockFromElement(el: Element): Block[] {
 			return [{ type: 'rule' }];
 		case 'img':
 			return [{ type: 'image', image: imageRef(el as HTMLImageElement) }];
+		case 'video': {
+			// A video can't go in a PDF; its poster frame can.
+			const poster = posterRef(el);
+			return poster ? [{ type: 'image', image: poster }] : [];
+		}
+		case 'figure': {
+			// Caption travels as the image's alt (book.ts prints alt as the caption).
+			const refs = images(el);
+			return refs.length ? [galleryOrImage(refs)] : paragraphBlocks(el);
+		}
+		case 'style':
+		case 'script':
+		case 'template':
+		case 'noscript':
+		case 'button':
+		case 'nav':
+		case 'time':
+			return [];
 		case 'div':
-			if (el.classList.contains('image-scroller')) {
+		case 'section':
+		case 'article':
+		case 'header':
+		case 'main':
+		case 'aside':
+			if (el.classList.contains('image-scroller') || el.classList.contains('media-grid')) {
 				return [galleryOrImage(images(el))];
 			}
+			if (el.classList.contains('eyebrow')) {
+				return [{ type: 'heading', level: 3, runs: inlineRuns(el) }];
+			}
+			// A container with no block children is just text (freeform pages wrap prose in divs).
+			if (el.children.length === 0) return paragraphBlocks(el);
 			return Array.from(el.children).flatMap(blockFromElement);
 		default:
 			return paragraphBlocks(el);
@@ -95,12 +123,29 @@ function galleryOrImage(imgs: ImageRef[]): Block {
 	return imgs.length === 1 ? { type: 'image', image: imgs[0] } : { type: 'gallery', images: imgs };
 }
 
+/** Every picture under `el` in document order: <img>s, plus poster frames of <video>s. */
 function images(el: Element): ImageRef[] {
-	return Array.from(el.querySelectorAll('img')).map(imageRef);
+	return Array.from(el.querySelectorAll('img, video'))
+		.map((node) =>
+			node.tagName.toLowerCase() === 'img' ? imageRef(node as HTMLImageElement) : posterRef(node)
+		)
+		.filter((ref): ref is ImageRef => ref !== null);
+}
+
+/** The figure's caption, if the picture sits in one, else its alt text. */
+function captionOrAlt(el: Element, fallback: string | null): string {
+	const caption = el.closest('figure')?.querySelector('figcaption')?.textContent?.trim();
+	return caption || (fallback ?? '').trim();
 }
 
 function imageRef(img: HTMLImageElement): ImageRef {
-	return { src: img.getAttribute('src') ?? '', alt: (img.getAttribute('alt') ?? '').trim() };
+	return { src: img.getAttribute('src') ?? '', alt: captionOrAlt(img, img.getAttribute('alt')) };
+}
+
+function posterRef(video: Element): ImageRef | null {
+	const poster = video.getAttribute('poster');
+	if (!poster) return null;
+	return { src: poster, alt: captionOrAlt(video, video.getAttribute('aria-label')) };
 }
 
 function listItems(list: Element): Run[][] {

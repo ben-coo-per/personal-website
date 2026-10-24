@@ -5,6 +5,8 @@
 	import type { ProjectMetadata } from '$lib/types';
 	import { ditherImages } from '$lib/actions/ditherImages';
 	import { imageScrollers } from '$lib/actions/imageScrollers';
+	import { lightbox } from '$lib/actions/lightbox';
+	import { lazyVideo } from '$lib/actions/lazyVideo';
 
 	interface Props {
 		data: PageData;
@@ -94,9 +96,13 @@
 		});
 		try {
 			const res = await fetch(`/api/project-content/${project.slug}`);
-			const body = await res.json();
+			const html = res.ok
+				? ((await res.json()) as { html: string }).html
+				: res.status === 403
+					? '<p>This project is restricted. Press <kbd>⌘K</kbd> and enter the passcode to read it.</p>'
+					: '<p>Couldn’t load this project right now.</p>';
 			if (selected?.slug === project.slug) {
-				panelHtml = body.html;
+				panelHtml = html;
 			}
 		} finally {
 			if (selected?.slug === project.slug) {
@@ -380,7 +386,7 @@
 						{#if panelLoading}
 							<p class="loading">loading…</p>
 						{:else if panelHtml}
-							<div class="article-body" use:ditherImages use:imageScrollers>{@html panelHtml}</div>
+							<div class="article-body in-panel" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>{@html panelHtml}</div>
 						{/if}
 					</div>
 				{/if}
@@ -458,7 +464,7 @@
 								{#if panelLoading}
 									<p class="loading">loading…</p>
 								{:else if panelHtml}
-									<div class="article-body" use:ditherImages use:imageScrollers>{@html panelHtml}</div>
+									<div class="article-body in-panel" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>{@html panelHtml}</div>
 								{/if}
 							</div>
 						</div>
