@@ -3,6 +3,9 @@
 	import { cmdkOpen } from '$lib/stores/ui';
 	import { ditherImages } from '$lib/actions/ditherImages';
 	import { imageScrollers } from '$lib/actions/imageScrollers';
+	import { lightbox } from '$lib/actions/lightbox';
+	import { lazyVideo } from '$lib/actions/lazyVideo';
+	import { projectAsset } from '$lib/utils/assets';
 
 	interface Props {
 		data: PageData;
@@ -11,11 +14,7 @@
 	let { data }: Props = $props();
 	let project = $derived(data.project);
 	let content = $derived(data.content);
-
-	async function handlePasswordSuccess() {
-		await fetch('/api/set-restricted-access', { method: 'POST' });
-		window.location.reload();
-	}
+	let Page = $derived(data.Page);
 </script>
 
 <svelte:head>
@@ -34,8 +33,12 @@
 		</div>
 	</div>
 {:else if project}
-	{#if content}
-		<div class="article-body" use:ditherImages use:imageScrollers>
+	{#if Page}
+		<div class="article-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>
+			<Page {project} asset={projectAsset(project.slug)} />
+		</div>
+	{:else if content}
+		<div class="article-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>
 			{@html content}
 		</div>
 	{/if}

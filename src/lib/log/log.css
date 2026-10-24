@@ -1,0 +1,815 @@
+/* ===== ARTICLE BODY / BUILD-LOG KIT =====
+   One stylesheet for every project body, however it was authored:
+   - markdown rendered by lib/utils/markdown.ts
+   - freeform Svelte pages in lib/pages/projects/*.svelte, built from lib/log components
+   - the same freeform pages server-rendered to HTML for the storehouse panel and PDF export
+
+   It is global on purpose. Component-scoped <style> never reaches server-rendered HTML
+   dropped in with {@html}, so the kit components only emit class names and this file
+   carries the look. Behaviour (dither loading, scroller buttons, lightbox, lazy video)
+   comes from the actions in lib/actions, applied to the .article-body container.
+
+   Layout model: the body spans the full .site width (media-first). Text blocks are
+   capped at --max-width-prose and centred; media runs the full body width, or breaks
+   out to the viewport edge with .full-bleed. */
+
+.article-body {
+	width: 100%;
+	container-type: inline-size;
+	container-name: article;
+}
+
+/* ---------- text: a centred measure ---------- */
+
+.article-body :where(p, h2, h3, h4, ul, ol, blockquote, pre, .prose) {
+	max-width: var(--max-width-prose);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.article-body p {
+	font-size: 16.5px;
+	line-height: 1.75;
+	color: var(--ink-2);
+	margin-top: 0;
+	margin-bottom: 1.2em;
+}
+
+.article-body h2 {
+	font-size: 26px;
+	font-weight: 500;
+	color: var(--ink);
+	margin-top: 2.4em;
+	margin-bottom: 0.6em;
+	letter-spacing: -0.015em;
+}
+
+.article-body h3 {
+	font-size: 18px;
+	font-weight: 500;
+	color: var(--ink);
+	margin-top: 1.6em;
+	margin-bottom: 0.5em;
+}
+
+.article-body h4 {
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--ink-3);
+	margin-top: 2em;
+	margin-bottom: 0.8em;
+}
+
+/* A section eyebrow: "phase 02 · may" above an h2. */
+.article-body .eyebrow {
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	color: var(--ink-3);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	max-width: var(--max-width-prose);
+	margin: 2.6em auto -1.8em;
+}
+
+.article-body ul,
+.article-body ol {
+	list-style: disc;
+	padding-left: 1.4em;
+	font-size: 16.5px;
+	line-height: 1.75;
+	color: var(--ink-2);
+	margin-top: 0;
+	margin-bottom: 1.2em;
+}
+
+.article-body ol {
+	list-style: decimal;
+}
+
+.article-body li {
+	margin-bottom: 0.4em;
+}
+
+.article-body a {
+	color: var(--amber);
+	border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+	padding-bottom: 1px;
+}
+
+.article-body a:hover {
+	border-color: var(--amber);
+}
+
+.article-body blockquote {
+	border-left: 2px solid var(--amber);
+	padding-left: 1em;
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+	color: var(--ink-2);
+	font-style: italic;
+}
+
+.article-body code {
+	font-family: var(--font-mono);
+	font-size: 0.875em;
+	background: var(--bg-2);
+	padding: 2px 6px;
+	border-radius: 4px;
+	color: var(--amber);
+}
+
+.article-body pre {
+	background: var(--bg-2);
+	border: 1px solid var(--rule);
+	border-radius: var(--radius);
+	padding: 16px 20px;
+	overflow-x: auto;
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+
+.article-body pre code {
+	background: none;
+	padding: 0;
+	color: var(--ink-2);
+}
+
+.article-body hr {
+	border: 0;
+	border-top: 1px solid var(--rule);
+	margin: 3em 0;
+}
+
+/* Work-in-progress note: a dashed amber strip at the top of an unfinished page,
+   matching the WIP project card. Runs the body width, not the prose measure. */
+.article-body .wip-note {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 12px;
+	max-width: none;
+	margin: 0 0 16px;
+	padding: 10px 14px;
+	border: 1px dashed rgba(251, 191, 36, 0.4);
+	border-radius: var(--radius);
+	background: rgba(251, 191, 36, 0.03);
+	font-family: var(--font-mono);
+	font-size: 12.5px;
+	line-height: 1.5;
+	color: var(--ink-2);
+}
+
+.article-body .wip-note strong {
+	color: var(--amber);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	white-space: nowrap;
+}
+
+.article-body .wip-note strong::before {
+	content: '';
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	margin-right: 8px;
+	border-radius: 50%;
+	background: var(--amber);
+	vertical-align: 1px;
+	animation: log-wip-pulse 2s ease-in-out infinite;
+}
+
+@keyframes log-wip-pulse {
+	50% {
+		opacity: 0.3;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.article-body .wip-note strong::before {
+		animation: none;
+	}
+}
+
+/* WIP veil: a blurred picture with a WIP label over it, for the end of an unfinished
+   page. The picture is a teaser, so it is kept out of the lightbox. */
+.article-body .wip-veil {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--radius);
+	margin: 0;
+}
+
+.article-body .wip-veil :where(img, .dither-media) {
+	filter: blur(28px) saturate(1.15);
+	transform: scale(1.12);
+}
+
+.article-body .wip-veil__label {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	padding: 16px;
+	background: linear-gradient(to bottom, transparent, rgba(10, 10, 11, 0.35));
+}
+
+.article-body .wip-veil__label .wip-note {
+	margin: 0;
+	width: fit-content;
+	max-width: 100%;
+	background: rgba(10, 10, 11, 0.55);
+	backdrop-filter: blur(6px);
+}
+
+/* Lead paragraph: the first p after the header, a touch larger. */
+.article-body .lede {
+	font-size: 19px;
+	line-height: 1.6;
+	color: var(--ink);
+}
+
+/* ---------- media: full body width ---------- */
+
+.article-body :where(img, video) {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--radius);
+	border: 1px solid var(--rule);
+}
+
+.article-body video {
+	background: var(--bg-2);
+}
+
+/* Block-level media and its wrappers share one vertical rhythm. */
+.article-body :where(figure, .media-grid, .full-bleed, .image-scroller-wrap, .image-scroller) {
+	margin: 2.6em 0;
+}
+
+.article-body > :where(img, video, .dither-media) {
+	margin: 2.6em 0;
+}
+
+/* Raw `<p><img></p>` (hand-written HTML in markdown): let the picture out of the measure. */
+.article-body p:has(> :is(img, video, .dither-media):only-child) {
+	max-width: none;
+	margin: 2.6em 0;
+}
+
+/* The dither action wraps each <img> in span.dither-media; the wrapper carries the frame. */
+.article-body .dither-media {
+	border-radius: var(--radius);
+	border: 1px solid var(--rule);
+}
+
+.article-body .dither-media .dither-media__img {
+	margin: 0;
+	border: none;
+	border-radius: calc(var(--radius) - 1px);
+}
+
+/* A figure that is the content of a bleed or a grid cell has no spacing of its own. */
+.article-body :where(.full-bleed, .media-grid, .duo) > figure {
+	margin: 0;
+}
+
+/* Inside a figure or grid, the cell owns the spacing. */
+.article-body
+	:where(figure, .media-grid, .full-bleed, .image-scroller)
+	:where(img, video, .dither-media) {
+	margin: 0;
+}
+
+.article-body :where(figure, .media-grid, .image-scroller) p {
+	max-width: none;
+	margin: 0;
+}
+
+/* Hero: a body that opens with media loses its top margin and is capped so a portrait
+   shot can't take three screens. */
+.article-body > :where(figure, img, video, .dither-media, .full-bleed):first-child {
+	margin-top: 0;
+}
+
+.article-body > :where(figure, .full-bleed):first-child :where(img, video, .dither-media__img),
+.article-body > :where(img, video):first-child,
+.article-body > .dither-media:first-child .dither-media__img {
+	max-height: 78vh;
+	object-fit: cover;
+}
+
+/* ---------- figure + caption ---------- */
+
+.article-body figure {
+	width: 100%;
+}
+
+.article-body figcaption {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	line-height: 1.5;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--ink-3);
+	margin-top: 10px;
+	padding: 0 2px;
+}
+
+/* Fixed-ratio figures (data-aspect from lib/log/Figure.svelte). */
+.article-body figure[data-aspect] :where(img, .dither-media, video) {
+	aspect-ratio: var(--aspect);
+	object-fit: cover;
+}
+
+.article-body figure[data-aspect] .dither-media__img {
+	height: 100%;
+	object-fit: cover;
+}
+
+.article-body figure[data-aspect='4/3'] {
+	--aspect: 4 / 3;
+}
+.article-body figure[data-aspect='3/2'] {
+	--aspect: 3 / 2;
+}
+.article-body figure[data-aspect='16/9'] {
+	--aspect: 16 / 9;
+}
+.article-body figure[data-aspect='1/1'] {
+	--aspect: 1 / 1;
+}
+.article-body figure[data-aspect='3/4'] {
+	--aspect: 3 / 4;
+}
+
+/* ---------- media stack ---------- */
+
+/* A run of media packed at the grid gap instead of the usual section spacing, for
+   pages that are one continuous gallery. */
+.article-body .media-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 2.6em 0;
+}
+
+.article-body .media-stack > * {
+	margin: 0;
+}
+
+.article-body .full-bleed + .media-stack:not(.spacious) {
+	margin-top: 12px;
+}
+
+/* Spacious: one picture per beat with a lot of air between them, so the page reads as a
+   slow scroll rather than a contact sheet. */
+.article-body {
+	--gallery-gap: clamp(72px, 15vw, 240px);
+}
+
+.article-body .media-stack.spacious {
+	gap: var(--gallery-gap);
+	margin: var(--gallery-gap) 0;
+}
+
+/* A centred column narrower than the body, for single pictures in a spacious stack. */
+.article-body .narrow,
+.article-body .media-stack > .narrow {
+	width: min(100%, 768px);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* A quiet centred label between runs of media: "process". */
+.article-body .section-label {
+	font-family: var(--font-mono);
+	font-size: 12px;
+	color: var(--ink-3);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	text-align: center;
+	margin: var(--gallery-gap) auto 40px;
+}
+
+.article-body .media-stack.spacious + .section-label {
+	margin-top: 0;
+}
+
+/* ---------- media grid ---------- */
+
+.article-body .media-grid {
+	--min: 240px;
+	--cell-aspect: 4 / 3;
+	display: grid;
+	gap: 12px;
+	grid-template-columns: repeat(auto-fill, minmax(min(var(--min), 100%), 1fr));
+	align-items: start;
+}
+
+.article-body .media-grid[data-cols='2'] {
+	grid-template-columns: repeat(2, 1fr);
+}
+.article-body .media-grid[data-cols='3'] {
+	grid-template-columns: repeat(3, 1fr);
+}
+.article-body .media-grid[data-cols='4'] {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+/* Contact sheet: many small squares. */
+.article-body .media-grid.dense {
+	--min: 150px;
+	--cell-aspect: 1 / 1;
+	gap: 6px;
+}
+
+.article-body .media-grid > :where(figure, img, video, .dither-media, p) {
+	margin: 0;
+	min-width: 0;
+}
+
+.article-body .media-grid :where(img, video, .dither-media) {
+	aspect-ratio: var(--cell-aspect);
+	object-fit: cover;
+}
+
+.article-body .media-grid .dither-media__img {
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Keep each picture's own shape instead of cropping to the cell. */
+.article-body .media-grid.natural :where(img, video, .dither-media),
+.article-body .media-grid.natural .dither-media__img {
+	aspect-ratio: auto;
+	height: auto;
+	object-fit: initial;
+}
+
+.article-body .media-grid .dither-media:not([data-loaded='true']) {
+	min-height: 0;
+}
+
+/* Narrow bodies (storehouse panel, phones): fewer columns. */
+@container article (max-width: 720px) {
+	.article-body .media-grid[data-cols='3'],
+	.article-body .media-grid[data-cols='4'] {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@container article (max-width: 420px) {
+	.article-body .media-grid[data-cols] {
+		grid-template-columns: 1fr;
+	}
+	.article-body .media-grid.dense[data-cols] {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* ---------- full bleed ---------- */
+
+.article-body .full-bleed {
+	width: 100vw;
+	max-width: 100vw;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+}
+
+.article-body .full-bleed :where(img, video, .dither-media) {
+	border-radius: 0;
+	border-left: 0;
+	border-right: 0;
+}
+
+.article-body .full-bleed .dither-media__img {
+	border-radius: 0;
+}
+
+.article-body .full-bleed figcaption {
+	padding: 0 var(--pad);
+}
+
+/* Inside the storehouse panel there is no viewport to bleed into. */
+.article-body.in-panel .full-bleed,
+.article-body.in-panel .image-scroller-wrap,
+.article-body.in-panel .image-scroller {
+	width: 100%;
+	max-width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.article-body.in-panel .full-bleed :where(img, video, .dither-media) {
+	border-radius: var(--radius);
+	border: 1px solid var(--rule);
+}
+
+.article-body.in-panel .image-scroller {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* ---------- image scroller ----------
+   Markdown: wrap images in `:::scroller … :::` (lib/utils/markdown.ts). Freeform: <Scroller>.
+   A horizontally-scrolling row of uniform-height images that runs edge to edge. The
+   `imageScrollers` action wraps it in .image-scroller-wrap and adds prev/next buttons. */
+
+.article-body .image-scroller-wrap {
+	position: relative;
+}
+
+.article-body .image-scroller-wrap,
+.article-body .image-scroller {
+	width: 100vw;
+	max-width: 100vw;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+}
+
+.article-body .image-scroller {
+	display: flex;
+	gap: 14px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0 max(var(--pad), calc(50vw - var(--maxw) / 2 + var(--pad))) 12px;
+	scroll-padding: 0 var(--pad);
+	scroll-snap-type: x proximity;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-color: var(--rule) transparent;
+}
+
+/* Once wrapped by the action, the wrapper owns the bleed and spacing. */
+.article-body .image-scroller-wrap .image-scroller {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+}
+
+.article-body .image-scroller__nav {
+	position: absolute;
+	top: 50%;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	margin-top: -6px;
+	transform: translateY(-50%);
+	border: 1px solid var(--rule);
+	border-radius: 999px;
+	background: var(--bg-2);
+	color: var(--ink-2);
+	cursor: pointer;
+	transition:
+		opacity 0.15s,
+		border-color 0.15s,
+		color 0.15s,
+		background 0.15s;
+}
+
+.article-body .image-scroller__nav svg {
+	width: 18px;
+	height: 18px;
+}
+
+.article-body .image-scroller__nav--prev {
+	left: 12px;
+}
+
+.article-body .image-scroller__nav--next {
+	right: 12px;
+}
+
+.article-body .image-scroller__nav:hover:not(:disabled) {
+	border-color: var(--amber);
+	color: var(--amber);
+}
+
+.article-body .image-scroller__nav:disabled {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.article-body .image-scroller-wrap[data-overflow='false'] .image-scroller__nav {
+	display: none;
+}
+
+.article-body .image-scroller::-webkit-scrollbar {
+	height: 8px;
+}
+
+.article-body .image-scroller::-webkit-scrollbar-thumb {
+	background: var(--rule);
+	border-radius: 4px;
+}
+
+.article-body .image-scroller > :where(p, figure, img, .dither-media) {
+	flex: 0 0 auto;
+	margin: 0;
+	height: clamp(260px, 52vh, 560px);
+	scroll-snap-align: center;
+}
+
+.article-body .image-scroller > p {
+	display: flex;
+}
+
+.article-body .image-scroller figure {
+	width: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.article-body .image-scroller figure figcaption {
+	flex: 0 0 auto;
+}
+
+.article-body .image-scroller figure :where(img, .dither-media) {
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+.article-body .image-scroller .dither-media {
+	width: auto;
+	height: 100%;
+	margin: 0;
+	display: inline-block;
+}
+
+.article-body .image-scroller .dither-media__img,
+.article-body .image-scroller img {
+	height: 100%;
+	width: auto;
+	margin: 0;
+	display: block;
+	border: none;
+	border-radius: var(--radius);
+}
+
+@media (max-width: 600px) {
+	.article-body .image-scroller > :where(p, figure, img, .dither-media) {
+		height: 280px;
+	}
+}
+
+/* ---------- side-by-side text + media ---------- */
+
+.article-body .duo {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 28px;
+	align-items: center;
+	margin: 2.6em 0;
+}
+
+.article-body .duo > :where(p, h2, h3, .prose) {
+	max-width: none;
+	margin: 0;
+}
+
+.article-body .duo > :where(figure, img, video, .dither-media) {
+	margin: 0;
+}
+
+@container article (max-width: 720px) {
+	.article-body .duo {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ---------- lightbox (lib/actions/lightbox.ts) ---------- */
+
+.article-body :where(.media-grid, .image-scroller, figure) img,
+.article-body > img,
+.article-body > .dither-media img {
+	cursor: zoom-in;
+}
+
+.article-body a img {
+	cursor: pointer;
+}
+
+.lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: grid;
+	grid-template-rows: 1fr auto;
+	background: rgba(10, 10, 11, 0.94);
+	backdrop-filter: blur(10px);
+	opacity: 0;
+	transition: opacity 0.18s ease-out;
+}
+
+.lightbox[data-open='true'] {
+	opacity: 1;
+}
+
+.lightbox__stage {
+	display: grid;
+	place-items: center;
+	min-height: 0;
+	padding: 56px var(--pad) 12px;
+}
+
+.lightbox__img {
+	max-width: min(1600px, 100%);
+	max-height: calc(100vh - 140px);
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	border-radius: 6px;
+	border: 1px solid var(--rule);
+	background: var(--bg-2);
+	cursor: default;
+}
+
+.lightbox__caption {
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--ink-2);
+	text-align: center;
+	padding: 6px var(--pad) 26px;
+	min-height: 48px;
+}
+
+.lightbox__count {
+	position: absolute;
+	top: 18px;
+	left: var(--pad);
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	letter-spacing: 0.06em;
+	color: var(--ink-3);
+}
+
+.lightbox__close,
+.lightbox__nav {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	border: 1px solid var(--rule);
+	border-radius: 999px;
+	background: var(--bg-2);
+	color: var(--ink-2);
+	cursor: pointer;
+	transition:
+		border-color 0.15s,
+		color 0.15s;
+}
+
+.lightbox__close:hover,
+.lightbox__nav:hover:not(:disabled) {
+	border-color: var(--amber);
+	color: var(--amber);
+}
+
+.lightbox__close {
+	top: 14px;
+	right: var(--pad);
+}
+
+.lightbox__nav {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.lightbox__nav--prev {
+	left: 12px;
+}
+
+.lightbox__nav--next {
+	right: 12px;
+}
+
+.lightbox__nav:disabled {
+	opacity: 0.25;
+	cursor: default;
+}
+
+.lightbox svg {
+	width: 18px;
+	height: 18px;
+}
+
+@media (max-width: 600px) {
+	.lightbox__nav {
+		top: auto;
+		bottom: 10px;
+		transform: none;
+	}
+	.lightbox__caption {
+		padding-bottom: 64px;
+	}
+}

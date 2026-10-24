@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
-import { getProject, getProjectContent } from '$lib/utils/content';
-import { marked } from '$lib/utils/markdown';
+import { getProject } from '$lib/utils/content';
+import { getProjectHtml } from '$lib/server/projectHtml';
 import type { RequestHandler } from './$types';
 
 /**
@@ -15,8 +15,5 @@ export const GET: RequestHandler = async ({ params, cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
 	if (project.isRestricted && !hasRestricted) error(403, 'Restricted');
 
-	const markdown = await getProjectContent(params.slug);
-	const html = markdown ? await marked.parse(markdown) : '';
-
-	return json({ project, html });
+	return json({ project, html: await getProjectHtml(project) });
 };

@@ -1,7 +1,9 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getNextProjectInOrder, getProject, getProjectContent } from '$lib/utils/content';
-import { marked } from '$lib/utils/markdown';
+import { renderMarkdown } from '$lib/utils/markdown';
+import { projectAssetBase } from '$lib/utils/assets';
+import { hasFreeformPage } from '$lib/pages/projects';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const hasRestricted = cookies.get('restrictedAccess') === 'true';
@@ -13,11 +15,18 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 	}
 
 	if (project.isRestricted && !hasRestricted) {
-		return { needsPassword: true, project: null, next, content: '' };
+		return { needsPassword: true, project: null, next, format: 'markdown' as const, content: '' };
 	}
 
-	const contentMarkdown = await getProjectContent(params.slug);
-	const content = contentMarkdown ? await marked.parse(contentMarkdown) : '';
+	// A freeform Svelte page for this slug wins over content.md; +page.ts loads it.
+	if (hasFreeformPage(project.slug)) {
+		return { needsPassword: false, project, next, format: 'svelte' as const, content: '' };
+	}
 
-	return { project, next, content };
+	const markdown = await getProjectContent(params.slug);
+	const content = markdown
+		? await renderMarkdown(markdown, { assetBase: projectAssetBase(project.slug) })
+		: '';
+
+	return { needsPassword: false, project, next, format: 'markdown' as const, content };
 };
