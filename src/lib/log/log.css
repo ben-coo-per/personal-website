@@ -505,6 +505,53 @@
 	}
 }
 
+/* ---------- mosaic ---------- */
+
+/* Hand-placed cells on a 12-column grid, each keeping its own shape. */
+.article-body .mosaic {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	column-gap: 16px;
+	row-gap: 40px;
+	align-items: start;
+	width: min(100%, 1080px);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.article-body .mosaic__cell {
+	grid-column: var(--col, auto);
+	margin-top: var(--shift, 0);
+	align-self: var(--align, start);
+	min-width: 0;
+}
+
+.article-body .mosaic__cell > :where(figure, img, video, .dither-media) {
+	margin: 0;
+}
+
+.article-body .mosaic__cell :where(img, video, .dither-media),
+.article-body .mosaic__cell .dither-media__img {
+	width: 100%;
+	height: auto;
+	aspect-ratio: auto;
+	object-fit: initial;
+}
+
+@container article (max-width: 720px) {
+	.article-body .mosaic {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+	}
+	.article-body .mosaic__cell {
+		grid-column: span 1;
+		margin-top: 0;
+	}
+	.article-body .mosaic__cell.wide {
+		grid-column: 1 / -1;
+	}
+}
+
 /* ---------- full bleed ---------- */
 
 .article-body .full-bleed {

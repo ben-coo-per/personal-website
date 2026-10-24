@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
+	import ProjectHeroVideo from '../../../components/ProjectHeroVideo.svelte';
+	import { projectAsset } from '$lib/utils/assets';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -19,6 +21,16 @@
 	});
 
 	let next = $derived($page.data.next);
+
+	let hero = $derived.by(() => {
+		if (!project?.heroVideo) return undefined;
+		const asset = projectAsset(project.slug);
+		return {
+			src: asset(project.heroVideo),
+			poster: project.heroPoster ? asset(project.heroPoster) : undefined,
+			tone: project.heroTone
+		};
+	});
 </script>
 
 <svelte:head>
@@ -27,7 +39,11 @@
 	{/if}
 </svelte:head>
 
-<div class="site">
+<div class="site" class:has-hero={hero} data-hero-tone={hero?.tone}>
+	{#if hero}
+		<ProjectHeroVideo src={hero.src} poster={hero.poster} label={project.title} />
+	{/if}
+
 	<a class="back" href="/projects">← projects</a>
 
 	{#if project}
@@ -63,6 +79,56 @@
 </div>
 
 <style>
+	/* Title over a hero video: it fills the first screen and fades out on scroll. */
+	.has-hero > :global(.back),
+	.has-hero > .article-head {
+		opacity: var(--hero-fade, 1);
+	}
+
+	.has-hero > .article-head {
+		min-height: calc(100svh - var(--hero-offset, 120px));
+		margin-bottom: clamp(160px, 35vh, 420px);
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		padding-bottom: 56px;
+		border-bottom: 0;
+		text-shadow: var(--hero-shadow);
+	}
+
+	.has-hero[data-hero-tone='light'] {
+		--hero-shadow: 0 1px 18px rgba(0, 0, 0, 0.35);
+	}
+
+	.has-hero[data-hero-tone='light'] > :global(.back),
+	.has-hero[data-hero-tone='light'] > .article-head :is(.eyebrow, .subtitle, .desc) {
+		color: rgba(255, 255, 255, 0.85);
+	}
+
+	.has-hero[data-hero-tone='dark'] > :global(.back),
+	.has-hero[data-hero-tone='dark'] > .article-head :is(h1, .eyebrow, .subtitle, .desc, .head-links a) {
+		color: #24121f;
+	}
+
+	.has-hero[data-hero-tone='dark'] > .article-head :is(.eyebrow, .subtitle, .desc) {
+		color: rgba(36, 18, 31, 0.78);
+	}
+
+	.has-hero[data-hero-tone='dark'] .head-links a {
+		border-color: rgba(36, 18, 31, 0.3);
+	}
+
+	/* The video stays behind the whole page, so text that sits straight on it needs help. */
+	.has-hero :global(.article-body > .wip-note) {
+		background: rgba(10, 10, 11, 0.7);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+	}
+
+	.has-hero[data-hero-tone='dark'] :global(.article-body .section-label) {
+		color: rgba(36, 18, 31, 0.78);
+	}
+
 	.desc {
 		margin-top: 14px;
 		font-size: 15px;

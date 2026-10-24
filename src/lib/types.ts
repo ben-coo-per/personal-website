@@ -9,6 +9,9 @@ export interface ProjectMetadata {
 	previewImage?: string;
 	hoverImage?: string;
 	bgColor?: string;
+	heroVideo?: string;
+	heroPoster?: string;
+	heroTone?: 'light' | 'dark';
 	slug: string;
 	archived?: boolean;
 	timeSpent?: number;
