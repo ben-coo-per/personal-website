@@ -6,18 +6,21 @@
 
 	const shot = (file: string, alt: string) => ({ src: asset(file), alt });
 
-	// Process: the build, from the first orange prints to the motors in the base.
-	const process = [
+	// Process, in the order the build happened. New shots go in by the date they were taken.
+	const processBefore = [
 		shot('gallery-2.jpg', 'Looking down into the diffuser at the drive motors'),
 		shot('gallery-9.jpg', 'The motor base plate on the bench'),
+		shot('gallery-3.jpg', 'The painted plaster globe build in the light tent'),
+		shot('gallery-12.jpg', 'The lamp lit up, glowing orange through the fluted glass')
+	];
+
+	const processAfter = [
 		shot('gallery-5.jpg', 'Bench prototype with a lit LED column'),
 		shot('gallery-8.jpg', 'Testing the size with an off-the-shelf globe'),
 		shot('gallery-6.jpg', 'Orange prototype globe sitting in its ring'),
 		shot('gallery-7.jpg', 'Prototype ring with contact pins'),
 		shot('gallery-13.jpg', 'Two 3D-printed dodecahedron shells stacked on a table'),
-		shot('gallery-14.jpg', 'Notebook sketch of the U-shaped base board and motor mounts'),
-		shot('gallery-3.jpg', 'The painted plaster globe build in the light tent'),
-		shot('gallery-12.jpg', 'The lamp lit up, glowing orange through the fluted glass')
+		shot('gallery-14.jpg', 'Notebook sketch of the U-shaped base board and motor mounts')
 	];
 </script>
 
@@ -48,11 +51,16 @@
 
 <MediaStack class="narrow">
 	<MediaGrid cols={2} aspect="1/1">
-		{#each process as { src, alt } (src)}
+		{#each processBefore as { src, alt } (src)}
 			<Figure {src} {alt} />
 		{/each}
 	</MediaGrid>
 	<Clip src={asset('video-1.mp4')} autoplay label="The lamp changing colour" />
+	<MediaGrid cols={2} aspect="1/1">
+		{#each processAfter as { src, alt } (src)}
+			<Figure {src} {alt} />
+		{/each}
+	</MediaGrid>
 	<Figure src={asset('gallery-10.jpg')} alt="Render of the base circuit board" />
 </MediaStack>
 
