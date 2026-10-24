@@ -38,7 +38,7 @@
 			<Page {project} asset={projectAsset(project.slug)} />
 		</div>
 	{:else if content}
-		<div class="article-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>
+		<div class="article-body project-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>
 			{@html content}
 		</div>
 	{/if}

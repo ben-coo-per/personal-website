@@ -302,6 +302,32 @@
 	object-fit: cover;
 }
 
+/* ---------- markdown project pages: room between media ----------
+   A markdown project body reads as a slow scroll through pictures: each top-level
+   image, video, grid and scroller sits in the spacious gallery gap instead of 2.6em.
+   Freeform pages pick their own spacing; the storehouse panel and blog keep 2.6em. */
+
+.article-body.project-body
+	> :where(figure, img, video, .dither-media, .media-grid, .full-bleed, .image-scroller-wrap, .image-scroller),
+.article-body.project-body p:has(> :is(img, video, .dither-media):only-child) {
+	margin-top: var(--gallery-gap);
+	margin-bottom: var(--gallery-gap);
+}
+
+/* Most hand-written markdown <video> tags carry an inline margin-bottom: 2em. */
+.article-body.project-body video {
+	margin-bottom: var(--gallery-gap) !important;
+}
+
+.article-body.project-body :where(figure, .media-grid, .full-bleed, .image-scroller) video {
+	margin-bottom: 0 !important;
+}
+
+/* The hero still sits right under the page header. */
+.article-body.project-body > :first-child {
+	margin-top: 0;
+}
+
 /* ---------- figure + caption ---------- */
 
 .article-body figure {
