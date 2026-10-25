@@ -7,6 +7,8 @@
 	import { imageScrollers } from '$lib/actions/imageScrollers';
 	import { lightbox } from '$lib/actions/lightbox';
 	import { lazyVideo } from '$lib/actions/lazyVideo';
+	import { projectAsset } from '$lib/utils/assets';
+	import HeroVideoFill from '../../components/HeroVideoFill.svelte';
 
 	interface Props {
 		data: PageData;
@@ -40,6 +42,17 @@
 	const MOBILE_BREAKPOINT = 700;
 
 	const projectCount = $derived(data.projects.length);
+
+	// The selected project's hero video, shown behind its panel.
+	const hero = $derived.by(() => {
+		if (!selected?.heroVideo) return undefined;
+		const asset = projectAsset(selected.slug);
+		return {
+			src: asset(selected.heroVideo),
+			poster: selected.heroPoster ? asset(selected.heroPoster) : undefined,
+			tone: selected.heroTone
+		};
+	});
 	const selectedIndex = $derived.by(() => {
 		if (!selected) {
 			return -1;
@@ -297,8 +310,15 @@
 			style:left={panelExpanded ? `${panelFixedLeft}px` : null}
 			style:width={panelExpanded ? `${panelFixedWidth}px` : null}
 		>
-			<div class="panel-inner">
+			<div class="panel-inner" class:on-hero-video={hero} data-hero-tone={hero?.tone}>
 				{#if selected}
+					{#if hero}
+						<HeroVideoFill
+							src={hero.src}
+							poster={hero.poster}
+							height={`${panelExpanded ? panelFixedHeight : desktopPanelHeight}px`}
+						/>
+					{/if}
 					<div class="panel-head">
 						<div class="panel-titles">
 							<h2>{selected.title}</h2>
@@ -416,7 +436,10 @@
 				</li>
 				{#if selected?.slug === project.slug}
 					<li class="accordion-panel">
-						<div class="accordion-inner">
+						<div class="accordion-inner" class:on-hero-video={hero} data-hero-tone={hero?.tone}>
+							{#if hero}
+								<HeroVideoFill src={hero.src} poster={hero.poster} />
+							{/if}
 							<div class="panel-head">
 								<div class="panel-titles">
 									<h2>{selected.title}</h2>
@@ -555,6 +578,38 @@
 		position: fixed;
 		right: auto;
 		z-index: 25;
+	}
+
+	/* Over a hero video: content above the video, and dark text for a light video. */
+	.on-hero-video {
+		position: relative;
+	}
+
+	.on-hero-video > :global(:not(.hero-fill)) {
+		position: relative;
+		z-index: 1;
+	}
+
+	.on-hero-video[data-hero-tone='dark'] :is(.panel-titles h2, .panel-sub, .panel-links a, .main-description) {
+		color: #24121f;
+	}
+
+	.on-hero-video[data-hero-tone='dark'] :is(.panel-sub, .main-description) {
+		color: rgba(36, 18, 31, 0.78);
+	}
+
+	.on-hero-video[data-hero-tone='dark'] :is(.panel-head, .panel-links a, .close-btn, .icon-btn) {
+		border-color: rgba(36, 18, 31, 0.25);
+	}
+
+	.on-hero-video[data-hero-tone='dark'] :is(.close-btn, .icon-btn) {
+		color: #24121f;
+	}
+
+	.panel-col.expanded .on-hero-video .panel-head {
+		background: transparent;
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
 	}
 
 	.panel-inner {

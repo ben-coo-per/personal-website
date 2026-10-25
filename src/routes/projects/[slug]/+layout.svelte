@@ -39,7 +39,7 @@
 	{/if}
 </svelte:head>
 
-<div class="site" class:has-hero={hero} data-hero-tone={hero?.tone}>
+<div class="site" class:has-hero={hero} class:on-hero-video={hero} data-hero-tone={hero?.tone}>
 	{#if hero}
 		<ProjectHeroVideo src={hero.src} poster={hero.poster} label={project.title} />
 	{/if}
@@ -116,17 +116,6 @@
 
 	.has-hero[data-hero-tone='dark'] .head-links a {
 		border-color: rgba(36, 18, 31, 0.3);
-	}
-
-	/* The video stays behind the whole page, so text that sits straight on it needs help. */
-	.has-hero :global(.article-body > .wip-note) {
-		background: rgba(10, 10, 11, 0.7);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-	}
-
-	.has-hero[data-hero-tone='dark'] :global(.article-body .section-label) {
-		color: rgba(36, 18, 31, 0.78);
 	}
 
 	.desc {
