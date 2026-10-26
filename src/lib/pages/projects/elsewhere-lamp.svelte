@@ -25,7 +25,9 @@
 		{ file: 'gallery-7.jpg', alt: 'Prototype ring with contact pins', col: '3 / span 3' },
 		{ file: 'gallery-13.jpg', alt: 'Two 3D-printed dodecahedron shells stacked on a table', col: '7 / span 5', shift: 80 },
 		{ file: 'gallery-14.jpg', alt: 'Notebook sketch of the U-shaped base board and motor mounts', col: '2 / span 4' },
-		{ file: 'gallery-10.jpg', alt: 'Render of the base circuit board', col: '7 / span 6', shift: 120, wide: true }
+		{ file: 'gallery-10.jpg', alt: 'Render of the base circuit board', col: '7 / span 6', shift: 120, wide: true },
+		{ file: 'gallery-15.jpg', alt: 'Layout of the pentagonal LED panel, its LEDs and capacitors on a triangulated grid', col: '2 / span 5', shift: 40 },
+		{ file: 'gallery-16.jpg', alt: 'Render of the dodecahedron shell, its pentagonal panels bolted together', col: '8 / span 5', shift: 160 }
 	];
 </script>
 
