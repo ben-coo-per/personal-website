@@ -41,7 +41,7 @@
 		navigate();
 	}}
 >
-	<div class="thumb" class:octopus>
+	<div class="thumb">
 		{#if octopus}
 			<Octopus poster={thumbUrl ?? undefined} alt={project.title ?? ''} />
 			<span class="corner">{year}</span>
@@ -101,14 +101,6 @@
 		overflow: hidden;
 		background: var(--bg-3);
 		border-bottom: 1px solid var(--rule);
-	}
-
-	.thumb.octopus {
-		background: transparent;
-	}
-
-	.thumb.octopus::after {
-		content: none;
 	}
 
 	.thumb-hover {
