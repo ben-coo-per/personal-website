@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Card from '../../components/Card.svelte';
-	import TaglineCycler from '../../components/TaglineCycler.svelte';
 	import { cmdkOpen } from '$lib/stores/ui';
 	import type { PageData } from './$types';
 
@@ -16,17 +15,10 @@
 	// 	(data.about?.body ?? []).map((b: { text: string }) => b.text).filter(Boolean)
 	// );
 	const projectCount = $derived(data.projects.length);
-	const taglines = $derived(data.home?.taglines ?? ['engineer, designer, developer']);
 </script>
 
 <div class="site">
-	<header class="hero">
-		<div>
-			<h1>Ben Cooper</h1>
-			<TaglineCycler {taglines} />
-		</div>
-		<div></div>
-	</header>
+	<h1 class="sr-only">Ben Cooper</h1>
 
 	<!-- CURATED WORK -->
 	<div class="sec-head">
@@ -65,23 +57,9 @@
 </div>
 
 <style>
-	/* ===== HERO ===== */
-	.hero {
-		display: grid;
-		grid-template-columns: 1.15fr 1fr;
-		gap: 40px;
-		align-items: end;
-		padding: 36px 6px 56px;
-	}
-
-	h1 {
-		font-family: var(--font-display);
-		font-size: clamp(40px, 6vw, 86px);
-		line-height: 0.95;
-		letter-spacing: -0.03em;
-		margin: 0;
-		font-weight: 400;
-		color: var(--amber);
+	.sec-head {
+		margin-top: 0;
+		border-top: 0;
 	}
 
 	/* ===== PROJECT GRID ===== */
@@ -178,11 +156,6 @@
 
 	/* ===== RESPONSIVE ===== */
 	@media (max-width: 960px) {
-		.hero {
-			grid-template-columns: 1fr;
-			gap: 28px;
-			padding: 20px 0 36px;
-		}
 		.projects-grid {
 			grid-template-columns: repeat(2, 1fr);
 		}

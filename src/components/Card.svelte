@@ -2,6 +2,7 @@
 	import { urlFor } from '$lib/utils/image';
 	import type { Project } from '$lib/types';
 	import DitherMedia from './DitherMedia.svelte';
+	import Octopus from '$lib/ink/Octopus.svelte';
 
 	interface Props {
 		project: Project;
@@ -16,6 +17,9 @@
 	const hoverUrl = $derived(
 		project.hoverImage ? urlFor(project.hoverImage, project.slug).url() : null
 	);
+
+	// INKER's picture is transparent and alive: it turns to follow the cursor.
+	const octopus = $derived(project.slug === 'inker');
 
 	const year = $derived(project.date ? project.date.getFullYear() : '');
 
@@ -38,9 +42,14 @@
 	}}
 >
 	<div class="thumb">
-		<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
+		{#if octopus}
+			<Octopus poster={thumbUrl ?? undefined} alt={project.title ?? ''} />
 			<span class="corner">{year}</span>
-		</DitherMedia>
+		{:else}
+			<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
+				<span class="corner">{year}</span>
+			</DitherMedia>
+		{/if}
 		{#if hoverUrl}
 			<div class="thumb-hover" aria-hidden="true">
 				<DitherMedia src={hoverUrl} alt="" aspect="4/3" fill loading="lazy" />
@@ -122,6 +131,16 @@
 	}
 
 	.card:hover :global(.thumb .dither-media[data-loaded='true'] .dither-media__img) {
+		opacity: 1;
+		transition: opacity 0.3s ease-out;
+	}
+
+	.card :global(.thumb .octopus) {
+		opacity: 0.78;
+		transition: opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms;
+	}
+
+	.card:hover :global(.thumb .octopus) {
 		opacity: 1;
 		transition: opacity 0.3s ease-out;
 	}
