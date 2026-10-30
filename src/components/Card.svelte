@@ -135,6 +135,16 @@
 		transition: opacity 0.3s ease-out;
 	}
 
+	.card :global(.thumb .octopus) {
+		opacity: 0.78;
+		transition: opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1) 180ms;
+	}
+
+	.card:hover :global(.thumb .octopus) {
+		opacity: 1;
+		transition: opacity 0.3s ease-out;
+	}
+
 	.corner {
 		position: absolute;
 		top: 10px;
