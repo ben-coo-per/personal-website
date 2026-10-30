@@ -499,6 +499,11 @@
 </div>
 
 <style>
+	.sec-head {
+		margin-top: 0;
+		border-top: 0;
+	}
+
 	/* ===== LAYOUT ===== */
 	.workspace {
 		position: relative;
