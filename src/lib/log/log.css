@@ -971,24 +971,11 @@ html:has(.inker) {
 	border-radius: 0;
 }
 
-.inker__nav {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	gap: 16px;
-	min-height: 76px;
+.inker__mark {
+	align-self: flex-start;
+	display: block;
 }
 
-.inker__nav div {
-	display: flex;
-	align-items: center;
-	gap: 24px;
-	font-size: 13px;
-	color: var(--ink-2);
-}
-
-.article-body .inker__nav div a:hover,
 .article-body .inker__foot a:hover {
 	color: var(--ink);
 }
@@ -1141,6 +1128,14 @@ html:has(.inker) {
 	height: 150px;
 }
 
+/* Level with the 01 step, once the page gutter is wide enough to clear its text. */
+@media (min-width: 1280px) {
+	.inker .inker__eye--left {
+		top: -203px;
+		left: -84px;
+	}
+}
+
 .inker .inker__eye--right {
 	right: -26px;
 	bottom: 14px;
@@ -1179,12 +1174,6 @@ html:has(.inker) {
 	.inker__btn {
 		justify-content: center;
 		height: 48px;
-	}
-	.inker__nav div span {
-		display: none;
-	}
-	.inker__nav div {
-		gap: 16px;
 	}
 	.inker .inker__lock {
 		width: 120px;
