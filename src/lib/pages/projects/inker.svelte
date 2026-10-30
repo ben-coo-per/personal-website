@@ -23,19 +23,11 @@
 
 <div class="inker">
 	<div class="inker__wrap">
-		<nav class="inker__nav">
-			<a href={site} target="_blank" rel="noopener noreferrer">
-				<InkCanvas start={lockup} label="INKER" class="inker__lock" />
-			</a>
-			<div>
-				<a href="{site}/how" target="_blank" rel="noopener noreferrer">How it works</a>
-				<a href={github} target="_blank" rel="noopener noreferrer">GitHub</a>
-				<span>macOS · coming soon</span>
-			</div>
-		</nav>
-
 		<section class="inker__hero">
 			<div class="inker__copy">
+				<a class="inker__mark" href={site} target="_blank" rel="noopener noreferrer">
+					<InkCanvas start={lockup} label="INKER" class="inker__lock" />
+				</a>
 				<h2>You trust your agent too much.</h2>
 				<p>
 					Hand your chat a <span class="inker__handle">🐙/</span> handle instead of the file. It gets
