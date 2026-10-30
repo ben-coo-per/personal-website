@@ -2,6 +2,7 @@
 	import { urlFor } from '$lib/utils/image';
 	import type { Project } from '$lib/types';
 	import DitherMedia from './DitherMedia.svelte';
+	import Octopus from '$lib/ink/Octopus.svelte';
 
 	interface Props {
 		project: Project;
@@ -16,6 +17,9 @@
 	const hoverUrl = $derived(
 		project.hoverImage ? urlFor(project.hoverImage, project.slug).url() : null
 	);
+
+	// INKER's picture is transparent and alive: it turns to follow the cursor.
+	const octopus = $derived(project.slug === 'inker');
 
 	const year = $derived(project.date ? project.date.getFullYear() : '');
 
@@ -37,10 +41,15 @@
 		navigate();
 	}}
 >
-	<div class="thumb">
-		<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
+	<div class="thumb" class:octopus>
+		{#if octopus}
+			<Octopus poster={thumbUrl ?? undefined} alt={project.title ?? ''} />
 			<span class="corner">{year}</span>
-		</DitherMedia>
+		{:else}
+			<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
+				<span class="corner">{year}</span>
+			</DitherMedia>
+		{/if}
 		{#if hoverUrl}
 			<div class="thumb-hover" aria-hidden="true">
 				<DitherMedia src={hoverUrl} alt="" aspect="4/3" fill loading="lazy" />
@@ -92,6 +101,14 @@
 		overflow: hidden;
 		background: var(--bg-3);
 		border-bottom: 1px solid var(--rule);
+	}
+
+	.thumb.octopus {
+		background: transparent;
+	}
+
+	.thumb.octopus::after {
+		content: none;
 	}
 
 	.thumb-hover {

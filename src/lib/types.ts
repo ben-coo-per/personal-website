@@ -12,6 +12,7 @@ export interface ProjectMetadata {
 	heroVideo?: string;
 	heroPoster?: string;
 	heroTone?: 'light' | 'dark';
+	bareLayout?: boolean;
 	slug: string;
 	archived?: boolean;
 	timeSpent?: number;

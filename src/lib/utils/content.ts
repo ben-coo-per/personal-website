@@ -63,6 +63,7 @@ type RawProject = {
 	heroVideo?: string;
 	heroPoster?: string;
 	heroTone?: string;
+	bareLayout?: boolean;
 };
 
 type RawBlogPost = {
@@ -99,6 +100,7 @@ function toProject(raw: RawProject): ProjectMetadata {
 		heroVideo: raw.heroVideo,
 		heroPoster: raw.heroPoster,
 		heroTone: raw.heroTone === 'dark' ? 'dark' : raw.heroVideo ? 'light' : undefined,
+		bareLayout: raw.bareLayout === true,
 		slug: raw.slug
 	};
 }

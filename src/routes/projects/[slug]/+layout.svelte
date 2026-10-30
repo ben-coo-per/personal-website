@@ -39,14 +39,22 @@
 	{/if}
 </svelte:head>
 
-<div class="site" class:has-hero={hero} class:on-hero-video={hero} data-hero-tone={hero?.tone}>
+<div
+	class="site"
+	class:bare={project?.bareLayout}
+	class:has-hero={hero}
+	class:on-hero-video={hero}
+	data-hero-tone={hero?.tone}
+>
 	{#if hero}
 		<ProjectHeroVideo src={hero.src} poster={hero.poster} label={project.title} />
 	{/if}
 
-	<a class="back" href="/projects">← projects</a>
+	{#if !project?.bareLayout}
+		<a class="back" href="/projects">← projects</a>
+	{/if}
 
-	{#if project}
+	{#if project && !project.bareLayout}
 		<div class="article-head">
 			<div class="eyebrow">{project.date?.getFullYear() ?? ''}</div>
 			<h1>{project.title}</h1>
@@ -79,6 +87,12 @@
 </div>
 
 <style>
+	/* The page is its own whole layout, edge to edge, with its own title. */
+	.bare {
+		max-width: none;
+		padding: 0 0 80px;
+	}
+
 	/* Title over a hero video: it fills the first screen and fades out on scroll. */
 	.has-hero > :global(.back),
 	.has-hero > .article-head {
