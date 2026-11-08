@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FreeformPageProps } from '.';
-	import { Clip, Figure, MediaStack, Mosaic, MosaicCell, WipVeil } from '$lib/log';
+	import { Clip, Figure, MediaGrid, MediaStack, Mosaic, MosaicCell, WipVeil } from '$lib/log';
 
 	let { asset }: FreeformPageProps = $props();
 
@@ -27,7 +27,26 @@
 		{ file: 'gallery-14.jpg', alt: 'Notebook sketch of the U-shaped base board and motor mounts', col: '2 / span 4' },
 		{ file: 'gallery-10.jpg', alt: 'Render of the base circuit board', col: '7 / span 6', shift: 120, wide: true },
 		{ file: 'gallery-15.jpg', alt: 'Layout of the pentagonal LED panel, its LEDs and capacitors on a triangulated grid', col: '2 / span 5', shift: 40 },
-		{ file: 'gallery-16.jpg', alt: 'Render of the dodecahedron shell, its pentagonal panels bolted together', col: '8 / span 5', shift: 160 }
+		{ file: 'gallery-16.jpg', alt: 'Render of the dodecahedron shell, its pentagonal panels bolted together', col: '8 / span 5', shift: 160 },
+		{ file: 'gallery-17.jpg', alt: 'The v10 dodecahedron frame in CAD', col: '1 / span 4' },
+		{ file: 'gallery-18.jpg', alt: 'A sheet of profile sketches: the globe on twelve different bases and stands', col: '6 / span 7', shift: 80, wide: true },
+		{ file: 'gallery-19.jpg', alt: 'Profile sketches of textured bases: fluted drums, perforated stems, collars', col: '2 / span 6', wide: true },
+		{ file: 'gallery-20.jpg', alt: 'Profile sketches of faceted sockets cradling the globe', col: '8 / span 5', shift: 120 },
+		{ file: 'gallery-21.jpg', alt: 'Study: a faceted socket with a crown rest on a plinth', col: '3 / span 4' }
+	];
+
+	// Form studies for the base, in the order they were drawn. Padded square at conversion.
+	const studies: { file: string; alt: string }[] = [
+		{ file: 'gallery-22.jpg', alt: 'Study: a fluted drum base' },
+		{ file: 'gallery-23.jpg', alt: 'Study: a ribbed two-tier base' },
+		{ file: 'gallery-24.jpg', alt: 'Study: a perforated collar' },
+		{ file: 'gallery-25.jpg', alt: 'Study: a mesh skirt' },
+		{ file: 'gallery-26.jpg', alt: 'Study: a collar with small dots' },
+		{ file: 'gallery-27.jpg', alt: 'Study: an icositetrahedron shell on a dotted collar' },
+		{ file: 'gallery-28.jpg', alt: 'Study: an icositetrahedron shell on a mesh collar' },
+		{ file: 'gallery-29.jpg', alt: 'Study: a knurled collar, 8mm tall' },
+		{ file: 'gallery-30.jpg', alt: 'Study: a knurled collar, 16mm tall' },
+		{ file: 'gallery-31.jpg', alt: 'Study: a 2mm knurled band' }
 	];
 </script>
 
@@ -57,6 +76,12 @@
 		</MosaicCell>
 	{/each}
 </Mosaic>
+
+<MediaGrid aspect="1/1">
+	{#each studies as { file, alt } (file)}
+		<Figure src={asset(file)} {alt} />
+	{/each}
+</MediaGrid>
 
 <MediaStack spacious>
 	<WipVeil

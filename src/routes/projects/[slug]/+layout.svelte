@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { projectYear } from '$lib/utils/format';
 	import NextProjectCard from '../../../components/NextProjectCard.svelte';
 	import ProjectHeroVideo from '../../../components/ProjectHeroVideo.svelte';
 	import { projectAsset } from '$lib/utils/assets';
@@ -56,7 +57,7 @@
 
 	{#if project && !project.bareLayout}
 		<div class="article-head">
-			<div class="eyebrow">{project.date?.getFullYear() ?? ''}</div>
+			<div class="eyebrow">{projectYear(project)}</div>
 			<h1>{project.title}</h1>
 			{#if project.subtitle}
 				<p class="subtitle">{project.subtitle}</p>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { urlFor } from '$lib/utils/image';
 	import type { Project } from '$lib/types';
+	import { projectYear } from '$lib/utils/format';
 	import DitherMedia from './DitherMedia.svelte';
 	import Octopus from '$lib/ink/Octopus.svelte';
 
@@ -21,7 +22,7 @@
 	// INKER's picture is transparent and alive: it turns to follow the cursor.
 	const octopus = $derived(project.slug === 'inker');
 
-	const year = $derived(project.date ? project.date.getFullYear() : '');
+	const year = $derived(projectYear(project));
 
 	const status = $derived(
 		project.wip ? 'work in progress' : project.isRestricted ? 'confidential' : ''

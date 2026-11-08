@@ -48,6 +48,7 @@ type RawProject = {
 	priority?: number;
 	restricted?: boolean;
 	wip?: boolean;
+	ongoing?: boolean;
 	unlisted?: boolean;
 	archived?: boolean;
 	draft?: boolean;
@@ -87,6 +88,7 @@ function toProject(raw: RawProject): ProjectMetadata {
 		priority: raw.priority ?? 0,
 		isRestricted: raw.restricted === true,
 		wip: raw.wip === true,
+		ongoing: raw.ongoing === true,
 		archived: raw.archived === true,
 		timeSpent: raw.timeSpent,
 		websiteUrl: raw.websiteUrl,

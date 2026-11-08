@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { cmdkOpen } from '$lib/stores/ui';
 	import type { ProjectMetadata } from '$lib/types';
+	import { projectYear } from '$lib/utils/format';
 
 	interface Props {
 		projects?: ProjectMetadata[];
@@ -134,7 +135,7 @@
 				group: 'projects',
 				icon: '●',
 				label: p.title ?? p.slug,
-				meta: (p.date?.getFullYear() ?? '') + (p.subtitle ? ' · ' + p.subtitle : ''),
+				meta: projectYear(p) + (p.subtitle ? ' · ' + p.subtitle : ''),
 				action: () => {
 					window.location.href = '/projects/' + p.slug;
 				}
