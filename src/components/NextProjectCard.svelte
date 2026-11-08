@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { urlFor } from '$lib/utils/image';
 	import type { Project } from '$lib/types';
+	import { projectYear } from '$lib/utils/format';
 	import { fade } from 'svelte/transition';
 
 	let hovering: boolean = $state(false);
@@ -30,7 +31,7 @@
 	onmouseleave={() => (hovering = false)}
 >
 	<div class="text-gray-100 flex flex-col gap-1 relative z-20" class:text-white={hovering}>
-		<h3 class="text-md">{project.date.getFullYear() || ''}</h3>
+		<h3 class="text-md">{projectYear(project)}</h3>
 		<h4 class="text-4xl font-display">
 			{project.title}
 		</h4>

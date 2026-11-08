@@ -6,6 +6,8 @@ export interface ProjectMetadata {
 	priority: number;
 	isRestricted: boolean;
 	wip?: boolean;
+	/** Still going: dates show as "<start>–Present". */
+	ongoing?: boolean;
 	previewImage?: string;
 	hoverImage?: string;
 	bgColor?: string;
