@@ -55,6 +55,15 @@
 		{ file: 'gallery-30.jpg', alt: 'Study: a knurled collar, 16mm tall' },
 		{ file: 'gallery-31.jpg', alt: 'Study: a 2mm knurled band' }
 	];
+
+	// Shell engineering drawings, Nov 6–8. They close the section: the section view alone,
+	// then these four as a pair of rows.
+	const shell: { file: string; alt: string }[] = [
+		{ file: 'gallery-40.jpg', alt: 'One pentagonal segment of the shell with its standoffs' },
+		{ file: 'gallery-41.jpg', alt: 'The shell exploded: panels lifted off the frame and base' },
+		{ file: 'gallery-42.jpg', alt: 'The bare truncated-icosahedron shell' },
+		{ file: 'gallery-43.jpg', alt: 'The shell assembled on its stem' }
+	];
 </script>
 
 <p class="wip-note">
@@ -86,6 +95,20 @@
 
 <MediaGrid aspect="1/1">
 	{#each studies as { file, alt } (file)}
+		<Figure src={asset(file)} {alt} />
+	{/each}
+</MediaGrid>
+
+<MediaStack spacious>
+	<Figure
+		class="narrow"
+		src={asset('gallery-39.jpg')}
+		alt="Section through the shell: frame, base cage and stem"
+	/>
+</MediaStack>
+
+<MediaGrid cols={2} natural>
+	{#each shell as { file, alt } (file)}
 		<Figure src={asset(file)} {alt} />
 	{/each}
 </MediaGrid>
