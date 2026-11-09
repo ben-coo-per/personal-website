@@ -7,6 +7,7 @@
 	import { imageScrollers } from '$lib/actions/imageScrollers';
 	import { lightbox } from '$lib/actions/lightbox';
 	import { lazyVideo } from '$lib/actions/lazyVideo';
+	import { videoPlayers } from '$lib/actions/videoPlayers';
 	import { projectAsset } from '$lib/utils/assets';
 	import HeroVideoFill from '../../components/HeroVideoFill.svelte';
 
@@ -406,7 +407,7 @@
 						{#if panelLoading}
 							<p class="loading">loading…</p>
 						{:else if panelHtml}
-							<div class="article-body in-panel" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>{@html panelHtml}</div>
+							<div class="article-body in-panel" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo use:videoPlayers>{@html panelHtml}</div>
 						{/if}
 					</div>
 				{/if}
@@ -487,7 +488,7 @@
 								{#if panelLoading}
 									<p class="loading">loading…</p>
 								{:else if panelHtml}
-									<div class="article-body in-panel" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo>{@html panelHtml}</div>
+									<div class="article-body in-panel" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo use:videoPlayers>{@html panelHtml}</div>
 								{/if}
 							</div>
 						</div>
