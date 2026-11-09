@@ -70,7 +70,7 @@
 
 <p>
 	We chose Henry because he's a British icon, he's roughly the right shape for a soapbox, and, most
-	importantly, our driver's name was Henry, copilot was me (Ben) and it was a stupid, but funny bit
+	importantly, our driver's name was Henry, copilot was me (Ben) and we thought it was a good bit
 	to call the car "Benry".
 </p>
 
