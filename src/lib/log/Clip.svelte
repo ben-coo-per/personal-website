@@ -10,6 +10,9 @@
 		caption?: string;
 		autoplay?: boolean;
 		loop?: boolean;
+		/** An autoplay clip whose soundtrack matters: it still starts muted (browsers
+		 *  insist), but the `videoPlayers` action gives it a mute toggle. */
+		sound?: boolean;
 		label?: string;
 		class?: string;
 	}
@@ -20,6 +23,7 @@
 		caption,
 		autoplay = false,
 		loop = autoplay,
+		sound = false,
 		label,
 		class: className = ''
 	}: Props = $props();
@@ -35,6 +39,7 @@
 		muted={autoplay}
 		{loop}
 		data-autoplay={autoplay ? 'true' : undefined}
+		data-sound={autoplay && sound ? 'true' : undefined}
 		aria-label={label ?? caption}
 	></video>
 {/snippet}

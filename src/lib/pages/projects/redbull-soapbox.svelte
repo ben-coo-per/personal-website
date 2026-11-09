@@ -19,7 +19,6 @@
 		shot(3, 'Welded frame sections'),
 		shot(4, 'The frame taking shape in the welding booth'),
 		shot(5, 'Welding the chassis'),
-		shot(6, 'Fresh welds, happy welder'),
 		shot(7, "Driver's-eye view from inside Henry"),
 		shot(8, 'The acceptance box from Red Bull'),
 		shot(9, 'Fitting out the rolling chassis'),
@@ -53,14 +52,6 @@
 		shot(32, 'The team at the finish')
 	];
 </script>
-
-<FullBleed>
-	<Figure
-		src={asset('gallery-31.jpg')}
-		alt="Henry airborne over the jump at Alexandra Palace"
-		loading="eager"
-	/>
-</FullBleed>
 
 <p class="lede">
 	Earlier this year, three of my coursemates and I applied to the London Red Bull Soapbox Race with

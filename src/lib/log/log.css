@@ -250,12 +250,12 @@
 	margin: 2.6em 0;
 }
 
-.article-body > :where(img, video, .dither-media) {
+.article-body > :where(img, video, .dither-media, .video-player) {
 	margin: 2.6em 0;
 }
 
 /* Raw `<p><img></p>` (hand-written HTML in markdown): let the picture out of the measure. */
-.article-body p:has(> :is(img, video, .dither-media):only-child) {
+.article-body p:has(> :is(img, video, .dither-media, .video-player):only-child) {
 	max-width: none;
 	margin: 2.6em 0;
 }
@@ -272,6 +272,152 @@
 	border-radius: calc(var(--radius) - 1px);
 }
 
+/* ---------- video player ----------
+   The videoPlayers action wraps each controlled <video> in div.video-player and adds a
+   play button. data-state is idle (never played, or ended), playing, or paused. Before the
+   first play the whole frame is the button; paused, only the disc is. */
+.article-body .video-player {
+	position: relative;
+	display: block;
+	width: 100%;
+	border-radius: var(--radius);
+}
+
+.article-body .video-player video {
+	margin: 0;
+}
+
+.article-body .video-player__play {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	translate: -50% -50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	background: none;
+	color: var(--ink);
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition: opacity 0.25s;
+}
+
+.article-body .video-player[data-state='idle'] .video-player__play {
+	inset: 0;
+	translate: none;
+	width: 100%;
+	height: 100%;
+	border-radius: var(--radius);
+	background: linear-gradient(to top, rgba(10, 10, 11, 0.45), rgba(10, 10, 11, 0.08) 45%);
+}
+
+.article-body .video-player[data-state='playing'] .video-player__play {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.article-body .video-player__icon {
+	display: grid;
+	place-items: center;
+	width: clamp(64px, 7cqi, 104px);
+	height: clamp(64px, 7cqi, 104px);
+	border-radius: 50%;
+	background: rgba(10, 10, 11, 0.72);
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+	transition:
+		transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+		border-color 0.25s,
+		color 0.25s;
+}
+
+.article-body .video-player__icon svg {
+	width: 44%;
+	height: 44%;
+	margin-left: 4%;
+}
+
+.article-body .video-player__play:hover .video-player__icon,
+.article-body .video-player__play:focus-visible .video-player__icon {
+	transform: scale(1.08);
+	border-color: var(--amber);
+	color: var(--amber);
+}
+
+.article-body .video-player__play:focus-visible {
+	outline: none;
+}
+
+.article-body .video-player__time {
+	font-family: var(--font-mono);
+	font-size: 11.5px;
+	letter-spacing: 0.08em;
+	color: rgba(245, 242, 235, 0.85);
+	text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+.article-body .video-player__time:empty,
+.article-body .video-player[data-state='paused'] .video-player__time {
+	display: none;
+}
+
+/* Silent clips with a soundtrack: a small speaker toggle in the corner. */
+.article-body .video-player__mute {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	display: grid;
+	place-items: center;
+	width: 38px;
+	height: 38px;
+	padding: 0;
+	margin: 0;
+	border-radius: 50%;
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	background: rgba(10, 10, 11, 0.72);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	color: var(--ink);
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition:
+		border-color 0.25s,
+		color 0.25s,
+		transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.article-body .video-player__mute svg {
+	width: 20px;
+	height: 20px;
+}
+
+.article-body .video-player__mute:hover,
+.article-body .video-player__mute:focus-visible {
+	transform: scale(1.08);
+	border-color: var(--amber);
+	color: var(--amber);
+	outline: none;
+}
+
+.article-body .video-player--clip[data-muted='false'] .video-player__mute {
+	color: var(--amber);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.article-body .video-player__icon,
+	.article-body .video-player__play,
+	.article-body .video-player__mute {
+		transition: none;
+	}
+}
+
 /* A figure that is the content of a bleed or a grid cell has no spacing of its own. */
 .article-body :where(.full-bleed, .media-grid, .duo) > figure {
 	margin: 0;
@@ -280,7 +426,7 @@
 /* Inside a figure or grid, the cell owns the spacing. */
 .article-body
 	:where(figure, .media-grid, .full-bleed, .image-scroller)
-	:where(img, video, .dither-media) {
+	:where(img, video, .dither-media, .video-player) {
 	margin: 0;
 }
 
@@ -291,11 +437,11 @@
 
 /* Hero: a body that opens with media loses its top margin and is capped so a portrait
    shot can't take three screens. */
-.article-body > :where(figure, img, video, .dither-media, .full-bleed):first-child {
+.article-body > :where(figure, img, video, .dither-media, .video-player, .full-bleed):first-child {
 	margin-top: 0;
 }
 
-.article-body > :where(figure, .full-bleed):first-child :where(img, video, .dither-media__img),
+.article-body > :where(figure, .full-bleed, .video-player):first-child :where(img, video, .dither-media__img),
 .article-body > :where(img, video):first-child,
 .article-body > .dither-media:first-child .dither-media__img {
 	max-height: 78vh;
@@ -308,8 +454,8 @@
    Freeform pages pick their own spacing; the storehouse panel and blog keep 2.6em. */
 
 .article-body.project-body
-	> :where(figure, img, video, .dither-media, .media-grid, .full-bleed, .image-scroller-wrap, .image-scroller),
-.article-body.project-body p:has(> :is(img, video, .dither-media):only-child) {
+	> :where(figure, img, video, .dither-media, .video-player, .media-grid, .full-bleed, .image-scroller-wrap, .image-scroller),
+.article-body.project-body p:has(> :is(img, video, .dither-media, .video-player):only-child) {
 	margin-top: var(--gallery-gap);
 	margin-bottom: var(--gallery-gap);
 }
@@ -319,7 +465,7 @@
 	margin-bottom: var(--gallery-gap) !important;
 }
 
-.article-body.project-body :where(figure, .media-grid, .full-bleed, .image-scroller) video {
+.article-body.project-body :where(figure, .media-grid, .full-bleed, .image-scroller, .video-player) video {
 	margin-bottom: 0 !important;
 }
 
@@ -461,7 +607,7 @@
 	gap: 6px;
 }
 
-.article-body .media-grid > :where(figure, img, video, .dither-media, p) {
+.article-body .media-grid > :where(figure, img, video, .dither-media, .video-player, p) {
 	margin: 0;
 	min-width: 0;
 }
@@ -540,7 +686,7 @@
 	min-width: 0;
 }
 
-.article-body .mosaic__cell > :where(figure, img, video, .dither-media) {
+.article-body .mosaic__cell > :where(figure, img, video, .dither-media, .video-player) {
 	margin: 0;
 }
 
@@ -569,6 +715,16 @@
 
 .on-hero-video[data-hero-tone='dark'] .article-body .mosaic__note {
 	color: #24121f;
+}
+
+/* A collage between paragraphs: a mosaic with room above and below it. */
+.article-body .mosaic.collage {
+	margin-top: 56px;
+	margin-bottom: 72px;
+}
+
+.article-body .mosaic.collage + .mosaic.collage {
+	margin-top: -16px;
 }
 
 /* Narrow bodies (phones, the storehouse panel): one column, pictures at 80% width
