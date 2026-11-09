@@ -20,18 +20,39 @@
 		poster?: string;
 		caption?: string;
 		aspect?: '4/3' | '3/2' | '16/9' | '1/1' | '3/4';
+		/** No frame or fill: the model floats on the page. */
+		bare?: boolean;
+		/** Mesh colour (any CSS colour), for a model that has to sit on a particular
+		 *  background. Defaults to the page's ink. */
+		color?: string;
 		class?: string;
 	}
 
-	let { src, label, name, poster, caption, aspect = '4/3', class: className = '' }: Props = $props();
+	let {
+		src,
+		label,
+		name,
+		poster,
+		caption,
+		aspect = '4/3',
+		bare = false,
+		color,
+		class: className = ''
+	}: Props = $props();
 
 	const sameOrigin = $derived(
 		PUBLIC_R2_URL && src.startsWith(PUBLIC_R2_URL) ? src.replace(PUBLIC_R2_URL, '/cms-assets') : src
 	);
 </script>
 
-<figure class="model {className}" data-aspect={aspect} data-no-lightbox>
-	<div class="model__stage" data-model-src={sameOrigin} role="img" aria-label={label}>
+<figure class="model {bare ? 'model--bare' : ''} {className}" data-aspect={aspect} data-no-lightbox>
+	<div
+		class="model__stage"
+		data-model-src={sameOrigin}
+		role="img"
+		aria-label={label}
+		style={color ? `--model-color: ${color}` : undefined}
+	>
 		{#if poster}
 			<img class="model__poster" src={poster} alt="" aria-hidden="true" loading="lazy" decoding="async" />
 		{/if}

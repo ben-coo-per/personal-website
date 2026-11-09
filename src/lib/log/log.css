@@ -534,6 +534,18 @@
 		var(--bg-2);
 }
 
+/* `bare`: no frame or fill, so the model floats on the page. */
+.article-body .model--bare .model__stage {
+	background: none;
+	border: 0;
+	border-radius: 0;
+}
+
+/* Over a light hero video a bare model reads as a white print, like the real ones. */
+.on-hero-video[data-hero-tone='dark'] .article-body .model--bare .model__stage {
+	--model-color: #fbf7f0;
+}
+
 .article-body .model__stage :where(.model__poster, .dither-media) {
 	position: absolute;
 	inset: 0;
@@ -702,6 +714,86 @@
 .article-body .media-grid[data-cols='4'] {
 	grid-template-columns: repeat(4, 1fr);
 }
+.article-body .media-grid[data-cols='5'] {
+	grid-template-columns: repeat(5, 1fr);
+}
+
+/* Ink drawings: line art on white, blended into the page so only the lines stay.
+   `figure.ink` (Figure class="ink"), alone or in a grid. Hides the dither placeholder,
+   which would otherwise multiply in as a dark box before the picture arrives. */
+.article-body figure.ink :where(img, .dither-media) {
+	mix-blend-mode: multiply;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.article-body figure.ink :where(.dither-media__placeholder, .dither-media__dither) {
+	display: none;
+}
+
+/* The paper in these renders is off-white; push it to white so multiply leaves no tile. */
+.article-body figure.ink :where(img, .dither-media__img) {
+	filter: brightness(1.06) contrast(1.12);
+}
+
+/* A strip of small, quiet drawings: tighter than a grid of photos. */
+.article-body .media-grid.ink-strip {
+	gap: 4px 20px;
+	width: min(100%, 1080px);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* ---------- tone: a passage on its own ground ----------
+   lib/log/Tone.svelte. The ground is a pseudo-element the width of the viewport behind
+   the children (z-index -1 inside the section's own stacking context), fading in at the
+   top and out at the bottom. */
+.article-body .tone {
+	position: relative;
+	isolation: isolate;
+}
+
+.article-body .tone--dark {
+	padding: 160px 0 240px;
+	margin: 0;
+}
+
+.article-body .tone--dark::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	bottom: 0;
+	left: calc(50% - 50vw);
+	width: 100vw;
+	background: linear-gradient(
+		to bottom,
+		transparent,
+		var(--bg) 300px,
+		var(--bg) calc(100% - 420px),
+		transparent
+	);
+	pointer-events: none;
+}
+
+.article-body.in-panel .tone--dark::before {
+	left: 0;
+	width: 100%;
+}
+
+.article-body .tone--dark > .media-stack.spacious:first-child {
+	margin-top: 0;
+}
+
+/* Inside the dark passage the page's usual light ink comes back, whatever the hero tone. */
+.on-hero-video[data-hero-tone='dark'] .article-body .tone--dark .mosaic__note {
+	color: var(--ink);
+}
+
+.on-hero-video[data-hero-tone='dark'] .article-body .tone--dark .section-label {
+	color: var(--ink-3);
+}
 
 /* Contact sheet: many small squares. */
 .article-body .media-grid.dense {
@@ -743,6 +835,9 @@
 	.article-body .media-grid[data-cols='4'] {
 		grid-template-columns: repeat(2, 1fr);
 	}
+	.article-body .media-grid[data-cols='5'] {
+		grid-template-columns: repeat(3, 1fr);
+	}
 }
 
 @container article (max-width: 420px) {
@@ -751,6 +846,9 @@
 	}
 	.article-body .media-grid.dense[data-cols] {
 		grid-template-columns: repeat(2, 1fr);
+	}
+	.article-body .media-grid.ink-strip[data-cols] {
+		grid-template-columns: repeat(3, 1fr);
 	}
 }
 

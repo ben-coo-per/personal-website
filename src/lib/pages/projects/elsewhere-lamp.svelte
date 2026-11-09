@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { FreeformPageProps } from '.';
-	import { Clip, Figure, MediaGrid, MediaStack, Model, Mosaic, MosaicCell, WipVeil } from '$lib/log';
+	import { Clip, Figure, MediaGrid, MediaStack, Model, Mosaic, MosaicCell, Tone, WipVeil } from '$lib/log';
 
 	let { asset }: FreeformPageProps = $props();
 
 	// Process, in the order the build happened. New shots go in by the date they were taken.
+	// `process` is the first prototype, shown on black; `rebuild` continues on the sky.
 	// Short notes sit in the same grid as the pictures and tell the story between them.
 	// `col` places each cell on the mosaic's 12-column grid; `shift` drops it lower.
 	const process: {
@@ -16,6 +17,8 @@
 		shift?: number;
 		align?: 'start' | 'center' | 'end';
 		wide?: boolean;
+		/** Line art on white: blended into the page so only the lines show. */
+		ink?: boolean;
 	}[] = [
 		{ file: 'gallery-2.jpg', alt: 'Looking down into the diffuser at the drive motors', col: '1 / span 7', wide: true },
 		{ file: 'gallery-9.jpg', alt: 'The motor base plate on the bench', col: '9 / span 4', shift: 120 },
@@ -45,7 +48,11 @@
 			col: '7 / span 4',
 			align: 'center',
 			wide: true
-		},
+		}
+	];
+
+	// The rebuild, from the dodecahedron prototypes on. Back on the sky.
+	const rebuild: typeof process = [
 		{
 			text: 'Now I’m rebuilding it from the ground up to do the idea justice.',
 			col: '1 / span 5',
@@ -64,11 +71,9 @@
 		{ file: 'gallery-36.jpg', alt: 'Section sketch of the mechanism: globe, spring, shaft and base', col: '1 / span 4' },
 		{ file: 'gallery-37.jpg', alt: 'CAD of the base, half-clad in LED panels around the motor mounts', col: '6 / span 7', shift: 80, wide: true },
 		{ file: 'gallery-38.jpg', alt: 'A notebook page of base ideas: slotted column, fluted drums, faceted globe, tripod', col: '2 / span 4' },
-		{ file: 'gallery-17.jpg', alt: 'The v10 dodecahedron frame in CAD', col: '7 / span 4', shift: 60 },
-		{ file: 'gallery-18.jpg', alt: 'A sheet of profile sketches: the globe on twelve different bases and stands', col: '6 / span 7', shift: 80, wide: true },
-		{ file: 'gallery-19.jpg', alt: 'Profile sketches of textured bases: fluted drums, perforated stems, collars', col: '2 / span 6', wide: true },
-		{ file: 'gallery-20.jpg', alt: 'Profile sketches of faceted sockets cradling the globe', col: '8 / span 5', shift: 120 },
-		{ file: 'gallery-21.jpg', alt: 'Study: a faceted socket with a crown rest on a plinth', col: '3 / span 4' }
+		{ file: 'gallery-18.jpg', alt: 'A sheet of profile sketches: the globe on twelve different bases and stands', col: '6 / span 7', shift: 80, wide: true, ink: true },
+		{ file: 'gallery-19.jpg', alt: 'Profile sketches of textured bases: fluted drums, perforated stems, collars', col: '2 / span 6', wide: true, ink: true },
+		{ file: 'gallery-20.jpg', alt: 'Profile sketches of faceted sockets cradling the globe', col: '8 / span 5', shift: 120, ink: true },
 	];
 
 	// Form studies for the base, in the order they were drawn. Padded square at conversion.
@@ -85,9 +90,9 @@
 		{ file: 'gallery-31.jpg', alt: 'Study: a 2mm knurled band' }
 	];
 
-	// Shell engineering drawings, Nov 6–8. They close the section: the section view alone,
-	// then these four as a pair of rows.
+	// Shell engineering drawings, Nov 6–8: one small strip of line art.
 	const shell: { file: string; alt: string }[] = [
+		{ file: 'gallery-39.jpg', alt: 'Section through the shell: frame, base cage and stem' },
 		{ file: 'gallery-40.jpg', alt: 'One pentagonal segment of the shell with its standoffs' },
 		{ file: 'gallery-41.jpg', alt: 'The shell exploded: panels lifted off the frame and base' },
 		{ file: 'gallery-42.jpg', alt: 'The bare truncated-icosahedron shell' },
@@ -100,47 +105,51 @@
 	<span>A completely new version is underway, with new mechanisms, lighting and hardware throughout.</span>
 </p>
 
-<MediaStack spacious>
-	<Figure
-		class="narrow"
-		src={asset('gallery-4.jpg')}
-		alt="The painted plaster globe sitting in the fluted glass"
-	/>
-</MediaStack>
-
-<p class="section-label">Process</p>
-
-<Mosaic>
-	{#each process as { file, text, alt, clip, col, shift, align, wide } (file ?? text)}
+{#snippet cells(items: typeof process)}
+	{#each items as { file, text, alt, clip, col, shift, align, wide, ink } (file ?? text)}
 		<MosaicCell {col} {shift} {align} {wide}>
 			{#if text}
 				<p class="mosaic__note">{text}</p>
 			{:else if clip}
 				<Clip src={asset(file!)} autoplay label={alt} />
 			{:else}
-				<Figure src={asset(file!)} alt={alt ?? ''} />
+				<Figure src={asset(file!)} alt={alt ?? ''} class={ink ? 'ink' : ''} />
 			{/if}
 		</MosaicCell>
 	{/each}
+{/snippet}
+
+<!-- The first prototype sits on black; the sky comes back with the rebuild. -->
+<Tone tone="dark">
+	<MediaStack spacious>
+		<Figure
+			class="narrow"
+			src={asset('gallery-4.jpg')}
+			alt="The painted plaster globe sitting in the fluted glass"
+		/>
+	</MediaStack>
+
+	<p class="section-label">Process</p>
+
+	<Mosaic>
+		{@render cells(process)}
+	</Mosaic>
+</Tone>
+
+<Mosaic>
+	{@render cells(rebuild)}
 </Mosaic>
 
-<MediaGrid aspect="1/1">
+<!-- Base form studies and shell drawings: small strips of line art, blended into the page. -->
+<MediaGrid cols={5} aspect="1/1" class="ink-strip">
 	{#each studies as { file, alt } (file)}
-		<Figure src={asset(file)} {alt} />
+		<Figure src={asset(file)} {alt} class="ink" />
 	{/each}
 </MediaGrid>
 
-<MediaStack spacious>
-	<Figure
-		class="narrow"
-		src={asset('gallery-39.jpg')}
-		alt="Section through the shell: frame, base cage and stem"
-	/>
-</MediaStack>
-
-<MediaGrid cols={2} natural>
+<MediaGrid cols={5} natural class="ink-strip">
 	{#each shell as { file, alt } (file)}
-		<Figure src={asset(file)} {alt} />
+		<Figure src={asset(file)} {alt} class="ink" />
 	{/each}
 </MediaGrid>
 
@@ -153,9 +162,10 @@
 	<Model
 		class="narrow"
 		src={asset('crate-panel-v5.stl')}
-		poster={asset('crate-panel-v5-poster.jpg')}
 		label="Crate panel v5, a 3D model. Drag to turn it."
 		name="crate panel v5"
+		color="#f4efe6"
+		bare
 	/>
 </MediaStack>
 

@@ -41,7 +41,10 @@ export function mount(stage: HTMLElement, src: string): ViewerHandle {
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 1000);
 
-	const ink = cssColor(stage, '--ink', '#f5f2eb');
+	// Mesh colour: `--model-color` where a page sets it, else the page's ink.
+	const ink = getComputedStyle(stage).getPropertyValue('--model-color').trim()
+		? cssColor(stage, '--model-color', '#f5f2eb')
+		: cssColor(stage, '--ink', '#f5f2eb');
 	const amber = cssColor(stage, '--amber', '#fbbf24');
 	scene.add(new THREE.HemisphereLight(0xffffff, 0x2a2622, 0.85));
 	const key = new THREE.DirectionalLight(0xffffff, 1.6);
