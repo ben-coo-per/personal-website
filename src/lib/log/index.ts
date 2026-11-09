@@ -9,3 +9,4 @@ export { default as MediaStack } from './MediaStack.svelte';
 export { default as WipVeil } from './WipVeil.svelte';
 export { default as Mosaic } from './Mosaic.svelte';
 export { default as MosaicCell } from './MosaicCell.svelte';
+export { default as Model } from './Model.svelte';

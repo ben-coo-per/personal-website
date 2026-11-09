@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FreeformPageProps } from '.';
-	import { Clip, Figure, MediaGrid, MediaStack, Mosaic, MosaicCell, WipVeil } from '$lib/log';
+	import { Clip, Figure, MediaGrid, MediaStack, Model, Mosaic, MosaicCell, WipVeil } from '$lib/log';
 
 	let { asset }: FreeformPageProps = $props();
 
@@ -143,6 +143,21 @@
 		<Figure src={asset(file)} {alt} />
 	{/each}
 </MediaGrid>
+
+<!-- Nov 9: the light simulator, and the crate panel it checks, as a model to turn over. -->
+<MediaStack spacious>
+	<Figure
+		src={asset('gallery-44.jpg')}
+		alt="The light simulator: the lit shell rendered on the left, its LEDs and crate cells in wireframe on the right"
+	/>
+	<Model
+		class="narrow"
+		src={asset('crate-panel-v5.stl')}
+		poster={asset('crate-panel-v5-poster.jpg')}
+		label="Crate panel v5, a 3D model. Drag to turn it."
+		name="crate panel v5"
+	/>
+</MediaStack>
 
 <MediaStack spacious>
 	<WipVeil
