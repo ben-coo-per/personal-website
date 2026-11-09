@@ -159,14 +159,21 @@
 		src={asset('gallery-44.jpg')}
 		alt="The light simulator: the lit shell rendered on the left, its LEDs and crate cells in wireframe on the right"
 	/>
-	<Model
-		class="narrow"
-		src={asset('crate-panel-v5.stl')}
-		label="Crate panel v5, a 3D model. Drag to turn it."
-		name="crate panel v5"
-		color="#f4efe6"
-		bare
-	/>
+	<MediaGrid cols={2} aspect="16/9">
+		<Clip
+			src={asset('video-2.mp4')}
+			autoplay
+			label="The light simulator running: the shell's glow updating as the sky turns"
+		/>
+		<Model
+			src={asset('crate-panel-v5.stl')}
+			label="Crate panel v5, a 3D model. Drag to turn it."
+			name="crate panel v5"
+			aspect="16/9"
+			color="#f4efe6"
+			bare
+		/>
+	</MediaGrid>
 </MediaStack>
 
 <MediaStack spacious>
