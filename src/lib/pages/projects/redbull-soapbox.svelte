@@ -70,11 +70,19 @@
 
 <p>
 	We chose Henry because he's a British icon, he's roughly the right shape for a soapbox, and, most
-	importantly, our driver's name was Henry, copilot was me (Ben) and it was a stupid, but funny bit
+	importantly, our driver's name was Henry, copilot was me (Ben) and we thought it was a good bit
 	to call the car "Benry".
 </p>
 
-<div class="eyebrow">01 · frame and steering</div>
+<FullBleed>
+	<Clip
+		src={asset('run.mp4')}
+		poster={asset('gallery-31.jpg')}
+		caption="The run down the hill"
+		label="Video of Henry racing down the Alexandra Palace course"
+	/>
+</FullBleed>
+
 <h2>The chassis</h2>
 
 <p>
@@ -95,12 +103,11 @@
 	{/each}
 </MediaGrid>
 
-<div class="eyebrow">02 · skin and face</div>
-<h2>Becoming Henry</h2>
+<h2>The Shell</h2>
 
 <p>
-	Cardboard panels wrapped around the frame gave him his shape, then a lot of red paint and one very
-	carefully painted smile. The nose doubles as the driver's window.
+	We built the shell with lots of cardboard panels wrapped around a PVC frame to give him his shape.
+	We then used a lot of red paint and a children's play tube to complete the look.
 </p>
 
 <MediaGrid cols={2}>
@@ -115,7 +122,6 @@
 	{/each}
 </MediaGrid>
 
-<div class="eyebrow">03 · alexandra palace</div>
 <h2>Race day</h2>
 
 <p>For something we threw together in a month, Henry held up remarkably well on race day.</p>
@@ -125,12 +131,3 @@
 		<Figure {src} alt={caption} />
 	{/each}
 </MediaGrid>
-
-<FullBleed>
-	<Clip
-		src={asset('run.mp4')}
-		poster={asset('gallery-31.jpg')}
-		caption="The run down the hill"
-		label="Video of Henry racing down the Alexandra Palace course"
-	/>
-</FullBleed>
