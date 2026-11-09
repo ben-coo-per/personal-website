@@ -83,7 +83,6 @@
 	/>
 </FullBleed>
 
-<div class="eyebrow">01 · frame and steering</div>
 <h2>The chassis</h2>
 
 <p>
@@ -104,7 +103,6 @@
 	{/each}
 </MediaGrid>
 
-<div class="eyebrow">02 · the shell</div>
 <h2>The Shell</h2>
 
 <p>
@@ -124,7 +122,6 @@
 	{/each}
 </MediaGrid>
 
-<div class="eyebrow">03 · alexandra palace</div>
 <h2>Race day</h2>
 
 <p>For something we threw together in a month, Henry held up remarkably well on race day.</p>
