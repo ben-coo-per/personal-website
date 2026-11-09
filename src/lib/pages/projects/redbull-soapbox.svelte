@@ -53,14 +53,6 @@
 	];
 </script>
 
-<FullBleed>
-	<Figure
-		src={asset('gallery-31.jpg')}
-		alt="Henry airborne over the jump at Alexandra Palace"
-		loading="eager"
-	/>
-</FullBleed>
-
 <p class="lede">
 	Earlier this year, three of my coursemates and I applied to the London Red Bull Soapbox Race with
 	a sketch of a giant Henry Hoover - and somehow got accepted. That left us with a fun problem:
