@@ -27,7 +27,8 @@ export function lazyVideo(node: HTMLElement) {
 			for (const entry of entries) {
 				const video = entry.target as HTMLVideoElement;
 				if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
-					video.muted = true;
+					// Stay muted unless the viewer unmuted it (videoPlayers' toggle).
+					if (video.dataset.unmuted !== 'true') video.muted = true;
 					video.play().catch(() => {});
 				} else if (!video.paused) {
 					video.pause();

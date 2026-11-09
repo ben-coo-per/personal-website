@@ -10,6 +10,7 @@
 		file: string;
 		alt: string;
 		clip?: boolean;
+		sound?: boolean;
 		col: string;
 		shift?: number;
 		align?: 'start' | 'center' | 'end';
@@ -48,9 +49,9 @@
 	const build: Cell[] = [
 		{ file: 'frame.jpeg', alt: 'The frame assembled in the workshop', col: '1 / span 4' },
 		{ file: 'structure.jpeg', alt: 'The full structure standing, tubes not yet lit', col: '5 / span 3', shift: 120 },
-		{ file: 'lights_inprog.mp4', clip: true, alt: 'The tubes lighting up for the first time', col: '9 / span 4', shift: 40 },
+		{ file: 'lights_inprog.mp4', clip: true, sound: true, alt: 'The tubes lighting up for the first time', col: '9 / span 4', shift: 40 },
 		{ file: 'zaynatheriveter.jpeg', alt: 'Zayna riveting the tubes in place', col: '1 / span 6', shift: 40, wide: true },
-		{ file: 'testingwmusic.mp4', clip: true, alt: 'Testing the spectrum analyser with music', col: '8 / span 4', shift: 100 }
+		{ file: 'testingwmusic.mp4', clip: true, sound: true, alt: 'Testing the spectrum analyser with music', col: '8 / span 4', shift: 100 }
 	];
 
 	// Electronics: the wireless microphone and the motor controller.
@@ -68,7 +69,7 @@
 		{ file: 'loudkidexplaining.jpg', alt: 'Explaining the microphone to a child', col: '7 / span 6', shift: 100, wide: true },
 		{ file: 'loudkid1.jpg', alt: 'A child yelling into the microphone', col: '1 / span 6', wide: true },
 		{ file: 'loudkid2.jpg', alt: 'The tubes responding to the yell', col: '7 / span 6', shift: 60, wide: true },
-		{ file: 'gerfest3.mp4', clip: true, alt: 'The sculpture responding to sound at the festival', col: '2 / span 3', shift: 40 },
+		{ file: 'gerfest3.mp4', clip: true, sound: true, alt: 'The sculpture responding to sound at the festival', col: '2 / span 3', shift: 40 },
 		{ file: 'something_funny.jpg', alt: 'Zayna and Ben laughing with visitors', col: '5 / span 8', shift: 80, wide: true },
 		{ file: 'wowedkid.jpg', alt: 'A wowed child in front of the sculpture', col: '1 / span 5' },
 		{ file: 'gerfest2.jpeg', alt: 'The sculpture glowing purple in the tent', col: '6 / span 3', shift: 100 },
@@ -78,10 +79,10 @@
 
 {#snippet collage(cells: Cell[])}
 	<Mosaic class="collage">
-		{#each cells as { file, alt, clip, col, shift, align, wide } (file)}
+		{#each cells as { file, alt, clip, sound, col, shift, align, wide } (file)}
 			<MosaicCell {col} {shift} {align} {wide}>
 				{#if clip}
-					<Clip src={asset(file)} autoplay label={alt} />
+					<Clip src={asset(file)} autoplay {sound} label={alt} />
 				{:else}
 					<Figure src={asset(file)} {alt} />
 				{/if}
