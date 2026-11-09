@@ -552,6 +552,23 @@
 	object-fit: initial;
 }
 
+/* A note in the mosaic: a few lines of story placed on the grid like one of the pictures,
+   not a prose column. Sized to its cell, so it reads as part of the gallery. */
+.article-body .mosaic__note {
+	max-width: none;
+	margin: 0;
+	padding: 8px 0;
+	font-size: clamp(17px, 1.9cqi, 21px);
+	line-height: 1.5;
+	letter-spacing: -0.01em;
+	color: var(--ink);
+	text-wrap: pretty;
+}
+
+.on-hero-video[data-hero-tone='dark'] .article-body .mosaic__note {
+	color: #24121f;
+}
+
 /* Narrow bodies (phones, the storehouse panel): one column, pictures at 80% width
    swinging left and right, wide ones full width. */
 @container article (max-width: 720px) {
@@ -571,6 +588,9 @@
 	}
 	.article-body .mosaic__cell.wide {
 		width: 100%;
+	}
+	.article-body .mosaic__note {
+		padding: 12px 0;
 	}
 }
 

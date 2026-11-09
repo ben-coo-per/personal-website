@@ -74,6 +74,15 @@
 	to call the car "Benry".
 </p>
 
+<FullBleed>
+	<Clip
+		src={asset('run.mp4')}
+		poster={asset('gallery-31.jpg')}
+		caption="The run down the hill"
+		label="Video of Henry racing down the Alexandra Palace course"
+	/>
+</FullBleed>
+
 <div class="eyebrow">01 · frame and steering</div>
 <h2>The chassis</h2>
 
@@ -95,12 +104,12 @@
 	{/each}
 </MediaGrid>
 
-<div class="eyebrow">02 · skin and face</div>
-<h2>Becoming Henry</h2>
+<div class="eyebrow">02 · the shell</div>
+<h2>The Shell</h2>
 
 <p>
-	Cardboard panels wrapped around the frame gave him his shape, then a lot of red paint and one very
-	carefully painted smile. The nose doubles as the driver's window.
+	We built the shell with lots of cardboard panels wrapped around a PVC frame to give him his shape.
+	We then used a lot of red paint and a children's play tube to complete the look.
 </p>
 
 <MediaGrid cols={2}>
@@ -125,12 +134,3 @@
 		<Figure {src} alt={caption} />
 	{/each}
 </MediaGrid>
-
-<FullBleed>
-	<Clip
-		src={asset('run.mp4')}
-		poster={asset('gallery-31.jpg')}
-		caption="The run down the hill"
-		label="Video of Henry racing down the Alexandra Palace course"
-	/>
-</FullBleed>
