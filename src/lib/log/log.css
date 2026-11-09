@@ -558,10 +558,12 @@
 	max-width: none;
 	margin: 0;
 	padding: 8px 0;
-	font-size: clamp(17px, 1.9cqi, 21px);
-	line-height: 1.5;
+	font-family: var(--font-display);
+	font-size: clamp(20px, 2.2cqi, 26px);
+	line-height: 1.35;
 	letter-spacing: -0.01em;
 	color: var(--ink);
+	text-align: center;
 	text-wrap: pretty;
 }
 

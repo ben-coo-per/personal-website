@@ -21,7 +21,7 @@
 		{ file: 'gallery-9.jpg', alt: 'The motor base plate on the bench', col: '9 / span 4', shift: 120 },
 		{
 			text: 'While I was living overseas, my partner and our dog stayed behind in NYC. I found myself often thinking about how it looked and felt there.',
-			col: '9 / span 4',
+			col: '7 / span 4',
 			wide: true
 		},
 		{ file: 'gallery-12.jpg', alt: 'The lamp lit up, glowing orange through the fluted glass', col: '2 / span 4' },
