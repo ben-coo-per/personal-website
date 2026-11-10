@@ -6,6 +6,7 @@
 	import { lightbox } from '$lib/actions/lightbox';
 	import { lazyVideo } from '$lib/actions/lazyVideo';
 	import { videoPlayers } from '$lib/actions/videoPlayers';
+	import { modelViewers } from '$lib/actions/modelViewers';
 	import { projectAsset } from '$lib/utils/assets';
 
 	interface Props {
@@ -35,11 +36,11 @@
 	</div>
 {:else if project}
 	{#if Page}
-		<div class="article-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo use:videoPlayers>
+		<div class="article-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo use:videoPlayers use:modelViewers>
 			<Page {project} asset={projectAsset(project.slug)} />
 		</div>
 	{:else if content}
-		<div class="article-body project-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo use:videoPlayers>
+		<div class="article-body project-body" use:ditherImages use:imageScrollers use:lightbox use:lazyVideo use:videoPlayers use:modelViewers>
 			{@html content}
 		</div>
 	{/if}

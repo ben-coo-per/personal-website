@@ -8,7 +8,7 @@
 	 * `aspect` overrides the cell crop, e.g. '3/4' for a row of portrait shots.
 	 */
 	interface Props {
-		cols?: 2 | 3 | 4;
+		cols?: 2 | 3 | 4 | 5;
 		dense?: boolean;
 		natural?: boolean;
 		aspect?: '4/3' | '3/2' | '16/9' | '1/1' | '4/5' | '3/4';
