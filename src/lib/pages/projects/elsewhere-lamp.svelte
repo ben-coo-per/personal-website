@@ -168,9 +168,10 @@
 		<Model
 			src={asset('crate-panel-v5.stl')}
 			label="Crate panel v5, a 3D model. Drag to turn it."
-			name="crate panel v5"
 			aspect="16/9"
 			color="#f4efe6"
+			light="#f3a1bf"
+			badge={false}
 			bare
 		/>
 	</MediaGrid>
