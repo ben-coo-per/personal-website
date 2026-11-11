@@ -41,16 +41,18 @@ export function mount(stage: HTMLElement, src: string): ViewerHandle {
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 1000);
 
-	// Mesh colour: `--model-color` where a page sets it, else the page's ink.
-	const ink = getComputedStyle(stage).getPropertyValue('--model-color').trim()
-		? cssColor(stage, '--model-color', '#f5f2eb')
-		: cssColor(stage, '--ink', '#f5f2eb');
+	// Mesh colour: `--model-color` where a page sets it, else the page's ink. The cast
+	// light (`--model-light`) tints the shadow side and the hover glow; amber by default.
+	const has = (name: string) => !!getComputedStyle(stage).getPropertyValue(name).trim();
+	const ink = has('--model-color') ? cssColor(stage, '--model-color', '#f5f2eb') : cssColor(stage, '--ink', '#f5f2eb');
 	const amber = cssColor(stage, '--amber', '#fbbf24');
-	scene.add(new THREE.HemisphereLight(0xffffff, 0x2a2622, 0.85));
+	const cast = has('--model-light') ? cssColor(stage, '--model-light', '#fbbf24') : amber;
+	// Ambient: a neutral sky above, a little of the cast colour bouncing up from below.
+	scene.add(new THREE.HemisphereLight(0xffffff, cast.clone().multiplyScalar(0.22), 0.85));
 	const key = new THREE.DirectionalLight(0xffffff, 1.6);
 	key.position.set(1.2, 1.6, 1.0);
 	scene.add(key);
-	const fill = new THREE.DirectionalLight(amber, 0.35);
+	const fill = new THREE.DirectionalLight(cast, 0.5);
 	fill.position.set(-1.4, -0.4, -1.0);
 	scene.add(fill);
 
@@ -61,8 +63,16 @@ export function mount(stage: HTMLElement, src: string): ViewerHandle {
 	controls.enablePan = false;
 	controls.autoRotate = true;
 	controls.autoRotateSpeed = 1.1;
+	// OrbitControls writes an inline cursor on the canvas ('auto' by default), which beats
+	// any stylesheet; ask it for the hand instead, open at rest and closed while dragging.
+	controls.cursorStyle = 'grab';
+	// Dragging: stop the idle turn and let the CSS swap the cursor to a closed hand.
 	controls.addEventListener('start', () => {
 		controls.autoRotate = false;
+		stage.dataset.modelGrabbing = 'true';
+	});
+	controls.addEventListener('end', () => {
+		delete stage.dataset.modelGrabbing;
 	});
 	// OrbitControls sets touch-action: none; give vertical swipes back to the page.
 	canvas.style.touchAction = 'pan-y';
@@ -73,6 +83,23 @@ export function mount(stage: HTMLElement, src: string): ViewerHandle {
 		roughness: 0.58,
 		metalness: 0.08
 	});
+
+	// Hover: the mesh warms a touch (eased in the render loop), so the thing you can grab
+	// answers the pointer the way a button would. Framed stages also brighten their rule in CSS.
+	const idleGlow = new THREE.Color(0x000000);
+	const hoverGlow = cast.clone().multiplyScalar(0.14);
+	let glowTarget = idleGlow;
+	const setHover = (on: boolean) => {
+		glowTarget = on ? hoverGlow : idleGlow;
+		if (on) stage.dataset.modelHover = 'true';
+		else delete stage.dataset.modelHover;
+	};
+	const onEnter = (e: PointerEvent) => {
+		if (e.pointerType === 'mouse') setHover(true);
+	};
+	const onLeave = () => setHover(false);
+	stage.addEventListener('pointerenter', onEnter);
+	stage.addEventListener('pointerleave', onLeave);
 
 	const frame = (geometry: THREE.BufferGeometry) => {
 		geometry.computeVertexNormals();
@@ -123,6 +150,7 @@ export function mount(stage: HTMLElement, src: string): ViewerHandle {
 		raf = 0;
 		if (!visible) return;
 		controls.update();
+		material.emissive.lerp(glowTarget, 0.14);
 		renderer.render(scene, camera);
 		raf = requestAnimationFrame(tick);
 	};
@@ -141,6 +169,10 @@ export function mount(stage: HTMLElement, src: string): ViewerHandle {
 			if (raf) cancelAnimationFrame(raf);
 			io.disconnect();
 			ro.disconnect();
+			stage.removeEventListener('pointerenter', onEnter);
+			stage.removeEventListener('pointerleave', onLeave);
+			delete stage.dataset.modelHover;
+			delete stage.dataset.modelGrabbing;
 			controls.dispose();
 			mesh?.geometry.dispose();
 			material.dispose();

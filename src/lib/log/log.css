@@ -532,6 +532,26 @@
 	background:
 		radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, 0.05), transparent 65%),
 		var(--bg-2);
+	transition:
+		border-color 0.25s,
+		box-shadow 0.25s;
+}
+
+/* The stage is something you can take hold of: an open hand once the model is in, a
+   closed one while dragging (the viewer sets `data-model-grabbing`; `:active` is
+   unreliable under OrbitControls' pointer capture). Hover (`data-model-hover`, mouse
+   only) warms the mesh in the viewer and lifts the frame here. */
+.article-body .model__stage[data-model-state='ready'] {
+	cursor: grab;
+}
+
+.article-body .model__stage[data-model-grabbing='true'] {
+	cursor: grabbing;
+}
+
+.article-body .model:not(.model--bare) .model__stage[data-model-hover='true'] {
+	border-color: var(--rule-2);
+	box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.08);
 }
 
 /* `bare`: no frame or fill, so the model floats on the page. */
@@ -577,17 +597,13 @@
 	height: 100% !important;
 	border: 0;
 	border-radius: 0;
-	cursor: grab;
+	cursor: inherit;
 	opacity: 0;
 	transition: opacity 0.6s;
 }
 
 .article-body .model__stage[data-model-state='ready'] .model__canvas {
 	opacity: 1;
-}
-
-.article-body .model__canvas:active {
-	cursor: grabbing;
 }
 
 .article-body .model__badge {
