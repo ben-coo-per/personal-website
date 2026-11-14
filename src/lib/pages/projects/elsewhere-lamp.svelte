@@ -98,6 +98,17 @@
 		{ file: 'gallery-42.jpg', alt: 'The bare truncated-icosahedron shell' },
 		{ file: 'gallery-43.jpg', alt: 'The shell assembled on its stem' }
 	];
+
+	// Nov 12: the base as an airplane window, from the notebook to the first line renders.
+	const windowBase: typeof process = [
+		{ file: 'gallery-45.jpg', alt: 'Pencil sketch of the globe sitting in a fluted, round-bottomed cup', col: '1 / span 3' },
+		{ file: 'gallery-46.jpg', alt: 'Pencil sketches of a rounded window outline and a small fluted cup', col: '4 / span 3', shift: 90 },
+		{ file: 'gallery-47.jpg', alt: 'Pen sketch of an airplane window with its shade half down, the edge circled', col: '7 / span 3', shift: 30 },
+		{ file: 'gallery-48.jpg', alt: 'Reference: sunset over clouds through an airplane window', col: '10 / span 3', shift: 150 },
+		{ file: 'gallery-50.jpg', alt: 'Sketch of the window frame turned about its centre line to make the flute profile', col: '1 / span 4', align: 'center' },
+		{ file: 'gallery-51.jpg', alt: 'Line render of the window base: a ring of window-shaped flutes', col: '5 / span 4', ink: true },
+		{ file: 'gallery-52.jpg', alt: 'Line render of the window base from the side', col: '9 / span 4', shift: 60, ink: true }
+	];
 </script>
 
 <p class="wip-note">
@@ -176,6 +187,10 @@
 		/>
 	</MediaGrid>
 </MediaStack>
+
+<Mosaic>
+	{@render cells(windowBase)}
+</Mosaic>
 
 <MediaStack spacious>
 	<WipVeil
