@@ -70,10 +70,10 @@
 		{ file: 'gallery-35.jpg', alt: 'CAD of the open dodecahedron frame sitting on the base cage', col: '7 / span 6', shift: 60 },
 		{ file: 'gallery-36.jpg', alt: 'Section sketch of the mechanism: globe, spring, shaft and base', col: '1 / span 4' },
 		{ file: 'gallery-37.jpg', alt: 'CAD of the base, half-clad in LED panels around the motor mounts', col: '6 / span 7', shift: 80, wide: true },
-		{ file: 'gallery-38.jpg', alt: 'A notebook page of base ideas: slotted column, fluted drums, faceted globe, tripod', col: '2 / span 4' },
-		{ file: 'gallery-18.jpg', alt: 'A sheet of profile sketches: the globe on twelve different bases and stands', col: '6 / span 7', shift: 80, wide: true, ink: true },
-		{ file: 'gallery-19.jpg', alt: 'Profile sketches of textured bases: fluted drums, perforated stems, collars', col: '2 / span 6', wide: true, ink: true },
-		{ file: 'gallery-20.jpg', alt: 'Profile sketches of faceted sockets cradling the globe', col: '8 / span 5', shift: 120, ink: true },
+		{ file: 'gallery-38.jpg', alt: 'A row of notebook sketches of base ideas: slotted column, fluted drums, faceted globe, mesh cup', col: '1 / span 8', wide: true },
+		{ file: 'gallery-18.jpg', alt: 'A sheet of profile sketches: the globe on twelve different bases and stands', col: '1 / span 6', wide: true, ink: true },
+		{ file: 'gallery-19.jpg', alt: 'Profile sketches of textured bases: fluted drums, perforated stems, collars', col: '7 / span 6', shift: 80, wide: true, ink: true },
+		{ file: 'gallery-20.jpg', alt: 'Profile sketches of faceted sockets cradling the globe', col: '4 / span 6', ink: true },
 	];
 
 	// Form studies for the base, in the order they were drawn. Padded square at conversion.
