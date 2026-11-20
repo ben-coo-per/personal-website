@@ -4,6 +4,7 @@
 	import { projectYear } from '$lib/utils/format';
 	import DitherMedia from './DitherMedia.svelte';
 	import Octopus from '$lib/ink/Octopus.svelte';
+	import { tilt } from '$lib/actions/tilt';
 
 	interface Props {
 		project: Project;
@@ -33,48 +34,63 @@
 	}
 </script>
 
-<a
-	class="card"
-	class:wip={project.wip}
-	href="/projects/{project.slug}"
-	onclick={(e) => {
-		e.preventDefault();
-		navigate();
-	}}
->
-	<div class="thumb">
-		{#if octopus}
-			<Octopus poster={thumbUrl ?? undefined} alt={project.title ?? ''} />
-			<span class="corner">{year}</span>
-		{:else}
-			<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
+<div class="tilt-wrap">
+	<a
+		class="card"
+		class:wip={project.wip}
+		href="/projects/{project.slug}"
+		use:tilt={{ max: 7, ease: 0.12 }}
+		onclick={(e) => {
+			e.preventDefault();
+			navigate();
+		}}
+	>
+		<div class="thumb">
+			{#if octopus}
+				<Octopus poster={thumbUrl ?? undefined} alt={project.title ?? ''} />
 				<span class="corner">{year}</span>
-			</DitherMedia>
-		{/if}
-		{#if hoverUrl}
-			<div class="thumb-hover" aria-hidden="true">
-				<DitherMedia src={hoverUrl} alt="" aspect="4/3" fill loading="lazy" />
-			</div>
-		{/if}
-	</div>
-	<div class="body">
-		<div class="meta">
-			{#if project.wip}
-				<span class="dot wip-dot"></span>
+			{:else}
+				<DitherMedia src={thumbUrl} alt={project.title ?? ''} aspect="4/3" fill loading="lazy">
+					<span class="corner">{year}</span>
+				</DitherMedia>
 			{/if}
-			<span class="status">{status}</span>
-			<span class="year-right">{year}</span>
+			{#if hoverUrl}
+				<div class="thumb-hover" aria-hidden="true">
+					<DitherMedia src={hoverUrl} alt="" aspect="4/3" fill loading="lazy" />
+				</div>
+			{/if}
 		</div>
-		<h3>{project.title ?? 'Untitled'} <span class="arrow">↗</span></h3>
-		{#if project.subtitle || project.mainDescription}
-			<p>{project.subtitle ?? project.mainDescription}</p>
-		{:else if project.wip}
-			<p>Full write-up coming soon.</p>
-		{/if}
-	</div>
-</a>
+		<div class="body">
+			<div class="meta">
+				{#if project.wip}
+					<span class="dot wip-dot"></span>
+				{/if}
+				<span class="status">{status}</span>
+				<span class="year-right">{year}</span>
+			</div>
+			<h3>{project.title ?? 'Untitled'} <span class="arrow">↗</span></h3>
+			{#if project.subtitle || project.mainDescription}
+				<p>{project.subtitle ?? project.mainDescription}</p>
+			{:else if project.wip}
+				<p>Full write-up coming soon.</p>
+			{/if}
+		</div>
+	</a>
+</div>
 
 <style>
+	/* Perspective for the tilt action. The hover lift lives here too, so it doesn't
+	   fight the inline rotateX/rotateY the action writes on .card. */
+	.tilt-wrap {
+		display: block;
+		perspective: 800px;
+		transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.tilt-wrap:hover {
+		transform: translateY(-2px);
+	}
+
 	.card {
 		display: block;
 		border: 1px solid var(--rule);
@@ -84,7 +100,6 @@
 		backdrop-filter: blur(4px);
 		transition:
 			border-color 0.2s,
-			transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
 			background 0.2s;
 		text-decoration: none;
 		color: inherit;
@@ -92,7 +107,6 @@
 
 	.card:hover {
 		border-color: var(--rule-2);
-		transform: translateY(-2px);
 		background: rgba(23, 23, 28, 0.7);
 	}
 
