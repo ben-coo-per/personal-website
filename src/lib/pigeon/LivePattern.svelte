@@ -102,6 +102,19 @@
 
 	const quanta = $derived(timeToQuanta(nowMs));
 
+	// The encoded time is a 10-minute block counted from the epoch; spell out which
+	// block in the viewer's own clock. Empty until mounted, so the server render
+	// doesn't show the epoch.
+	const timeWindow = $derived.by(() => {
+		if (nowMs === EPOCH_MS) return "";
+		const start = new Date(EPOCH_MS + quanta * TEN_MIN_MS);
+		const end = new Date(start.getTime() + TEN_MIN_MS);
+		const hm = (d: Date) =>
+			d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+		const day = start.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+		return `${day}, ${hm(start)}–${hm(end)}`;
+	});
+
 	onMount(() => {
 		let interval: ReturnType<typeof setInterval> | undefined;
 		let cancelled = false;
@@ -230,21 +243,10 @@
 				<dt>LON</dt>
 				<dd>{lon.toFixed(4)}°</dd>
 			</div>
-			<div>
-				<dt>TIME (q)</dt>
-				<dd>{quanta}</dd>
-			</div>
-			<div>
-				<dt>DEVICE</dt>
-				<dd>{deviceId}</dd>
-			</div>
-			<div>
-				<dt>COUNTER</dt>
-				<dd>{counter}</dd>
-			</div>
-			<div>
-				<dt>TILES</dt>
-				<dd>{tileCount}</dd>
+			<div class="lp__time">
+				<dt>TIME</dt>
+				<dd>{quanta.toLocaleString('en-GB')}</dd>
+				{#if timeWindow}<dd class="lp__note">{timeWindow} · a 10-minute window</dd>{/if}
 			</div>
 		</dl>
 	{/if}
@@ -309,7 +311,7 @@
 
 	.lp__readout {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: var(--space-3) var(--space-5);
 		margin: 0;
 	}
@@ -329,5 +331,12 @@
 		font-family: var(--font-mono);
 		font-size: var(--type-data);
 		color: var(--color-text-primary);
+	}
+	.lp__readout .lp__time {
+		grid-column: 1 / -1;
+	}
+	.lp__readout .lp__note {
+		font-size: var(--type-label);
+		color: var(--color-text-secondary);
 	}
 </style>
