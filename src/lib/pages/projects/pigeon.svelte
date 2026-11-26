@@ -5,7 +5,7 @@
 	import Multitruchet from '$lib/pigeon/Multitruchet.svelte';
 	import LivePattern from '$lib/pigeon/LivePattern.svelte';
 	import GapReveal from '$lib/pigeon/GapReveal.svelte';
-	import { progress, rise, span, smooth } from '$lib/pigeon/scroll';
+	import { autoloop, progress, rise, span, smooth } from '$lib/pigeon/scroll';
 	import caseScene from '$lib/pigeon/assets/case-scene.webp';
 	import revealClip from '$lib/pigeon/assets/reveal-clip.webp';
 	import {
@@ -33,6 +33,11 @@
 	let revealP = $state(0);
 	// p runs from the section entering (0) to its end (1); it pins at ~0.31.
 	const fizzle = $derived(span(revealP, 0.08, 0.55));
+	const v2Views = [
+		{ src: 'v2-front.webp', alt: 'The PIGEON device from the front' },
+		{ src: 'v2-side.webp', alt: 'The PIGEON device from the side' },
+		{ src: 'v2-rear.webp', alt: 'The PIGEON device from the back' }
+	];
 	const wrist = $derived(smooth(span(revealP, 0.55, 0.72)));
 	const wordmark = $derived(smooth(span(revealP, 0.74, 0.88)));
 
@@ -97,7 +102,7 @@
 		<div class="pg-hero__foot">
 			<div class="pg-hero__lockup">
 				<h1 class="pg-hero__title">PIGEON</h1>
-				<p class="pg-hero__sub">A wrist wearable that makes corroboration searchable.</p>
+				<p class="pg-hero__sub">A living pattern that makes corroboration searchable.</p>
 				<ul class="pg-hero__meta pg-label">
 					<li>Ben Cooper</li>
 					<li>IDE 2 · Master's solo project</li>
@@ -109,6 +114,37 @@
 				graphic is shown.
 			</p>
 		</div>
+	</section>
+
+	<!-- ───────────── the device ───────────── -->
+	<!-- The product first, no explanation yet: the story that follows earns it. The renders
+	     sit on pure black and are screen-blended, so the black drops into the page and the
+	     device floats in front of the outlined V2. -->
+	<section class="pg-v2" aria-label="The PIGEON device">
+		<div class="pg-wrap pg-v2__stage">
+			<p class="pg-v2__title" aria-hidden="true">V2</p>
+			<img class="pg-v2__hero" src={asset('v2-hero.webp')} alt="Render of the PIGEON device" />
+		</div>
+		<div class="pg-wrap pg-v2__views">
+			{#each v2Views as v, i (v.src)}
+				<figure class="pg-v2__view" use:rise style:--i={i}>
+					<img src={asset(v.src)} alt={v.alt} loading="lazy" />
+				</figure>
+			{/each}
+		</div>
+		<figure class="pg-wrap pg-v2__parts" use:rise data-no-lightbox>
+			<video
+				use:autoloop
+				src={asset('v2-explode.mp4')}
+				poster={asset('v2-explode-poster.webp')}
+				autoplay
+				muted
+				loop
+				playsinline
+				disablepictureinpicture
+				aria-label="The PIGEON device coming apart into its parts and back together"
+			></video>
+		</figure>
 	</section>
 
 	<!-- ───────────── case study ───────────── -->
@@ -281,9 +317,9 @@
 			<div
 				class="pg-reveal__wrist"
 				role="img"
-				aria-label="The PIGEON device worn on a wrist"
+				aria-label="The PIGEON device"
 				style:opacity={wrist}
-				style:background-image="url({asset('reveal-wrist.webp')})"
+				style:background-image="url({asset('reveal-v2.webp')})"
 			></div>
 			<div class="pg-reveal__word" style:opacity={wordmark}>
 				<p class="pg-reveal__title">PIGEON</p>
@@ -293,7 +329,7 @@
 
 	<section class="pg-wrap pg-demo">
 		<p class="pg-eyebrow">Demo</p>
-		<h2 class="pg-h2">One photo in, the moment back out.</h2>
+		<h2 class="pg-h2">Decoded from a single photo.</h2>
 		<!-- svelte-ignore a11y_media_has_caption -->
 		<video src={asset('decode-demo.mp4')} poster={asset('decode-demo-poster.webp')} controls preload="none" playsinline></video>
 		<p class="pg-caption">The decoder: a phone photo of the device goes in; the time, place and device identity come out.</p>
@@ -485,19 +521,6 @@
 				class="pg-conclusion__fill"
 			/>
 		</p>
-	</section>
-
-	<!-- ───────────── version two teaser ───────────── -->
-	<!-- Deliberately says nothing about what V2 is: the renders do the talking. -->
-	<section class="pg-wrap pg-v2" aria-label="PIGEON version two, in the works">
-		<div class="pg-v2__head">
-			<span class="pg-v2__status">In the works</span>
-			<p class="pg-v2__title">V2</p>
-		</div>
-		<div class="pg-v2__shots">
-			<img src={asset('v2-exploded.webp')} alt="Exploded render of PIGEON version two" loading="lazy" />
-			<img src={asset('v2-back.webp')} alt="Render of the back of PIGEON version two" loading="lazy" />
-		</div>
 	</section>
 
 	<!-- ───────────── close ───────────── -->
