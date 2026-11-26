@@ -5,6 +5,8 @@
  * content folder, resolved with the page's `asset()` helper.
  */
 
+import { moreEvidence } from './flood-data';
+
 export interface Tweet {
 	type: 'tweet';
 	avatar: string;
@@ -17,6 +19,8 @@ export interface Tweet {
 	caption: string;
 	source: string;
 	date: string;
+	/** Hour of day (0–24) it surfaced, when it matters on the timeline. */
+	hour?: number;
 	archiveUrl?: string;
 }
 
@@ -27,9 +31,29 @@ export interface Shot {
 	alt: string;
 	source: string;
 	date: string;
+	/** Hour of day (0–24) it surfaced, when it matters on the timeline. */
+	hour?: number;
 }
 
-export type Evidence = Tweet | Shot;
+/** A post or report with no picture of its own: shown as a text tile. */
+export interface Post {
+	type: 'post';
+	/** Shown on the tile: the platform (X, Bsky, TikTok…) or the outlet (NYT, ABC…). */
+	tag: string;
+	caption: string;
+	source: string;
+	date: string;
+	hour?: number;
+	text?: string;
+	metrics?: { views?: number; likes?: number; reposts?: number };
+	url: string;
+	archiveUrl?: string;
+	debunkedBy?: string;
+	/** Involves a misidentified private person: names are blocked out, links go to the fact-check. */
+	private?: boolean;
+}
+
+export type Evidence = Tweet | Shot | Post;
 
 export interface Stop {
 	number: string;
@@ -38,6 +62,8 @@ export interface Stop {
 	/** Gantt bar placement, in % of the row (from the deck's HookTimeline). */
 	offset: number;
 	width: number;
+	/** The lane's headline figure (sourced in `floodNumbers`). */
+	stat: string;
 	items: Evidence[];
 }
 
@@ -48,6 +74,7 @@ export const caseStudy: Stop[] = [
 		sublabel: 'T + 2 hours',
 		offset: 2,
 		width: 35,
+		stat: '72.9M views on 4 federal posts',
 		items: [
 			{
 				type: 'tweet',
@@ -56,10 +83,11 @@ export const caseStudy: Stop[] = [
 				handle: 'DHSgov',
 				text: 'Today, ICE officers in Minneapolis were conducting targeted operations when rioters began blocking ICE officers and one of these violent rioters weaponized her vehicle, attempting to run over our law enforcement officers in an attempt to kill them—an act of domestic terrorism.\n\nAn ICE officer, fearing for his life, the lives of his fellow law enforcement and the safety of the public, fired defensive shots.',
 				timestamp: '11:45 AM · Jan 7, 2026',
-				metrics: { reposts: 21000, likes: 97000, views: 28_400_000 },
+				metrics: { reposts: 20_884, likes: 95_318, views: 28_477_948 },
 				caption: 'DHS statement post',
 				source: 'DHS / X',
 				date: 'Jan 7, 2026',
+				hour: 11.75,
 				archiveUrl: 'https://archive.ph/QG6Op'
 			},
 			{
@@ -69,10 +97,11 @@ export const caseStudy: Stop[] = [
 				handle: 'TriciaOhio',
 				text: 'Today, ICE officers in Minneapolis were conducting targeted operations when rioters began blocking  ICE officers and one of these violent rioters weaponized her vehicle, attempting to run over our law enforcement officers in an attempt to kill them—an act of domestic terrorism.',
 				timestamp: '11:41 AM · Jan 7, 2026',
-				metrics: { reposts: 15200, likes: 19000, views: 11_200_000 },
+				metrics: { reposts: 15200, likes: 19000, views: 11_293_782 },
 				caption: 'DHS Spokesperson statement post',
 				source: 'Tricia McLaughlin / X',
 				date: 'Jan 7, 2026',
+				hour: 11.68,
 				archiveUrl: 'https://archive.ph/RkOF8'
 			},
 			{
@@ -95,6 +124,7 @@ export const caseStudy: Stop[] = [
 				caption: 'Presidential post',
 				source: 'Truth Social / X repost',
 				date: 'Jan 7, 2026',
+				hour: 14.47,
 				archiveUrl: 'https://archive.ph/aJSkN'
 			}
 		]
@@ -105,6 +135,7 @@ export const caseStudy: Stop[] = [
 		sublabel: 'Filmed at T+0, surfaced in pieces',
 		offset: 10,
 		width: 52,
+		stat: '9+ angles in 4 days',
 		items: [
 			{
 				type: 'image',
@@ -146,6 +177,7 @@ export const caseStudy: Stop[] = [
 		sublabel: 'Days 1–6, at scale',
 		offset: 27,
 		width: 64,
+		stat: '7.6M views on 4 false posts',
 		items: [
 			{
 				type: 'image',
@@ -203,6 +235,7 @@ export const caseStudy: Stop[] = [
 		sublabel: 'Coherent at day 6',
 		offset: 40,
 		width: 40,
+		stat: 'first map 4h 47m after DHS',
 		items: [
 			{
 				type: 'image',
@@ -210,7 +243,8 @@ export const caseStudy: Stop[] = [
 				caption: 'Animated reconstruction of officer positions',
 				alt: 'Bellingcat overhead sequence mapping the positions of officers and vehicles',
 				source: 'Bellingcat',
-				date: 'Jan 7, 2026'
+				date: 'Jan 7, 2026',
+				hour: 16.55 // 4:32 pm on Bluesky, nearly five hours after the first footage
 			},
 			{
 				type: 'image',
@@ -229,6 +263,33 @@ export const caseStudy: Stop[] = [
 				date: 'Jan 15, 2026'
 			}
 		]
+	}
+];
+
+// The research pass's items join each lane after the hand-picked ones.
+for (const stop of caseStudy) stop.items.push(...(moreEvidence[stop.number] ?? []));
+
+/** Headline figures for the case study, each with where it comes from. */
+export const floodNumbers = [
+	{
+		value: '49 min',
+		label: 'from the first shot to the first official post',
+		source: 'https://abc7.com/post/minneapolis-ice-shooting-minute-timeline-how-renee-nicole-good-died/18379148/'
+	},
+	{
+		value: '72.9M',
+		label: 'views on four federal posts defending the agent',
+		source: 'https://x.com/DHSgov/status/2008958123092979817'
+	},
+	{
+		value: '7.6M',
+		label: 'views on just four false posts',
+		source: 'https://x.com/PoliticoForYou/status/2011525311738101907'
+	},
+	{
+		value: '4h 47m',
+		label: 'from the DHS statement to the first reconstruction',
+		source: 'https://bsky.app/profile/bellingcat.com/post/3mbujjukc5c23'
 	}
 ];
 
@@ -367,29 +428,22 @@ export const pillars: Pillar[] = [
 	}
 ];
 
+/** What the project set out to show, each with the line of evidence behind it. */
 export const claims = [
-	'Corroboration is the unmet need',
-	'Citizen witnesses are the users',
-	'Pattern survives the real world'
-];
-
-export const people = [
 	{
-		name: 'Santiago Lyon',
-		org: "Content Authenticity Initiative, formerly AP's Global Director of Photography",
-		portrait: 'person-santiago.webp'
+		claim: 'Corroboration is the unmet need',
+		evidence:
+			'Five practitioners, from WITNESS to the Content Authenticity Initiative, described corroboration as slow, manual work.'
 	},
-	{ name: 'Mahsa Alimardani', org: 'WITNESS / Journalist', portrait: 'person-mahsa.webp' },
 	{
-		name: 'Jacobo Castellanos',
-		org: 'WITNESS / C2PA Threats & Harms',
-		portrait: 'person-jacobo.webp'
+		claim: 'Citizen witnesses are the users',
+		evidence:
+			'The footage that contradicts the official account comes from bystanders filming the moment, not the press.'
 	},
-	{ name: 'Ron Haviv', org: 'VII Foundation, conflict photographer', portrait: 'person-ron.webp' },
 	{
-		name: 'Maya Burnand',
-		org: 'Independent visual journalist, formerly Centre for Information Resilience',
-		portrait: 'person-maya.webp'
+		claim: 'Pattern survives the real world',
+		evidence:
+			'Photographed around London in real conditions, every capture decoded to the right time and place.'
 	}
 ];
 

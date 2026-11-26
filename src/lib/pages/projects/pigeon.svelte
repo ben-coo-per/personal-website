@@ -14,11 +14,12 @@
 		quadrant,
 		pillars,
 		claims,
-		people,
 		captures,
 		fieldMap,
 		prototyping,
-		acknowledgements
+		acknowledgements,
+		floodNumbers,
+		type Evidence
 	} from '$lib/pigeon/content';
 
 	let { project, asset }: FreeformPageProps = $props();
@@ -39,26 +40,90 @@
 		{ src: 'v2-rear.webp', alt: 'The PIGEON device from the back' }
 	];
 	const wrist = $derived(smooth(span(revealP, 0.55, 0.72)));
-	const wordmark = $derived(smooth(span(revealP, 0.74, 0.88)));
 
-	// Case-study timeline: one pinned gantt; the stop whose evidence is crossing the
-	// middle of the screen lights up its bar. -1 = before the first stop.
-	let activeStop = $state(-1);
-	const stopEls: HTMLElement[] = [];
-	function trackStop(node: HTMLElement, i: number) {
-		stopEls[i] = node;
-		const io = new IntersectionObserver(
-			([e]) => {
-				if (e.isIntersecting) activeStop = i;
-				// Scrolled back up above the first stop: nothing is current.
-				else if (i === 0 && e.boundingClientRect.top > 0 && activeStop === 0) activeStop = -1;
-			},
-			{ rootMargin: '-50% 0px -49% 0px' }
-		);
-		io.observe(node);
-		return { destroy: () => io.disconnect() };
-	}
-	const goToStop = (i: number) => stopEls[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	// Case study as a flood: every piece of evidence is a tile on its lane at the time it
+	// surfaced, on a log time axis from the shot (the first hours get most of the width),
+	// stacking up where they crowd. A playhead sweeps it as the pinned section scrolls; the
+	// newest item it has passed is shown large below.
+	const compact = (n: number) =>
+		n >= 1e6 ? `${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${n}`;
+	const SHOT_H = 9 + 37 / 60; // 9:37 am, Jan 7, Minneapolis time
+	const SPAN_H = 9 * 24 - SHOT_H; // to midnight, Jan 16
+	const LOG_SPAN = Math.log1p(SPAN_H);
+	const xOf = (h: number) => (Math.log1p(Math.max(0, h)) / LOG_SPAN) * 100; // h = hours since the shot
+	const hOf = (x: number) => Math.expm1((x / 100) * LOG_SPAN);
+	const day0 = Date.parse('Jan 7, 2026');
+	const clock = (hourOfDay: number) => {
+		const m = Math.round((hourOfDay * 60) / 5) * 5;
+		const hh = Math.floor(m / 60) % 24;
+		return `${hh % 12 || 12}:${String(m % 60).padStart(2, '0')} ${hh < 12 ? 'AM' : 'PM'}`;
+	};
+	const flood = (() => {
+		const out: { item: Evidence; lane: number; x: number; when: string }[] = [];
+		caseStudy.forEach((stop, lane) => {
+			const days = stop.items.map((it) => Math.round((Date.parse(it.date) - day0) / 864e5));
+			// Items with no known time are spread evenly across the rest of their day; the
+			// panel then shows only their date, so no time is claimed for them.
+			const untimed = new Map<number, number>();
+			days.forEach((d, i) => stop.items[i].hour === undefined && untimed.set(d, (untimed.get(d) ?? 0) + 1));
+			const seen = new Map<number, number>();
+			stop.items.forEach((item, i) => {
+				const d = days[i];
+				let hour = item.hour;
+				if (hour === undefined) {
+					const [from, to] = d === 0 ? [12, 21] : [6, 22];
+					const j = seen.get(d) ?? 0;
+					seen.set(d, j + 1);
+					hour = from + ((to - from) * (j + 0.5)) / (untimed.get(d) ?? 1);
+				}
+				const when = item.hour !== undefined ? `${clock(item.hour)} · ${item.date}` : item.date;
+				out.push({ item, lane, x: xOf(d * 24 + hour - SHOT_H), when });
+			});
+		});
+		return out.sort((a, b) => a.x - b.x || a.lane - b.lane);
+	})();
+	const floodTicks = [
+		{ h: 0, label: 'Shot · 9:37 AM' },
+		{ h: 1, label: '+1 h', minor: true },
+		{ h: 6, label: '+6 h' },
+		{ h: 24 - SHOT_H, label: 'Jan 8', minor: true },
+		{ h: 72 - SHOT_H, label: 'Jan 10' },
+		{ h: 168 - SHOT_H, label: 'Jan 14' }
+	].map((t) => ({ ...t, x: xOf(t.h) }));
+
+	// Stacking: tiles are sized from the track width, and each lane packs its tiles into
+	// rows so nothing hides another completely.
+	let trackW = $state(1100);
+	const tile = $derived(Math.max(24, Math.min(44, trackW * 0.034)));
+	const stack = $derived.by(() => {
+		const w = (tile / trackW) * 100 * 1.04;
+		const level: number[] = new Array(flood.length).fill(0);
+		const rows = caseStudy.map(() => [] as number[]);
+		flood.forEach((f, n) => {
+			const ends = rows[f.lane];
+			let l = ends.findIndex((e) => e <= f.x);
+			if (l < 0) l = ends.push(0) - 1;
+			ends[l] = f.x + w;
+			level[n] = l;
+		});
+		return { level, rows: rows.map((r) => r.length) };
+	});
+
+	let floodP = $state(0);
+	let floodStill = $state(false); // reduced motion: everything shown, no sweep
+	const head = $derived(floodStill ? 100 : span(floodP, 0.04, 0.88) * 100);
+	const shown = $derived(flood.filter((f) => f.x <= head).length);
+	let picked = $state<number | null>(null);
+	const focusIdx = $derived(picked ?? (shown > 0 ? shown - 1 : null));
+	const focus = $derived(focusIdx === null ? null : flood[focusIdx]);
+	const headLabel = $derived.by(() => {
+		const abs = SHOT_H + hOf(head); // hours from midnight, Jan 7
+		const d = Math.floor(abs / 24);
+		return d === 0 ? `Jan 7 · ${clock(abs)}` : `Jan ${7 + d}`;
+	});
+	$effect(() => {
+		floodStill = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+	});
 
 	let pattern: LivePattern | undefined = $state();
 	let patternStatus = $state('default');
@@ -81,8 +146,6 @@
 		const mi = String(d.getUTCMinutes()).padStart(2, '0');
 		return `${dd}.${mm} ${hh}:${mi}Z`;
 	};
-	const compact = (n: number) =>
-		n >= 1e6 ? `${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${n}`;
 </script>
 
 <svelte:head>
@@ -93,6 +156,12 @@
 		rel="stylesheet"
 	/>
 </svelte:head>
+
+{#snippet redacted(text: string)}
+	{#each text.split(/(▇[▇ ]*▇|▇)/) as part}
+		{#if part.startsWith('▇')}<span class="pg-redact" aria-label="name withheld">{part}</span>{:else}{part}{/if}
+	{/each}
+{/snippet}
 
 <div class="pigeon">
 	<!-- ───────────── title ───────────── -->
@@ -163,86 +232,159 @@
 		</div>
 	</section>
 
-	<section class="pg-wrap pg-case">
-		<!-- The four phases on one shared time axis. It pins under the top of the
-		     screen while the evidence scrolls beneath it; overlapping bars read as
-		     phases running at the same time. -->
-		<nav class="pg-tl" aria-label="Evidence timeline" data-active={activeStop}>
-			<ol class="pg-tl__rows">
-				{#each caseStudy as stop, i}
-					<li>
-						<button
-							type="button"
-							class="pg-tl__bar"
-							class:is-active={activeStop === i}
-							aria-current={activeStop === i ? 'step' : undefined}
-							style:--off="{stop.offset}%"
-							style:--w="{stop.width}%"
-							onclick={() => goToStop(i)}
-						>
-							<span class="pg-tl__num">{stop.number}</span>
-							<span class="pg-tl__label">{stop.label}</span>
-							<span class="pg-tl__sub">{stop.sublabel}</span>
-						</button>
-					</li>
-				{/each}
-			</ol>
-			<div class="pg-tl__axis" aria-hidden="true">
-				<span>T+0 · Jan 7</span>
-				<span>Time →</span>
-			</div>
-		</nav>
+	<!-- The scale, in numbers, before the flood itself. -->
+	<section class="pg-wrap pg-tally" aria-label="The first days in numbers">
+		{#each floodNumbers as n}
+			<a class="pg-tally__item" href={n.source} target="_blank" rel="noopener noreferrer">
+				<b>{n.value}</b>
+				<span>{n.label}</span>
+			</a>
+		{/each}
+	</section>
 
-		{#each caseStudy as stop, i}
-			<div class="pg-stop" id="stop-{stop.number}" use:trackStop={i}>
-				<p class="pg-stop__head pg-label">
-					<b>{stop.number}</b>
-					{stop.label}
-					<span>· {stop.sublabel}</span>
+	<!-- The first days as a flood: four lanes on one log time axis from the shot, every piece
+	     of evidence a tile at the time it surfaced, stacking where they crowd. The section
+	     pins while a playhead sweeps it; the newest item it has passed is shown large
+	     underneath, so only one thing is ever read at a time. -->
+	<section class="pg-flood" use:progress={{ onchange: (p) => (floodP = p) }} style:--tw="{tile}px">
+		<div class="pg-flood__frame">
+			<div class="pg-wrap pg-flood__inner">
+				<p class="pg-flood__sample">
+					{flood.length} pieces I collected: a small sample of a far larger flood.
 				</p>
-				<div class="pg-stop__items" data-count={stop.items.length}>
-					{#each stop.items as item, j}
-						<figure class="pg-ev" use:rise style:--i={j % 4}>
-							{#if item.type === 'tweet'}
-								<article class="pg-tweet" data-platform={item.platform ?? 'x'}>
-									<header>
-										<img class="pg-tweet__av" src={asset(item.avatar)} alt="" data-no-lightbox />
-										<span class="pg-tweet__who">
-											<strong>{item.name}</strong>
-											<span>@{item.handle}</span>
-										</span>
-										<span class="pg-tweet__net">{item.platform === 'truthsocial' ? 'T' : '𝕏'}</span>
-									</header>
-									<p class="pg-tweet__text">{item.text}…</p>
-									<p class="pg-tweet__time">{item.timestamp}</p>
-									<p class="pg-tweet__stats">
-										<span><b>{compact(item.metrics.reposts)}</b> reposts</span>
-										<span><b>{compact(item.metrics.likes)}</b> likes</span>
-										{#if item.metrics.views}<span><b>{compact(item.metrics.views)}</b> views</span>{/if}
-									</p>
-								</article>
-							{:else}
-								<img src={asset(item.src)} alt={item.alt} loading="lazy" />
-							{/if}
+				<div class="pg-flood__chart" role="group" aria-label="Evidence from the first days, by kind" bind:clientWidth={trackW}>
+					{#each caseStudy as stop, lane}
+						<div class="pg-flood__lane" class:is-live={focus?.lane === lane}>
+							<p class="pg-flood__label">
+								<b>{stop.number}</b>
+								{stop.label}
+								<span>{stop.stat}</span>
+							</p>
+							<div class="pg-flood__track" style:--rows={stack.rows[lane]}>
+								{#each flood as f, n}
+									{#if f.lane === lane}
+										<button
+											type="button"
+											class="pg-flood__thumb"
+											class:is-in={f.x <= head}
+											class:is-focus={focusIdx === n}
+											class:is-text={f.item.type === 'post'}
+											style:left="{f.x}%"
+											style:--lv={stack.level[n]}
+											aria-label="{f.item.caption}, {f.when}"
+											aria-pressed={focusIdx === n}
+											onmouseenter={() => (picked = n)}
+											onmouseleave={() => (picked = null)}
+											onfocus={() => (picked = n)}
+											onblur={() => (picked = null)}
+											onclick={() => (picked = n)}
+										>
+											{#if f.item.type === 'tweet'}
+												<span class="pg-flood__post" data-platform={f.item.platform ?? 'x'}>
+													<img src={asset(f.item.avatar)} alt="" data-no-lightbox />
+													<b>{f.item.metrics.views ? compact(f.item.metrics.views) : compact(f.item.metrics.likes)}</b>
+												</span>
+											{:else if f.item.type === 'post'}
+												<span class="pg-flood__chip">
+													<i>{f.item.tag === 'X' ? '𝕏' : f.item.tag}</i>
+													{#if f.item.metrics?.views}<b>{compact(f.item.metrics.views)}</b>{/if}
+												</span>
+											{:else}
+												<img src={asset(f.item.src)} alt="" loading="lazy" data-no-lightbox />
+											{/if}
+										</button>
+									{/if}
+								{/each}
+							</div>
+						</div>
+					{/each}
+					<div class="pg-flood__axis" aria-hidden="true">
+						{#each floodTicks as t}
+							<span class:is-minor={t.minor} style:left="{t.x}%">{t.label}</span>
+						{/each}
+					</div>
+					<span class="pg-flood__head" style:left="{head}%" style:--edge={head > 82 ? 1 : 0} aria-hidden="true">
+						<em>{headLabel}</em>
+					</span>
+				</div>
+
+				<div class="pg-flood__focus">
+					{#each flood as f, n}
+						{@const on = focusIdx === n}
+						<figure class="pg-flood__card" class:is-on={on} aria-hidden={!on}>
+							<div class="pg-flood__media">
+								{#if f.item.type === 'tweet'}
+									<article class="pg-tweet" data-platform={f.item.platform ?? 'x'}>
+										<header>
+											<img class="pg-tweet__av" src={asset(f.item.avatar)} alt="" data-no-lightbox />
+											<span class="pg-tweet__who">
+												<strong>{f.item.name}</strong>
+												<span>@{f.item.handle}</span>
+											</span>
+											<span class="pg-tweet__net">{f.item.platform === 'truthsocial' ? 'T' : '𝕏'}</span>
+										</header>
+										<p class="pg-tweet__text">{f.item.text}…</p>
+										<p class="pg-tweet__time">{f.item.timestamp}</p>
+										<p class="pg-tweet__stats">
+											<span><b>{compact(f.item.metrics.reposts)}</b> reposts</span>
+											<span><b>{compact(f.item.metrics.likes)}</b> likes</span>
+											{#if f.item.metrics.views}<span><b>{compact(f.item.metrics.views)}</b> views</span>{/if}
+										</p>
+									</article>
+								{:else if f.item.type === 'post'}
+									<article class="pg-tweet pg-flood__report">
+										<header>
+											<span class="pg-tweet__who"><strong>{@render redacted(f.item.source)}</strong></span>
+											<span class="pg-tweet__net">{f.item.tag === 'X' ? '𝕏' : f.item.tag}</span>
+										</header>
+										<p class="pg-tweet__text">{@render redacted(f.item.text ?? f.item.caption)}</p>
+										<p class="pg-tweet__time">{f.when}</p>
+										{#if f.item.metrics}
+											<p class="pg-tweet__stats">
+												{#if f.item.metrics.reposts}<span><b>{compact(f.item.metrics.reposts)}</b> reposts</span>{/if}
+												{#if f.item.metrics.likes}<span><b>{compact(f.item.metrics.likes)}</b> likes</span>{/if}
+												{#if f.item.metrics.views}<span><b>{compact(f.item.metrics.views)}</b> views</span>{/if}
+											</p>
+										{/if}
+									</article>
+								{:else}
+									<img src={asset(f.item.src)} alt={f.item.alt} />
+								{/if}
+							</div>
 							<figcaption>
-								<span>{item.caption}</span>
+								<b>{caseStudy[f.lane].number} {caseStudy[f.lane].label}</b>
+								<span>{@render redacted(f.item.caption)}</span>
 								<small>
-									{item.source} · {item.date}
-									{#if item.type === 'tweet' && item.archiveUrl}
-										· <a href={item.archiveUrl} target="_blank" rel="noopener noreferrer">archived</a>
+									{@render redacted(f.item.source)} · {f.when}
+									{#if f.item.type === 'post'}
+										· <a href={f.item.url} target="_blank" rel="noopener noreferrer" tabindex={on ? 0 : -1}>{f.item.private ? 'fact-check' : 'source'}</a>
+										{#if f.item.archiveUrl}
+											· <a href={f.item.archiveUrl} target="_blank" rel="noopener noreferrer" tabindex={on ? 0 : -1}>archived</a>
+										{/if}
+										{#if f.item.debunkedBy && !f.item.private}
+											· <a href={f.item.debunkedBy} target="_blank" rel="noopener noreferrer" tabindex={on ? 0 : -1}>debunked</a>
+										{/if}
+									{:else if f.item.type === 'tweet' && f.item.archiveUrl}
+										· <a href={f.item.archiveUrl} target="_blank" rel="noopener noreferrer" tabindex={on ? 0 : -1}>archived</a>
 									{/if}
 								</small>
 							</figcaption>
 						</figure>
 					{/each}
+					{#if focus === null}
+						<p class="pg-flood__hint">Scroll to play the first days.</p>
+					{/if}
 				</div>
 			</div>
-		{/each}
+		</div>
+	</section>
+
+	<section class="pg-wrap pg-case">
 		<p class="pg-note">
 			Official statements land within hours. The citizen footage that contradicts them was filmed
-			at the moment itself, but surfaces in pieces. Over the next six days a flood of doctored and
-			misattributed media runs in parallel with the OSINT investigations, which only reach a
-			coherent account at day six. Those days are where false narratives take hold.
+			at the moment itself, but surfaces in pieces. Over the next week a flood of doctored and
+			misattributed media runs in parallel with the OSINT investigations, which start within hours
+			but take days to settle what happened. Those days are where false narratives take hold.
 		</p>
 	</section>
 
@@ -313,17 +455,14 @@
 	<!-- ───────────── PIGEON reveal ───────────── -->
 	<section class="pg-reveal" use:progress={{ mode: 'cover', onchange: (p) => (revealP = p) }}>
 		<div class="pg-reveal__frame" data-no-lightbox>
-			<ScrollFizzle src={revealClip} progress={fizzle} clip={fizzle} rootGrid={66} maxDepth={1} opacity={1 - 0.45 * wrist - 0.2 * wordmark} />
+			<ScrollFizzle src={revealClip} progress={fizzle} clip={fizzle} rootGrid={66} maxDepth={1} opacity={1 - 0.45 * wrist} />
 			<div
 				class="pg-reveal__wrist"
 				role="img"
-				aria-label="The PIGEON device"
+				aria-label="The PIGEON device worn on a wrist"
 				style:opacity={wrist}
-				style:background-image="url({asset('reveal-v2.webp')})"
+				style:background-image="url({asset('reveal-wrist.webp')})"
 			></div>
-			<div class="pg-reveal__word" style:opacity={wordmark}>
-				<p class="pg-reveal__title">PIGEON</p>
-			</div>
 		</div>
 	</section>
 
@@ -417,22 +556,16 @@
 		<p class="pg-eyebrow">Validation</p>
 		<ol class="pg-claims">
 			{#each claims as c, i}
-				<li><span class="pg-claims__n">{i + 1}</span>{c}<span class="pg-claims__check" aria-hidden="true">✓</span></li>
+				<li>
+					<span class="pg-claims__n">{i + 1}</span>
+					<div class="pg-claims__body">
+						{c.claim}
+						<p class="pg-claims__evidence">{c.evidence}</p>
+					</div>
+					<span class="pg-claims__check" aria-hidden="true">✓</span>
+				</li>
 			{/each}
 		</ol>
-
-		<h3 class="pg-h3">Expert interviews <span class="pg-label">claims 1 · 2</span></h3>
-		<div class="pg-people">
-			{#each people as person}
-				<figure>
-					<img src={asset(person.portrait)} alt={person.name} loading="lazy" data-no-lightbox />
-					<figcaption>
-						<strong>{person.name}</strong>
-						<span>{person.org}</span>
-					</figcaption>
-				</figure>
-			{/each}
-		</div>
 
 		<h3 class="pg-h3">Field validation <span class="pg-label">claim 3</span></h3>
 		<p class="pg-body">
@@ -540,6 +673,7 @@
 				{#each acknowledgements as [name, role]}
 					<li><strong>{name}</strong><span>{role}</span></li>
 				{/each}
+				<li><span>and many more who helped shape the direction</span></li>
 			</ul>
 		</div>
 	</footer>

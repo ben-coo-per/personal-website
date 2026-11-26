@@ -1888,142 +1888,6 @@ html:has(.pigeon) {
 	gap: 88px;
 }
 
-/* The pinned timeline: four bars on one shared axis. */
-.pigeon .pg-tl {
-	position: sticky;
-	/* pinned just under the site's floating nav, which overlaps the page top */
-	top: 0;
-	z-index: 5;
-	margin: 0 calc(-1 * var(--pg-gutter, 24px)) -40px;
-	padding: 84px var(--pg-gutter, 24px) 14px;
-	background: var(--color-bg);
-}
-/* short fade under the pinned timeline so cards slide beneath it softly */
-.pigeon .pg-tl::after {
-	content: '';
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 100%;
-	height: 28px;
-	background: linear-gradient(to bottom, var(--color-bg), transparent);
-	pointer-events: none;
-}
-.pigeon .pg-tl__rows {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-	margin: 0;
-	padding: 0;
-	/* faint vertical gridlines make the shared axis legible */
-	background: repeating-linear-gradient(
-		to right,
-		#1d1d1c 0 1px,
-		transparent 1px 10%
-	);
-}
-.pigeon .pg-tl__rows > li {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-.pigeon .pg-tl__bar {
-	display: flex;
-	align-items: baseline;
-	gap: 12px;
-	margin-left: var(--off);
-	width: var(--w);
-	min-width: 0;
-	padding: 5px 12px;
-	overflow: hidden;
-	white-space: nowrap;
-	color: var(--color-text-primary);
-	font: inherit;
-	text-align: left;
-	background: var(--color-surface);
-	border: 1px solid var(--color-gray-mid);
-	cursor: pointer;
-	opacity: 0.85;
-	transition:
-		opacity 0.35s,
-		border-color 0.35s,
-		background 0.35s;
-}
-/* Once a stop is current, the others step back. */
-.pigeon .pg-tl:not([data-active='-1']) .pg-tl__bar:not(.is-active) {
-	opacity: 0.38;
-}
-.pigeon .pg-tl__bar:hover,
-.pigeon .pg-tl__bar:focus-visible {
-	opacity: 1 !important;
-	border-color: var(--color-text-secondary);
-}
-.pigeon .pg-tl__bar.is-active {
-	opacity: 1;
-	border-color: var(--color-red);
-	background: #241014;
-}
-.pigeon .pg-tl__num {
-	font-size: 11px;
-	color: var(--color-text-secondary);
-}
-.pigeon .pg-tl__bar.is-active .pg-tl__num {
-	color: var(--color-red);
-}
-.pigeon .pg-tl__label {
-	font-family: var(--font-display);
-	font-stretch: 112%;
-	font-weight: 700;
-	font-size: clamp(12px, 1.25vw, 16px);
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-	line-height: 1.2;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.pigeon .pg-tl__sub {
-	font-size: 10px;
-	letter-spacing: var(--tracking-label);
-	text-transform: uppercase;
-	color: var(--color-text-secondary);
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.pigeon .pg-tl__axis {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 8px;
-	padding-top: 6px;
-	border-top: 1px solid var(--color-gray-mid);
-	font-size: 10px;
-	letter-spacing: var(--tracking-label);
-	text-transform: uppercase;
-	color: var(--color-text-secondary);
-}
-
-.pigeon .pg-stop {
-	display: flex;
-	flex-direction: column;
-	gap: 18px;
-	/* clear the pinned timeline when jumped to from a bar */
-	scroll-margin-top: 320px;
-}
-.pigeon .pg-stop__head {
-	margin: 0;
-	font-size: 11px;
-	letter-spacing: var(--tracking-label);
-	text-transform: uppercase;
-	color: var(--color-text-primary);
-}
-.pigeon .pg-stop__head b {
-	margin-right: 8px;
-	font-weight: 400;
-	color: var(--color-red);
-}
-.pigeon .pg-stop__head span {
-	color: var(--color-text-secondary);
-}
-
 /* Evidence cards (and the V2 views) fade in and float up as they scroll into view (see `rise`). */
 .pigeon [data-rise] {
 	transition:
@@ -2035,47 +1899,368 @@ html:has(.pigeon) {
 	opacity: 0;
 	transform: translateY(48px);
 }
-.pigeon .pg-stop__items {
+
+/* ---------- the case study in numbers ---------- */
+
+.pigeon .pg-tally {
 	display: grid;
-	grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
-	gap: 18px;
-	align-items: start;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 24px;
+	margin-top: clamp(48px, 8vh, 96px);
+	padding-top: 20px;
+	border-top: var(--border-default);
 }
-.pigeon .pg-stop__items[data-count='3'] {
-	--cols: 3;
+.pigeon .pg-tally__item {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	color: inherit;
+	text-decoration: none;
 }
-.pigeon .pg-stop__items[data-count='6'] {
-	--cols: 6;
+.pigeon .pg-tally__item b {
+	font-family: var(--font-display);
+	font-stretch: 112%;
+	font-weight: 800;
+	font-size: clamp(30px, 4.2vw, 60px);
+	line-height: 1;
+	white-space: nowrap;
+	letter-spacing: 0.01em;
+	color: var(--color-white);
 }
-.pigeon .pg-ev {
+.pigeon .pg-tally__item span {
+	max-width: 24ch;
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--color-text-secondary);
+}
+.pigeon .pg-tally__item:hover span,
+.pigeon .pg-tally__item:focus-visible span {
+	color: var(--color-white);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+/* ---------- the flood: the case study's first days ---------- */
+
+/* Tall so the pinned frame has room to play; the playhead follows the scroll. --tw (the
+   tile width) is set from the track width by the page. */
+.pigeon .pg-flood {
+	position: relative;
+	height: 420vh;
+	--tw: 40px;
+	--th: calc(var(--tw) * 0.75);
+	--step: calc(var(--th) * 0.6); /* stacked rows overlap, so a crowd reads as a pile */
+}
+.pigeon .pg-flood__frame {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	overflow: hidden;
+}
+.pigeon .pg-flood__inner {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(16px, 2.6vh, 32px);
+	height: 100%;
+	/* clear the site's floating nav */
+	padding-top: clamp(84px, 11vh, 110px);
+	padding-bottom: clamp(16px, 3vh, 32px);
+}
+.pigeon .pg-flood__chart {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+	padding-bottom: 28px; /* room for the axis */
 }
-.pigeon .pg-ev > img,
-.pigeon .pg-ev > .dither-media {
-	aspect-ratio: 16 / 10;
+.pigeon .pg-flood__lane {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
 }
-.pigeon .pg-ev > img,
-.pigeon .pg-ev > .dither-media img {
+.pigeon .pg-flood__label {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 4px 10px;
+	margin: 0;
+	font-family: var(--font-display);
+	font-stretch: 112%;
+	font-weight: 700;
+	font-size: clamp(11px, 1.1vw, 14px);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+	transition: color 0.3s;
+}
+.pigeon .pg-flood__lane.is-live .pg-flood__label {
+	color: var(--color-white);
+}
+.pigeon .pg-flood__label b {
+	font-family: var(--font-mono);
+	font-weight: 400;
+	font-size: 10px;
+	color: var(--color-red);
+}
+.pigeon .pg-flood__label span {
+	font-family: var(--font-mono);
+	font-stretch: normal;
+	font-weight: 400;
+	font-size: 10px;
+	letter-spacing: var(--tracking-label);
+	color: var(--color-white);
+}
+.pigeon .pg-flood__track {
+	position: relative;
+	height: calc(var(--th) + (var(--rows, 1) - 1) * var(--step) + 4px);
+	border-bottom: 1px solid #1d1d1c;
+}
+/* says plainly that the tiles are a sample, not the whole flood */
+.pigeon .pg-flood__sample {
+	margin: 0;
+	font-size: 11px;
+	line-height: 1.5;
+	letter-spacing: var(--tracking-label);
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+}
+/* Each piece of evidence: a tile at the time it surfaced, stacked on any it crowds. */
+.pigeon .pg-flood__thumb {
+	position: absolute;
+	bottom: calc(2px + var(--lv, 0) * var(--step));
+	width: var(--tw);
+	height: var(--th);
+	padding: 0;
+	overflow: hidden;
+	background: #111;
+	border: 1px solid #2c2c2a;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+	cursor: pointer;
+	z-index: calc(1 + var(--lv, 0));
+	opacity: 0;
+	transform: translateY(-28px) scale(0.6);
+	transition:
+		opacity 0.3s ease,
+		transform 0.45s cubic-bezier(0.2, 1.4, 0.3, 1),
+		border-color 0.2s;
+	pointer-events: none;
+}
+.pigeon .pg-flood__thumb.is-in {
+	opacity: 1;
+	transform: none;
+	pointer-events: auto;
+}
+.pigeon .pg-flood__thumb.is-focus {
+	z-index: 40;
+	border-color: var(--color-red);
+	transform: translateY(-2px) scale(1.35);
+}
+.pigeon .pg-flood__thumb :is(img, .dither-media) {
+	display: block;
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 }
-.pigeon .pg-stop__items[data-count='6'] .pg-ev > :is(img, .dither-media) {
-	aspect-ratio: 1 / 1;
-}
-.pigeon .pg-ev figcaption {
+/* a post, shrunk to its avatar and its reach */
+.pigeon .pg-flood__post,
+.pigeon .pg-flood__chip {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
-	font-size: 12px;
-	line-height: 1.45;
+	align-items: flex-start;
+	justify-content: space-between;
+	height: 100%;
+	padding: calc(var(--tw) * 0.08);
+	background: #15181c;
+	font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+	font-size: calc(var(--tw) * 0.24);
+	line-height: 1;
+	color: #e7e9ea;
+}
+.pigeon .pg-flood__post[data-platform='truthsocial'] {
+	background: #17152a;
+}
+.pigeon .pg-flood__post > :is(img, .dither-media) {
+	width: 30% !important;
+	height: auto !important;
+	aspect-ratio: 1;
+	border-radius: 50% !important;
+}
+.pigeon .pg-flood__post .dither-media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.pigeon :is(.pg-flood__post, .pg-flood__chip) b {
+	font-weight: 700;
+	white-space: nowrap;
+}
+/* a text tile: the platform, and the reach when it was counted */
+.pigeon .pg-flood__chip {
+	background: #191918;
+}
+.pigeon .pg-flood__chip i {
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: clip;
+	white-space: nowrap;
+	font-style: normal;
+	font-size: 0.8em;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #8b8a84;
+}
+.pigeon .pg-flood__axis {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 22px;
+	border-top: 1px solid var(--color-gray-mid);
+	font-size: 10px;
+	letter-spacing: var(--tracking-label);
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+}
+.pigeon .pg-flood__axis span {
+	position: absolute;
+	top: 6px;
+	white-space: nowrap;
+}
+.pigeon .pg-flood__axis span::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: -9px;
+	height: 6px;
+	width: 1px;
+	background: var(--color-gray-mid);
+}
+/* a blocked-out name: the letters were never in the page, this just softens the blocks */
+.pigeon .pg-redact {
+	filter: blur(3px);
+	user-select: none;
+}
+/* the playhead: where the scroll has got to in time */
+.pigeon .pg-flood__head {
+	position: absolute;
+	top: 0;
+	bottom: 22px;
+	width: 1px;
+	background: var(--color-red);
+	pointer-events: none;
+	z-index: 30;
+}
+.pigeon .pg-flood__head em {
+	position: absolute;
+	bottom: -22px;
+	left: 6px;
+	transform: translateX(min(0px, calc(var(--edge, 0) * -100% - 12px * var(--edge, 0))));
+	padding: 1px 6px;
+	font-style: normal;
+	font-size: 10px;
+	letter-spacing: var(--tracking-label);
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: var(--color-white);
+	background: var(--color-red);
+}
+
+/* The one item being read: the newest the playhead has passed, or the one pointed at. */
+.pigeon .pg-flood__focus {
+	position: relative;
+	flex: 1;
+	min-height: 0;
+}
+.pigeon .pg-flood__card {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: flex-end;
+	gap: 28px;
+	margin: 0;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		opacity 0.25s ease,
+		visibility 0s 0.25s;
+}
+.pigeon .pg-flood__card.is-on {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.25s ease;
+}
+.pigeon .pg-flood__media {
+	flex: 1 1 auto;
+	max-width: 760px;
+	height: 100%;
+	min-width: 0;
+	min-height: 0;
+	display: flex;
+	align-items: flex-end;
+}
+.pigeon .pg-flood__media > :is(img, .dither-media) {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+/* no wrapper backdrop: the letterbox around a contained image stays page-coloured */
+.pigeon .pg-flood__media .dither-media {
+	background: transparent;
+}
+.pigeon .pg-flood__media .dither-media :is(.dither-media__placeholder, .dither-media__dither) {
+	display: none;
+}
+/* fit the whole item in the panel, sitting on the panel's bottom-left corner */
+.pigeon .pg-flood__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: left bottom;
+}
+.pigeon .pg-flood__media .pg-tweet {
+	width: min(100%, 420px);
+	max-height: 100%;
+	overflow: hidden;
+}
+.pigeon .pg-flood__media .pg-tweet > * {
+	flex-shrink: 0;
+}
+.pigeon .pg-flood__media .pg-tweet__text {
+	-webkit-line-clamp: 3;
+}
+.pigeon .pg-flood__card figcaption {
+	order: -1;
+	flex: 0 0 min(30ch, 32%);
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	font-size: 13px;
+	line-height: 1.5;
 	color: #d6d5cf;
 }
-.pigeon .pg-ev figcaption small {
+.pigeon .pg-flood__card figcaption b {
+	font-family: var(--font-mono);
+	font-weight: 400;
+	font-size: 10px;
+	letter-spacing: var(--tracking-label);
+	text-transform: uppercase;
+	color: var(--color-red);
+}
+.pigeon .pg-flood__card figcaption small {
 	font-size: 10px;
 	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+}
+.pigeon .pg-flood__hint {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	margin: 0;
+	font-size: 11px;
+	letter-spacing: var(--tracking-label);
 	text-transform: uppercase;
 	color: var(--color-text-secondary);
 }
@@ -2389,35 +2574,18 @@ html:has(.pigeon) {
 .pigeon .pg-reveal__wrist {
 	position: absolute;
 	inset: 0;
-	/* the V2 render on black, screened over the dimmed clip so only the device shows */
-	/* below the wordmark, like the photo it replaced */
-	background-size: auto min(62%, 640px);
-	background-position: 50% 96%;
+	background-size: cover;
+	background-position: 70% 100%;
 	background-repeat: no-repeat;
-	mix-blend-mode: screen;
-}
-.pigeon .pg-reveal__word {
-	position: absolute;
-	left: var(--pg-gutter);
-	right: var(--pg-gutter);
-	top: clamp(96px, 16vh, 180px);
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	pointer-events: none;
-}
-.pigeon .pg-reveal__title {
-	font-family: var(--font-display);
-	font-stretch: 125%;
-	font-weight: 900;
-	font-size: clamp(64px, 15vw, 240px);
-	line-height: 0.82;
-	color: var(--color-white);
 }
 
 .pigeon .pg-demo video,
 .pigeon .pg-demo .video-player {
+	/* the near-square recording sized to fit the viewport whole, and centred */
+	display: block;
 	width: 100%;
+	max-width: min(100%, 980px, calc(82vh * 736 / 616));
+	margin-inline: auto;
 	background: #000;
 }
 .pigeon .pg-demo .pg-caption {
@@ -2599,7 +2767,7 @@ html:has(.pigeon) {
 }
 .pigeon .pg-claims li {
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 	gap: 18px;
 	padding: 16px 0;
 	border-bottom: var(--border-default);
@@ -2618,6 +2786,23 @@ html:has(.pigeon) {
 	color: var(--color-text-secondary);
 	width: 14px;
 }
+.pigeon .pg-claims__body {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+}
+.pigeon .pg-claims__evidence {
+	font-family: var(--font-mono);
+	font-stretch: normal;
+	font-weight: 400;
+	font-size: 13px;
+	line-height: 1.5;
+	letter-spacing: 0;
+	text-transform: none;
+	color: var(--color-text-secondary);
+	max-width: 62ch;
+}
 .pigeon .pg-claims__check {
 	margin-left: auto;
 	font-family: var(--font-mono);
@@ -2625,48 +2810,6 @@ html:has(.pigeon) {
 	color: var(--color-red);
 }
 
-.pigeon .pg-people {
-	display: grid;
-	grid-template-columns: repeat(5, minmax(0, 1fr));
-	gap: 16px;
-	margin-bottom: 40px;
-}
-.pigeon .pg-people figure {
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-}
-.pigeon .pg-people :is(img, .dither-media) {
-	aspect-ratio: 4 / 5;
-	filter: grayscale(1);
-}
-.pigeon .pg-people img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-.pigeon .pg-people figcaption {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-}
-.pigeon .pg-people strong {
-	font-family: var(--font-display);
-	font-stretch: 112%;
-	font-weight: 700;
-	font-size: clamp(14px, 1.4vw, 18px);
-	line-height: 1.05;
-	letter-spacing: 0.03em;
-	text-transform: uppercase;
-	color: var(--color-white);
-}
-.pigeon .pg-people span {
-	font-size: 10px;
-	line-height: 1.5;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	color: var(--color-text-secondary);
-}
 
 .pigeon .pg-wall {
 	display: grid;
@@ -2839,6 +2982,10 @@ html:has(.pigeon) {
 	mix-blend-mode: screen;
 	background: transparent;
 }
+/* the hero is a cut-out with real alpha, laid over the outlined "V2" so the case hides it */
+.pigeon .pg-v2__stage :is(img, .dither-media) {
+	mix-blend-mode: normal;
+}
 .pigeon .pg-v2 :is(img, video) {
 	display: block;
 	width: 100%;
@@ -2928,10 +3075,6 @@ html:has(.pigeon) {
 /* ---------- narrow screens ---------- */
 
 @media (max-width: 900px) {
-	.pigeon .pg-stop__items,
-	.pigeon .pg-stop__items[data-count] {
-		--cols: 2;
-	}
 	.pigeon .pg-tools {
 		grid-template-columns: minmax(0, 1fr);
 	}
@@ -2940,9 +3083,6 @@ html:has(.pigeon) {
 	}
 	.pigeon .pg-pillar.is-flip .pg-pillar__media {
 		order: 0;
-	}
-	.pigeon .pg-people {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 	.pigeon .pg-wall {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2960,34 +3100,8 @@ html:has(.pigeon) {
 	.pigeon .pg-hero__note {
 		text-align: left;
 	}
-	.pigeon .pg-tl__bar {
-		padding: 5px 8px;
-		gap: 8px;
-	}
-	.pigeon .pg-tl__sub {
-		display: none;
-	}
-	.pigeon .pg-tl__label {
-		font-size: 10.5px;
-	}
-	.pigeon .pg-tl__num {
-		font-size: 9.5px;
-	}
-	.pigeon .pg-stop {
-		scroll-margin-top: 250px;
-	}
-	.pigeon .pg-tl {
-		padding-top: 78px;
-		padding-bottom: 16px;
-	}
-	.pigeon .pg-tl__rows {
-		gap: 3px;
-	}
-	.pigeon .pg-facts {
+			.pigeon .pg-facts {
 		grid-template-columns: minmax(0, 1fr);
-	}
-	.pigeon .pg-people {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 	.pigeon .pg-quad__pt,
 	.pigeon .pg-quad__end,
@@ -3013,7 +3127,7 @@ html:has(.pigeon) {
 		grid-template-columns: minmax(0, 1fr);
 	}
 	.pigeon .pg-reveal__wrist {
-		background-size: min(92%, 420px) auto;
+		background-position: 58% 100%;
 	}
 }
 
@@ -3030,11 +3144,8 @@ html:has(.pigeon) {
 	height: auto;
 	aspect-ratio: 4 / 3;
 }
-.in-panel .pigeon :is(.pg-reveal__wrist, .pg-reveal__word) {
+.in-panel .pigeon .pg-reveal__wrist {
 	opacity: 1 !important;
-}
-.in-panel .pigeon .pg-reveal__word {
-	top: 24px;
 }
 .in-panel .pigeon .pg-scene {
 	min-height: 0;
@@ -3058,4 +3169,64 @@ html:has(.pigeon) {
 }
 .in-panel .pigeon .pg-pillar#pillar-pattern .pg-pillar__media {
 	display: none;
+}
+
+/* the flood on phones: caption under the item, smaller tiles */
+@media (max-width: 700px) {
+	.pigeon .pg-flood {
+		height: 380vh;
+	}
+	.pigeon .pg-flood__card {
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-end;
+		gap: 12px;
+	}
+	.pigeon .pg-flood__media {
+		flex: 1 1 auto;
+		width: 100%;
+		height: auto;
+	}
+	.pigeon .pg-flood__card figcaption {
+		order: 0;
+		flex: none;
+	}
+	.pigeon .pg-flood__media .pg-tweet {
+		width: 100%;
+	}
+	.pigeon .pg-flood__media .pg-tweet__text {
+		-webkit-line-clamp: 2;
+	}
+	.pigeon .pg-flood__axis .is-minor {
+		display: none;
+	}
+	.pigeon .pg-tally {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 28px 20px;
+	}
+}
+
+/* Static copies (storehouse panel, PDF): no scroll, so show every tile and every item. */
+.in-panel .pigeon .pg-flood {
+	height: auto;
+}
+.in-panel .pigeon .pg-flood__frame {
+	position: relative;
+	height: auto;
+}
+.in-panel .pigeon .pg-flood__inner {
+	padding-top: 24px;
+}
+.in-panel .pigeon .pg-flood__thumb {
+	opacity: 1;
+	transform: none;
+}
+.in-panel .pigeon :is(.pg-flood__head, .pg-flood__hint) {
+	display: none;
+}
+.in-panel .pigeon .pg-flood__card {
+	position: relative;
+	opacity: 1;
+	visibility: visible;
+	margin-bottom: 24px;
 }
