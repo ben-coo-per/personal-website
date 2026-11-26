@@ -2024,14 +2024,14 @@ html:has(.pigeon) {
 	color: var(--color-text-secondary);
 }
 
-/* Evidence cards fade in and float up as they scroll into view (see `rise`). */
-.pigeon .pg-ev[data-rise] {
+/* Evidence cards (and the V2 views) fade in and float up as they scroll into view (see `rise`). */
+.pigeon [data-rise] {
 	transition:
 		opacity 0.7s ease,
 		transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
 	transition-delay: calc(var(--i, 0) * 90ms);
 }
-.pigeon .pg-ev[data-rise='wait'] {
+.pigeon [data-rise='wait'] {
 	opacity: 0;
 	transform: translateY(48px);
 }
@@ -2389,9 +2389,12 @@ html:has(.pigeon) {
 .pigeon .pg-reveal__wrist {
 	position: absolute;
 	inset: 0;
-	background-size: cover;
-	background-position: 70% 100%;
+	/* the V2 render on black, screened over the dimmed clip so only the device shows */
+	/* below the wordmark, like the photo it replaced */
+	background-size: auto min(62%, 640px);
+	background-position: 50% 96%;
 	background-repeat: no-repeat;
+	mix-blend-mode: screen;
 }
 .pigeon .pg-reveal__word {
 	position: absolute;
@@ -2822,87 +2825,68 @@ html:has(.pigeon) {
 	user-select: text;
 }
 
-/* ---------- version two teaser ---------- */
+/* ---------- the device ---------- */
 
-/* Two renders on black, sized to equal heights (5:4 and 4:5), and a big "V2".
-   No description on purpose. */
+/* Opens the page: the product, no words. Every render is on pure black and is
+   screen-blended, so the black vanishes into the page and the frosted case floats over
+   an outlined "V2". Then front / side / back on one baseline, then the explode loop. */
 .pigeon .pg-v2 {
-	gap: 0;
+	/* the blend group needs the page colour inside it, or the black has nothing to drop into */
+	isolation: isolate;
+	background: var(--color-bg);
 }
-.pigeon .pg-v2__head {
-	display: flex;
-	align-items: flex-end;
-	justify-content: space-between;
-	gap: 24px;
-	position: relative;
-	z-index: 1;
-	margin-bottom: clamp(-72px, -5vw, -24px);
-	pointer-events: none;
+.pigeon .pg-v2 :is(img, video, .dither-media) {
+	mix-blend-mode: screen;
+	background: transparent;
+}
+.pigeon .pg-v2 :is(img, video) {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+.pigeon .pg-v2__stage {
+	display: grid;
+	place-items: center;
 }
 .pigeon .pg-v2__title {
+	grid-area: 1 / 1;
 	margin: 0;
-	order: -1;
+	z-index: -1;
 	font-family: var(--font-display);
 	font-stretch: 125%;
 	font-weight: 900;
-	font-size: clamp(72px, 16vw, 220px);
+	font-size: clamp(180px, 46vw, 620px);
 	line-height: 0.8;
-	color: var(--color-white);
+	letter-spacing: -0.02em;
+	color: transparent;
+	-webkit-text-stroke: 1.5px rgba(240, 240, 238, 0.42);
+	user-select: none;
 }
-.pigeon .pg-v2__status {
-	display: inline-flex;
-	align-items: center;
-	gap: 10px;
-	margin-bottom: 0.6em;
-	font-size: 11px;
-	letter-spacing: var(--tracking-label);
-	text-transform: uppercase;
-	color: var(--color-red);
+.pigeon .pg-v2__hero,
+.pigeon .pg-v2__stage > .dither-media {
+	grid-area: 1 / 1;
+	width: min(100%, 560px);
 }
-.pigeon .pg-v2__status::before {
-	content: '';
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	background: var(--color-red);
-	animation: pg-blink 1.4s steps(2, jump-none) infinite;
-}
-@keyframes pg-blink {
-	50% {
-		opacity: 0.15;
-	}
-}
-.pigeon .pg-v2__shots {
+
+/* front · side · back, at one height on a shared baseline */
+.pigeon .pg-v2__views {
 	display: grid;
-	grid-template-columns: 1.25fr 0.8fr;
-	background: #000;
+	/* 0.35 = the side render's aspect, so all three land at one height */
+	grid-template-columns: minmax(0, 1fr) minmax(0, 0.35fr) minmax(0, 1fr);
+	gap: 0 clamp(8px, 2vw, 32px);
+	padding-top: clamp(24px, 4vw, 48px);
 }
-.pigeon .pg-v2__shots > :is(img, .dither-media) {
-	width: 100%;
-	height: auto;
-	display: block;
+.pigeon .pg-v2__view {
+	margin: 0;
 }
-.pigeon .pg-v2__shots > .dither-media img {
-	width: 100%;
-	height: auto;
-	display: block;
+.pigeon .pg-v2__parts {
+	margin: 0 auto;
+	padding-top: clamp(24px, 5vw, 64px);
+	align-items: center;
 }
-@media (max-width: 600px) {
-	.pigeon .pg-v2__shots {
-		grid-template-columns: minmax(0, 1fr);
-	}
-	/* the tall back view would dominate a phone: crop it to a square */
-	.pigeon .pg-v2__shots > :last-child,
-	.pigeon .pg-v2__shots > :last-child img {
-		aspect-ratio: 1 / 1;
-		object-fit: cover;
-		height: auto;
-	}
-}
-@media (prefers-reduced-motion: reduce) {
-	.pigeon .pg-v2__status::before {
-		animation: none;
-	}
+.pigeon .pg-v2__parts video {
+	max-width: 900px;
+	pointer-events: none;
 }
 
 /* ---------- close ---------- */
@@ -3029,7 +3013,7 @@ html:has(.pigeon) {
 		grid-template-columns: minmax(0, 1fr);
 	}
 	.pigeon .pg-reveal__wrist {
-		background-position: 78% 100%;
+		background-size: min(92%, 420px) auto;
 	}
 }
 

@@ -99,3 +99,14 @@ export function inview(node: HTMLElement, margin = '-35% 0px -35% 0px') {
 	io.observe(node);
 	return { destroy: () => io.disconnect() };
 }
+
+/**
+ * Starts a silent loop. `autoplay` alone is not enough here: Svelte sets `muted` as a
+ * property after hydration, not in the server HTML, so the browser sees an unmuted
+ * video and blocks it. Skipped for reduced motion (the poster stays).
+ */
+export function autoloop(node: HTMLVideoElement) {
+	node.muted = true;
+	if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+	node.play().catch(() => {});
+}

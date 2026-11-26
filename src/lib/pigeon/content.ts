@@ -291,8 +291,8 @@ export const pillars: Pillar[] = [
 	{
 		id: 'hardware',
 		label: 'Hardware',
-		image: 'pillar-hardware.webp',
-		imageAlt: 'PIGEON hardware: PCB, e-ink display, GNSS module and microcontroller',
+		image: 'pillar-hardware-v2.webp',
+		imageAlt: 'Exploded render of the PIGEON device: case, e-ink display, PCB and battery',
 		highlights: [
 			{ lead: 'Creates pattern', text: 'Location + time + device ID + per-device counter.' },
 			{ lead: 'Components', text: 'GNSS module · microcontroller · e-ink display.' },
@@ -347,8 +347,8 @@ export const pillars: Pillar[] = [
 	{
 		id: 'form',
 		label: 'Form',
-		image: 'pillar-form.webp',
-		imageAlt: 'The PIGEON wristwatch render',
+		image: 'pillar-form-v2.webp',
+		imageAlt: 'A render of the PIGEON device from the front',
 		highlights: [
 			{
 				lead: 'Form family',
@@ -358,7 +358,10 @@ export const pillars: Pillar[] = [
 				lead: 'Functional aesthetics',
 				text: 'Decals on the faceplate assist pattern decoding; exposed screws allow for backplate expansion.'
 			},
-			{ lead: 'Wrist wearable', text: 'Based on citizen journalism best practice.' },
+			{
+				lead: 'Pattern first',
+				text: 'The case is built around the pattern, so it can live on any surface.'
+			},
 			{ lead: 'Visual language', text: 'Deliberately not a QR / tracking aesthetic.' }
 		]
 	}
@@ -440,7 +443,7 @@ export const prototyping = [
 	},
 	{
 		name: 'Form',
-		blurb: 'Form studies → shape language → printed case → wristwatch.',
+		blurb: 'Form studies → shape language → printed case → worn prototype → V2.',
 		shots: [
 			['proto-form-01.webp', 'form study'],
 			['proto-form-02.webp', 'form study'],
@@ -450,7 +453,9 @@ export const prototyping = [
 			['proto-form-06.webp', 'shape language'],
 			['proto-form-07.webp', 'shape language'],
 			['proto-form-08.webp', 'case v1.0'],
-			['proto-form-09.webp', 'wristwatch']
+			['proto-form-09.webp', 'worn prototype'],
+			['reveal-wrist.webp', 'v1 on the wrist'],
+			['pillar-form-v2.webp', 'v2']
 		]
 	},
 	{
