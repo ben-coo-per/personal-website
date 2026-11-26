@@ -22,11 +22,10 @@
 		type Evidence
 	} from '$lib/pigeon/content';
 
-	let { project, asset }: FreeformPageProps = $props();
+	let { asset }: FreeformPageProps = $props();
 
-	// The page wears the presentation's look (see the .pigeon rules in log.css). It
-	// follows the deck's story top to bottom; the deck itself stays at the website URL.
-	const deck = $derived(project.websiteUrl ?? 'https://pigeon.bencooper.xyz/');
+	// The page wears the presentation's look (see the .pigeon rules in log.css) and
+	// follows the deck's story top to bottom.
 
 	// Case-study opener: the scene photo resolves out of the pattern as it scrolls in.
 	let sceneP = $state(0);
@@ -658,15 +657,6 @@
 
 	<!-- ───────────── close ───────────── -->
 	<footer class="pg-wrap pg-foot">
-		<div class="pg-foot__deck">
-			<p class="pg-eyebrow">The presentation</p>
-			<p class="pg-body">
-				This page follows my final presentation. The deck itself is still up, with its deep dives on
-				the pattern, the ledger and the red-teaming. It is desktop-only: move through it with the
-				arrow keys and open deep dives with the spacebar.
-			</p>
-			<a class="pg-btn pg-btn--fill" href={deck} target="_blank" rel="noopener noreferrer">Open the presentation ↗</a>
-		</div>
 		<div>
 			<p class="pg-eyebrow">Thank you</p>
 			<ul class="pg-thanks">
