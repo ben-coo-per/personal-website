@@ -357,8 +357,7 @@ export const pillars: Pillar[] = [
 		highlights: [
 			{ lead: 'Creates pattern', text: 'Location + time + device ID + per-device counter.' },
 			{ lead: 'Components', text: 'GNSS module · microcontroller · e-ink display.' },
-			{ lead: 'Why e-ink', text: 'Sunlight-readable, zero power to hold an image, field-robust.' },
-			{ lead: 'Accessible', text: 'Under £15 · open source.' }
+			{ lead: 'Why e-ink', text: 'Sunlight-readable, zero power to hold an image, field-robust.' }
 		]
 	},
 	{
