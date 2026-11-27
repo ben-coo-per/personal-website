@@ -171,11 +171,6 @@
 			<div class="pg-hero__lockup">
 				<h1 class="pg-hero__title">PIGEON</h1>
 				<p class="pg-hero__sub">A living pattern that makes corroboration searchable.</p>
-				<ul class="pg-hero__meta pg-label">
-					<li>Ben Cooper</li>
-					<li>IDE 2 · Master's solo project</li>
-					<li>June 2026</li>
-				</ul>
 			</div>
 			<p class="pg-hero__note pg-label">
 				Content note: the case study below includes images referencing a fatal shooting. Nothing
@@ -248,9 +243,6 @@
 	<section class="pg-flood" use:progress={{ onchange: (p) => (floodP = p) }} style:--tw="{tile}px">
 		<div class="pg-flood__frame">
 			<div class="pg-wrap pg-flood__inner">
-				<p class="pg-flood__sample">
-					{flood.length} pieces I collected: a small sample of a far larger flood.
-				</p>
 				<div class="pg-flood__chart" role="group" aria-label="Evidence from the first days, by kind" bind:clientWidth={trackW}>
 					{#each caseStudy as stop, lane}
 						<div class="pg-flood__lane" class:is-live={focus?.lane === lane}>
@@ -393,11 +385,11 @@
 		<div class="pg-tools">
 			{#each toolFamilies as t}
 				<figure class="pg-tool">
-					<p class="pg-label">{t.kicker}</p>
 					<!-- one word per line, so every title is the same two lines -->
 					<h3 class="pg-h3 pg-tool__title">
 						{#each t.label.split(' ') as word}<span>{word}</span>{/each}
 					</h3>
+					<p class="pg-tool__kicker">{t.kicker}</p>
 					<img src={asset(t.src)} alt={t.alt} loading="lazy" />
 					<figcaption>{t.blurb}</figcaption>
 				</figure>
