@@ -1762,9 +1762,16 @@ html:has(.pigeon) {
 .pigeon .pg-hero > canvas {
 	z-index: -1;
 }
+/* On the page itself the pattern runs up under the floating nav to the top edge. */
+.article-body:not(.in-panel) .pigeon .pg-hero {
+	--pg-nav: 72px;
+	margin-top: calc(-1 * var(--pg-nav));
+	padding-top: calc(24px + var(--pg-nav));
+	min-height: max(560px, 100svh);
+}
 .article-body .pigeon .pg-hero__back {
 	position: absolute;
-	top: 20px;
+	top: calc(20px + var(--pg-nav, 0px));
 	left: var(--pg-gutter);
 	border: 0;
 	font-family: var(--font-mono);
@@ -1796,12 +1803,6 @@ html:has(.pigeon) {
 	font-size: clamp(15px, 1.4vw, 19px);
 	color: var(--color-white);
 	max-width: 36ch;
-}
-.pigeon .pg-hero__meta {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px 32px;
-	color: #b4b3ac;
 }
 .pigeon .pg-hero__note {
 	max-width: 34ch;
@@ -1983,15 +1984,6 @@ html:has(.pigeon) {
 	position: relative;
 	height: calc(var(--th) + (var(--rows, 1) - 1) * var(--step) + 4px);
 	border-bottom: 1px solid #1d1d1c;
-}
-/* says plainly that the tiles are a sample, not the whole flood */
-.pigeon .pg-flood__sample {
-	margin: 0;
-	font-size: 11px;
-	line-height: 1.5;
-	letter-spacing: var(--tracking-label);
-	text-transform: uppercase;
-	color: var(--color-text-secondary);
 }
 /* Each piece of evidence: a tile at the time it surfaced, stacked on any it crowds. */
 .pigeon .pg-flood__thumb {
@@ -2317,7 +2309,7 @@ html:has(.pigeon) {
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 28px;
 }
-/* Each card spans four shared rows (kicker, title, image, blurb), so the rows
+/* Each card spans four shared rows (title, kicker, image, blurb), so the rows
    line up across the three cards whatever wraps. */
 .pigeon .pg-tool {
 	display: grid;
@@ -2335,6 +2327,13 @@ html:has(.pigeon) {
 	flex-direction: column;
 	gap: 0;
 	align-self: end;
+}
+/* A plain subtitle under the title, not an eyebrow above it. */
+.pigeon .pg-tool__kicker {
+	margin-top: -6px;
+	font-size: 1.05rem;
+	line-height: 1.35;
+	color: var(--color-text-secondary);
 }
 .pigeon .pg-tool > img,
 .pigeon .pg-tool > .dither-media {
