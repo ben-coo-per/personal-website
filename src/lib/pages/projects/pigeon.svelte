@@ -478,7 +478,7 @@
 		<p class="pg-eyebrow">How it works</p>
 		<p class="pg-body">
 			PIGEON is a beacon built from three parts (a GNSS module, a microcontroller and
-			an e-ink display) for under £15, fully open source. Its face shows a constantly refreshing
+			an e-ink display). Its face shows a constantly refreshing
 			truchet pattern that encodes the device's ID, a per-device counter, a timestamp and
 			coordinates, authenticated with an HMAC and wrapped in Reed–Solomon error correction.
 		</p>
